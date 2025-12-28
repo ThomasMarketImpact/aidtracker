@@ -1,0 +1,167 @@
+{
+  "timestamp": "2025-12-24T19:06:04.992Z",
+  "endpoints": [
+    {
+      "endpoint": "/v1/public/fts/flow?year=2024",
+      "recordCount": 24385,
+      "keys": [
+        "id",
+        "amountUSD",
+        "fullParkedAmountUSD",
+        "budgetYear",
+        "childFlowIds",
+        "contributionType",
+        "createdAt",
+        "date",
+        "decisionDate",
+        "description",
+        "grandBargainEarmarkingType",
+        "exchangeRate",
+        "firstReportedDate",
+        "flowType",
+        "keywords",
+        "newMoney",
+        "method",
+        "parentFlowId",
+        "status",
+        "updatedAt",
+        "versionId",
+        "sourceObjects",
+        "destinationObjects",
+        "boundary",
+        "onBoundary",
+        "reportDetails",
+        "refCode"
+      ]
+    },
+    {
+      "endpoint": "/v1/public/organization",
+      "recordCount": 14319,
+      "keys": [
+        "id",
+        "abbreviation",
+        "name",
+        "categories",
+        "locations"
+      ]
+    },
+    {
+      "endpoint": "/v2/public/location",
+      "recordCount": 258,
+      "keys": [
+        "id",
+        "iso3",
+        "name",
+        "adminLevel",
+        "pcode",
+        "isRegion"
+      ]
+    },
+    {
+      "endpoint": "/v2/public/plan",
+      "recordCount": 910,
+      "keys": [
+        "id",
+        "revisionState",
+        "isReleased",
+        "releasedDate",
+        "createdAt",
+        "updatedAt",
+        "planVersion",
+        "categories",
+        "emergencies",
+        "locations",
+        "years",
+        "origRequirements",
+        "revisedRequirements"
+      ]
+    },
+    {
+      "endpoint": "/v1/public/global-cluster",
+      "recordCount": 22,
+      "keys": [
+        "id",
+        "name",
+        "code",
+        "type",
+        "parentId"
+      ]
+    },
+    {
+      "endpoint": "/v1/public/fts/flow?year=2024&groupby=plan",
+      "recordCount": 0,
+      "keys": [
+        "status",
+        "data",
+        "meta"
+      ]
+    }
+  ],
+  "flowsByYear": [
+    {
+      "year": 2016,
+      "flowCount": 11482,
+      "fundingTotal": 22645450937
+    },
+    {
+      "year": 2017,
+      "flowCount": 12404,
+      "fundingTotal": 21192258227
+    },
+    {
+      "year": 2018,
+      "flowCount": 12648,
+      "fundingTotal": 25464396756
+    },
+    {
+      "year": 2019,
+      "flowCount": 13582,
+      "fundingTotal": 24991725984
+    },
+    {
+      "year": 2020,
+      "flowCount": 17360,
+      "fundingTotal": 29034792365
+    },
+    {
+      "year": 2021,
+      "flowCount": 16936,
+      "fundingTotal": 30977173723
+    },
+    {
+      "year": 2022,
+      "flowCount": 21340,
+      "fundingTotal": 43260251083
+    },
+    {
+      "year": 2023,
+      "flowCount": 26306,
+      "fundingTotal": 38198379895
+    },
+    {
+      "year": 2024,
+      "flowCount": 24385,
+      "fundingTotal": 37106238335
+    }
+  ],
+  "volumeEstimates": {
+    "rawNodes": {
+      "countries": 258,
+      "organizations": 14319,
+      "plans": 910,
+      "clusters": 22,
+      "flows": 156443,
+      "total": 171952
+    },
+    "aggregatedNodes": {
+      "countries": 258,
+      "organizations": 14319,
+      "plans": 910,
+      "clusters": 22,
+      "flowSummaries": 36000,
+      "total": 51509
+    },
+    "freeTierLimit": 200000,
+    "aggregationRequired": true
+  }
+}

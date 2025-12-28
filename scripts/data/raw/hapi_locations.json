@@ -1,0 +1,2492 @@
+[
+  {
+    "id": 1,
+    "code": "AFG",
+    "name": "Afghanistan",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2004-01-26T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 2,
+    "code": "ALA",
+    "name": "Åland Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2004-02-13T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 3,
+    "code": "ALB",
+    "name": "Albania",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 4,
+    "code": "DZA",
+    "name": "Algeria",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 5,
+    "code": "ASM",
+    "name": "American Samoa",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 6,
+    "code": "AND",
+    "name": "Andorra",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1994-01-26T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 7,
+    "code": "AGO",
+    "name": "Angola",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1993-07-02T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 8,
+    "code": "AIA",
+    "name": "Anguilla",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1985-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 9,
+    "code": "ATA",
+    "name": "Antarctica",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1983-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 10,
+    "code": "ATG",
+    "name": "Antigua and Barbuda",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 11,
+    "code": "ARG",
+    "name": "Argentina",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 12,
+    "code": "ARM",
+    "name": "Armenia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 13,
+    "code": "ABW",
+    "name": "Aruba",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1986-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 14,
+    "code": "AUS",
+    "name": "Australia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 15,
+    "code": "AUT",
+    "name": "Austria",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 16,
+    "code": "AZE",
+    "name": "Azerbaijan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 17,
+    "code": "BHS",
+    "name": "Bahamas",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 18,
+    "code": "BHR",
+    "name": "Bahrain",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 19,
+    "code": "BGD",
+    "name": "Bangladesh",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 20,
+    "code": "BRB",
+    "name": "Barbados",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 21,
+    "code": "BLR",
+    "name": "Belarus",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 22,
+    "code": "BEL",
+    "name": "Belgium",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 23,
+    "code": "BLZ",
+    "name": "Belize",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 24,
+    "code": "BEN",
+    "name": "Benin",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1977-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 25,
+    "code": "BMU",
+    "name": "Bermuda",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 26,
+    "code": "BTN",
+    "name": "Bhutan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 27,
+    "code": "BOL",
+    "name": "Bolivia (Plurinational State of)",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2009-05-08T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 28,
+    "code": "BIH",
+    "name": "Bosnia and Herzegovina",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 29,
+    "code": "BES",
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2011-06-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 30,
+    "code": "BWA",
+    "name": "Botswana",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 31,
+    "code": "BVT",
+    "name": "Bouvet Island",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 32,
+    "code": "BRA",
+    "name": "Brazil",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 33,
+    "code": "IOT",
+    "name": "British Indian Ocean Territory",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 34,
+    "code": "BRN",
+    "name": "Brunei Darussalam",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 35,
+    "code": "BGR",
+    "name": "Bulgaria",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 36,
+    "code": "BFA",
+    "name": "Burkina Faso",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1984-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 37,
+    "code": "BDI",
+    "name": "Burundi",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 38,
+    "code": "KHM",
+    "name": "Cambodia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1994-01-26T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 39,
+    "code": "CMR",
+    "name": "Cameroon",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 40,
+    "code": "CAN",
+    "name": "Canada",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 41,
+    "code": "CPV",
+    "name": "Cabo Verde",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 42,
+    "code": "CYM",
+    "name": "Cayman Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 43,
+    "code": "CAF",
+    "name": "Central African Republic",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 44,
+    "code": "TCD",
+    "name": "Chad",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 45,
+    "code": "CHL",
+    "name": "Chile",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 46,
+    "code": "CHN",
+    "name": "China",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 47,
+    "code": "CXR",
+    "name": "Christmas Island",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 48,
+    "code": "CCK",
+    "name": "Cocos (Keeling) Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 49,
+    "code": "COL",
+    "name": "Colombia",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 50,
+    "code": "COM",
+    "name": "Comoros",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2003-01-14T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 51,
+    "code": "COG",
+    "name": "Congo",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 52,
+    "code": "COD",
+    "name": "Democratic Republic of the Congo",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1997-07-14T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 53,
+    "code": "COK",
+    "name": "Cook Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 54,
+    "code": "CRI",
+    "name": "Costa Rica",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 55,
+    "code": "CIV",
+    "name": "Côte d'Ivoire",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 56,
+    "code": "HRV",
+    "name": "Croatia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 57,
+    "code": "CUB",
+    "name": "Cuba",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 58,
+    "code": "CUW",
+    "name": "Curaçao",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2010-12-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 59,
+    "code": "CYP",
+    "name": "Cyprus",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 60,
+    "code": "CZE",
+    "name": "Czechia",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2016-08-29T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 61,
+    "code": "DNK",
+    "name": "Denmark",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 62,
+    "code": "DJI",
+    "name": "Djibouti",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1977-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 63,
+    "code": "DMA",
+    "name": "Dominica",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 64,
+    "code": "DOM",
+    "name": "Dominican Republic",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 65,
+    "code": "ECU",
+    "name": "Ecuador",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 66,
+    "code": "EGY",
+    "name": "Egypt",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 67,
+    "code": "SLV",
+    "name": "El Salvador",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 68,
+    "code": "GNQ",
+    "name": "Equatorial Guinea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 69,
+    "code": "ERI",
+    "name": "Eritrea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2012-08-02T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 70,
+    "code": "EST",
+    "name": "Estonia",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 71,
+    "code": "ETH",
+    "name": "Ethiopia",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1993-07-16T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 72,
+    "code": "FLK",
+    "name": "Falkland Islands (Malvinas)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 73,
+    "code": "FRO",
+    "name": "Faroe Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 74,
+    "code": "FJI",
+    "name": "Fiji",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2011-06-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 75,
+    "code": "FIN",
+    "name": "Finland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 76,
+    "code": "FRA",
+    "name": "France",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 77,
+    "code": "GUF",
+    "name": "French Guiana",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 78,
+    "code": "PYF",
+    "name": "French Polynesia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 79,
+    "code": "ATF",
+    "name": "French Southern Territories",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1979-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 80,
+    "code": "GAB",
+    "name": "Gabon",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 81,
+    "code": "GMB",
+    "name": "Gambia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 82,
+    "code": "GEO",
+    "name": "Georgia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-08-28T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 83,
+    "code": "DEU",
+    "name": "Germany",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1990-10-30T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 84,
+    "code": "GHA",
+    "name": "Ghana",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 85,
+    "code": "GIB",
+    "name": "Gibraltar",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 86,
+    "code": "GRC",
+    "name": "Greece",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 87,
+    "code": "GRL",
+    "name": "Greenland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 88,
+    "code": "GRD",
+    "name": "Grenada",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 89,
+    "code": "GLP",
+    "name": "Guadeloupe",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 90,
+    "code": "GUM",
+    "name": "Guam",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 91,
+    "code": "GTM",
+    "name": "Guatemala",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 92,
+    "code": "GGY",
+    "name": "Guernsey",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2006-03-29T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 93,
+    "code": "GIN",
+    "name": "Guinea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 94,
+    "code": "GNB",
+    "name": "Guinea-Bissau",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 95,
+    "code": "GUY",
+    "name": "Guyana",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2018-10-11T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 96,
+    "code": "HTI",
+    "name": "Haiti",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 97,
+    "code": "HMD",
+    "name": "Heard Island and McDonald Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 98,
+    "code": "VAT",
+    "name": "Holy See",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1996-04-03T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 99,
+    "code": "HND",
+    "name": "Honduras",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 100,
+    "code": "HKG",
+    "name": "China, Hong Kong Special Administrative Region",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 101,
+    "code": "HUN",
+    "name": "Hungary",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2012-02-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 102,
+    "code": "ISL",
+    "name": "Iceland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2022-10-20T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 103,
+    "code": "IND",
+    "name": "India",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1975-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 104,
+    "code": "IDN",
+    "name": "Indonesia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 105,
+    "code": "IRN",
+    "name": "Iran (Islamic Republic of)",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 106,
+    "code": "IRQ",
+    "name": "Iraq",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 107,
+    "code": "IRL",
+    "name": "Ireland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 108,
+    "code": "IMN",
+    "name": "Isle of Man",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2006-03-29T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 109,
+    "code": "ISR",
+    "name": "Israel",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 110,
+    "code": "ITA",
+    "name": "Italy",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 111,
+    "code": "JAM",
+    "name": "Jamaica",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 112,
+    "code": "JPN",
+    "name": "Japan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 113,
+    "code": "JEY",
+    "name": "Jersey",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2006-03-29T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 114,
+    "code": "JOR",
+    "name": "Jordan",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 115,
+    "code": "KAZ",
+    "name": "Kazakhstan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2002-05-20T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 116,
+    "code": "KEN",
+    "name": "Kenya",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 117,
+    "code": "KIR",
+    "name": "Kiribati",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1984-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 118,
+    "code": "PRK",
+    "name": "Democratic People's Republic of Korea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 119,
+    "code": "KOR",
+    "name": "Republic of Korea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 120,
+    "code": "KWT",
+    "name": "Kuwait",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 121,
+    "code": "KGZ",
+    "name": "Kyrgyzstan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-07-25T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 122,
+    "code": "LAO",
+    "name": "Lao People's Democratic Republic",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 123,
+    "code": "LVA",
+    "name": "Latvia",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 124,
+    "code": "LBN",
+    "name": "Lebanon",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 125,
+    "code": "LSO",
+    "name": "Lesotho",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 126,
+    "code": "LBR",
+    "name": "Liberia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 127,
+    "code": "LBY",
+    "name": "Libya",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2018-01-03T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 128,
+    "code": "LIE",
+    "name": "Liechtenstein",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 129,
+    "code": "LTU",
+    "name": "Lithuania",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 130,
+    "code": "LUX",
+    "name": "Luxembourg",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 131,
+    "code": "MAC",
+    "name": "China, Macao Special Administrative Region",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 132,
+    "code": "MKD",
+    "name": "North Macedonia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2019-02-14T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 133,
+    "code": "MDG",
+    "name": "Madagascar",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-07-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 134,
+    "code": "MWI",
+    "name": "Malawi",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 135,
+    "code": "MYS",
+    "name": "Malaysia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 136,
+    "code": "MDV",
+    "name": "Maldives",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 137,
+    "code": "MLI",
+    "name": "Mali",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 138,
+    "code": "MLT",
+    "name": "Malta",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 139,
+    "code": "MHL",
+    "name": "Marshall Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1986-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 140,
+    "code": "MTQ",
+    "name": "Martinique",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 141,
+    "code": "MRT",
+    "name": "Mauritania",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 142,
+    "code": "MUS",
+    "name": "Mauritius",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 143,
+    "code": "MYT",
+    "name": "Mayotte",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-07-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 144,
+    "code": "MEX",
+    "name": "Mexico",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 145,
+    "code": "FSM",
+    "name": "Micronesia (Federated States of)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-04-19T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 146,
+    "code": "MDA",
+    "name": "Republic of Moldova",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2009-01-07T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 147,
+    "code": "MCO",
+    "name": "Monaco",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 148,
+    "code": "MNG",
+    "name": "Mongolia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 149,
+    "code": "MNE",
+    "name": "Montenegro",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2006-09-26T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 150,
+    "code": "MSR",
+    "name": "Montserrat",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 151,
+    "code": "MAR",
+    "name": "Morocco",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 152,
+    "code": "MOZ",
+    "name": "Mozambique",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 153,
+    "code": "MMR",
+    "name": "Myanmar",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2011-06-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 154,
+    "code": "NAM",
+    "name": "Namibia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 155,
+    "code": "NRU",
+    "name": "Nauru",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 156,
+    "code": "NPL",
+    "name": "Nepal",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2020-12-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 157,
+    "code": "NLD",
+    "name": "Netherlands (Kingdom of the)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2023-03-10T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 158,
+    "code": "NCL",
+    "name": "New Caledonia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 159,
+    "code": "NZL",
+    "name": "New Zealand",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 160,
+    "code": "NIC",
+    "name": "Nicaragua",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 161,
+    "code": "NER",
+    "name": "Niger",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 162,
+    "code": "NGA",
+    "name": "Nigeria",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 163,
+    "code": "NIU",
+    "name": "Niue",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2011-06-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 164,
+    "code": "NFK",
+    "name": "Norfolk Island",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 165,
+    "code": "NOR",
+    "name": "Norway",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 166,
+    "code": "OMN",
+    "name": "Oman",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 167,
+    "code": "PAK",
+    "name": "Pakistan",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 168,
+    "code": "PLW",
+    "name": "Palau",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1986-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 169,
+    "code": "PSE",
+    "name": "State of Palestine",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2013-02-06T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 170,
+    "code": "PAN",
+    "name": "Panama",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1993-07-22T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 171,
+    "code": "PNG",
+    "name": "Papua New Guinea",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 172,
+    "code": "PRY",
+    "name": "Paraguay",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 173,
+    "code": "PER",
+    "name": "Peru",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 174,
+    "code": "PHL",
+    "name": "Philippines",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1976-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 175,
+    "code": "PCN",
+    "name": "Pitcairn",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 176,
+    "code": "POL",
+    "name": "Poland",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 177,
+    "code": "PRT",
+    "name": "Portugal",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 178,
+    "code": "PRI",
+    "name": "Puerto Rico",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 179,
+    "code": "QAT",
+    "name": "Qatar",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 180,
+    "code": "REU",
+    "name": "Réunion",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 181,
+    "code": "ROU",
+    "name": "Romania",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2002-02-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 182,
+    "code": "RUS",
+    "name": "Russian Federation",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 183,
+    "code": "RWA",
+    "name": "Rwanda",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 184,
+    "code": "BLM",
+    "name": "Saint Barthélemy",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2007-09-21T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 185,
+    "code": "SHN",
+    "name": "Saint Helena",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 186,
+    "code": "KNA",
+    "name": "Saint Kitts and Nevis",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1985-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 187,
+    "code": "LCA",
+    "name": "Saint Lucia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 188,
+    "code": "MAF",
+    "name": "Saint Martin (French part)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2007-09-21T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 189,
+    "code": "SPM",
+    "name": "Saint Pierre and Miquelon",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 190,
+    "code": "VCT",
+    "name": "Saint Vincent and the Grenadines",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 191,
+    "code": "WSM",
+    "name": "Samoa",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1998-02-05T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 192,
+    "code": "SMR",
+    "name": "San Marino",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 193,
+    "code": "STP",
+    "name": "Sao Tome and Principe",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 194,
+    "code": "SAU",
+    "name": "Saudi Arabia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 195,
+    "code": "SEN",
+    "name": "Senegal",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 196,
+    "code": "SRB",
+    "name": "Serbia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2006-09-26T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 197,
+    "code": "SYC",
+    "name": "Seychelles",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 198,
+    "code": "SLE",
+    "name": "Sierra Leone",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 199,
+    "code": "SGP",
+    "name": "Singapore",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 200,
+    "code": "SXM",
+    "name": "Sint Maarten (Dutch part)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2010-12-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 201,
+    "code": "SVK",
+    "name": "Slovakia",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 202,
+    "code": "SVN",
+    "name": "Slovenia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 203,
+    "code": "SLB",
+    "name": "Solomon Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 204,
+    "code": "SOM",
+    "name": "Somalia",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 205,
+    "code": "ZAF",
+    "name": "South Africa",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 206,
+    "code": "SGS",
+    "name": "South Georgia and the South Sandwich Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1993-07-23T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 207,
+    "code": "ESP",
+    "name": "Spain",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 208,
+    "code": "LKA",
+    "name": "Sri Lanka",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 209,
+    "code": "SSD",
+    "name": "South Sudan",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2011-09-08T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 210,
+    "code": "SDN",
+    "name": "Sudan",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 211,
+    "code": "SUR",
+    "name": "Suriname",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 212,
+    "code": "SJM",
+    "name": "Svalbard and Jan Mayen Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 213,
+    "code": "SWZ",
+    "name": "Eswatini",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2018-06-02T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 214,
+    "code": "SWE",
+    "name": "Sweden",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 215,
+    "code": "CHE",
+    "name": "Switzerland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 216,
+    "code": "SYR",
+    "name": "Syrian Arab Republic",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 217,
+    "code": "TWN",
+    "name": "Taiwan (Province of China)",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 218,
+    "code": "TJK",
+    "name": "Tajikistan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 219,
+    "code": "TZA",
+    "name": "United Republic of Tanzania",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 220,
+    "code": "THA",
+    "name": "Thailand",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 221,
+    "code": "TLS",
+    "name": "Timor-Leste",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "2002-11-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 222,
+    "code": "TGO",
+    "name": "Togo",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 223,
+    "code": "TKL",
+    "name": "Tokelau",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 224,
+    "code": "TON",
+    "name": "Tonga",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 225,
+    "code": "TTO",
+    "name": "Trinidad and Tobago",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 226,
+    "code": "TUN",
+    "name": "Tunisia",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 227,
+    "code": "TUR",
+    "name": "Türkiye",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2022-06-02T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 228,
+    "code": "TKM",
+    "name": "Turkmenistan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 229,
+    "code": "TCA",
+    "name": "Turks and Caicos Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 230,
+    "code": "TUV",
+    "name": "Tuvalu",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1979-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 231,
+    "code": "UGA",
+    "name": "Uganda",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 232,
+    "code": "UKR",
+    "name": "Ukraine",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1992-04-19T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 233,
+    "code": "ARE",
+    "name": "United Arab Emirates",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 234,
+    "code": "GBR",
+    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 235,
+    "code": "USA",
+    "name": "United States of America",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 236,
+    "code": "UMI",
+    "name": "United States Minor Outlying Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1986-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 237,
+    "code": "URY",
+    "name": "Uruguay",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 238,
+    "code": "UZB",
+    "name": "Uzbekistan",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1992-06-15T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 239,
+    "code": "VUT",
+    "name": "Vanuatu",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1980-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 240,
+    "code": "VEN",
+    "name": "Venezuela (Bolivarian Republic of)",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "2009-03-03T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 241,
+    "code": "VNM",
+    "name": "Viet Nam",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1977-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 242,
+    "code": "VGB",
+    "name": "British Virgin Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 243,
+    "code": "WLF",
+    "name": "Wallis and Futuna Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 244,
+    "code": "ESH",
+    "name": "Western Sahara",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1985-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 245,
+    "code": "YEM",
+    "name": "Yemen",
+    "has_hrp": true,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1993-07-12T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 246,
+    "code": "ZMB",
+    "name": "Zambia",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 247,
+    "code": "ZWE",
+    "name": "Zimbabwe",
+    "has_hrp": false,
+    "in_gho": true,
+    "from_cods": true,
+    "reference_period_start": "1980-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 248,
+    "code": "MNP",
+    "name": "Northern Mariana Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1986-01-01T00:00:00",
+    "reference_period_end": null
+  },
+  {
+    "id": 249,
+    "code": "VIR",
+    "name": "United States Virgin Islands",
+    "has_hrp": false,
+    "in_gho": false,
+    "from_cods": true,
+    "reference_period_start": "1974-01-01T00:00:00",
+    "reference_period_end": null
+  }
+]

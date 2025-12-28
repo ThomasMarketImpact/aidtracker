@@ -1,0 +1,278 @@
+[
+  {
+    "iso3": "AFG",
+    "country": "Afghanistan",
+    "year": 2025,
+    "peopleInNeed": 22887726
+  },
+  {
+    "iso3": "BFA",
+    "country": "Burkina Faso",
+    "year": 2025,
+    "peopleInNeed": 5915136
+  },
+  {
+    "iso3": "CMR",
+    "country": "Cameroon",
+    "year": 2025,
+    "peopleInNeed": 3322058
+  },
+  {
+    "iso3": "CAF",
+    "country": "Central African Republic",
+    "year": 2025,
+    "peopleInNeed": 2440338
+  },
+  {
+    "iso3": "TCD",
+    "country": "Chad",
+    "year": 2025,
+    "peopleInNeed": 7049226
+  },
+  {
+    "iso3": "COL",
+    "country": "Colombia",
+    "year": 2025,
+    "peopleInNeed": 9053352
+  },
+  {
+    "iso3": "COD",
+    "country": "Democratic Republic of the Congo",
+    "year": 2025,
+    "peopleInNeed": 21241767
+  },
+  {
+    "iso3": "SLV",
+    "country": "El Salvador",
+    "year": 2025,
+    "peopleInNeed": 818700
+  },
+  {
+    "iso3": "GTM",
+    "country": "Guatemala",
+    "year": 2025,
+    "peopleInNeed": 2163953
+  },
+  {
+    "iso3": "HTI",
+    "country": "Haiti",
+    "year": 2025,
+    "peopleInNeed": 5986456
+  },
+  {
+    "iso3": "HND",
+    "country": "Honduras",
+    "year": 2025,
+    "peopleInNeed": 1640224
+  },
+  {
+    "iso3": "MLI",
+    "country": "Mali",
+    "year": 2025,
+    "peopleInNeed": 6431534
+  },
+  {
+    "iso3": "MOZ",
+    "country": "Mozambique",
+    "year": 2025,
+    "peopleInNeed": 1305029
+  },
+  {
+    "iso3": "MMR",
+    "country": "Myanmar",
+    "year": 2025,
+    "peopleInNeed": 1957173
+  },
+  {
+    "iso3": "NER",
+    "country": "Niger",
+    "year": 2025,
+    "peopleInNeed": 2580329
+  },
+  {
+    "iso3": "NGA",
+    "country": "Nigeria",
+    "year": 2025,
+    "peopleInNeed": 7847048
+  },
+  {
+    "iso3": "SOM",
+    "country": "Somalia",
+    "year": 2025,
+    "peopleInNeed": 5979741
+  },
+  {
+    "iso3": "SSD",
+    "country": "South Sudan",
+    "year": 2025,
+    "peopleInNeed": 9290088
+  },
+  {
+    "iso3": "SDN",
+    "country": "Sudan",
+    "year": 2025,
+    "peopleInNeed": 30440770
+  },
+  {
+    "iso3": "UKR",
+    "country": "Ukraine",
+    "year": 2025,
+    "peopleInNeed": 12708866
+  },
+  {
+    "iso3": "VEN",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "year": 2025,
+    "peopleInNeed": 7943720
+  },
+  {
+    "iso3": "YEM",
+    "country": "Yemen",
+    "year": 2025,
+    "peopleInNeed": 19540217
+  },
+  {
+    "iso3": "AFG",
+    "country": "Afghanistan",
+    "year": 2024,
+    "peopleInNeed": 23666389
+  },
+  {
+    "iso3": "BFA",
+    "country": "Burkina Faso",
+    "year": 2024,
+    "peopleInNeed": 6293939
+  },
+  {
+    "iso3": "CMR",
+    "country": "Cameroon",
+    "year": 2024,
+    "peopleInNeed": 3369526
+  },
+  {
+    "iso3": "CAF",
+    "country": "Central African Republic",
+    "year": 2024,
+    "peopleInNeed": 2801810
+  },
+  {
+    "iso3": "TCD",
+    "country": "Chad",
+    "year": 2024,
+    "peopleInNeed": 6009715
+  },
+  {
+    "iso3": "COL",
+    "country": "Colombia",
+    "year": 2024,
+    "peopleInNeed": 8307129
+  },
+  {
+    "iso3": "COD",
+    "country": "Democratic Republic of the Congo",
+    "year": 2024,
+    "peopleInNeed": 25397896
+  },
+  {
+    "iso3": "SLV",
+    "country": "El Salvador",
+    "year": 2024,
+    "peopleInNeed": 1119198
+  },
+  {
+    "iso3": "ETH",
+    "country": "Ethiopia",
+    "year": 2024,
+    "peopleInNeed": 21360484
+  },
+  {
+    "iso3": "GTM",
+    "country": "Guatemala",
+    "year": 2024,
+    "peopleInNeed": 5300000
+  },
+  {
+    "iso3": "HTI",
+    "country": "Haiti",
+    "year": 2024,
+    "peopleInNeed": 5500000
+  },
+  {
+    "iso3": "HND",
+    "country": "Honduras",
+    "year": 2024,
+    "peopleInNeed": 2800000
+  },
+  {
+    "iso3": "MLI",
+    "country": "Mali",
+    "year": 2024,
+    "peopleInNeed": 7107194
+  },
+  {
+    "iso3": "MOZ",
+    "country": "Mozambique",
+    "year": 2024,
+    "peopleInNeed": 2252973
+  },
+  {
+    "iso3": "MMR",
+    "country": "Myanmar",
+    "year": 2024,
+    "peopleInNeed": 18590021
+  },
+  {
+    "iso3": "NER",
+    "country": "Niger",
+    "year": 2024,
+    "peopleInNeed": 4500000
+  },
+  {
+    "iso3": "NGA",
+    "country": "Nigeria",
+    "year": 2024,
+    "peopleInNeed": 7945364
+  },
+  {
+    "iso3": "SOM",
+    "country": "Somalia",
+    "year": 2024,
+    "peopleInNeed": 6869716
+  },
+  {
+    "iso3": "SSD",
+    "country": "South Sudan",
+    "year": 2024,
+    "peopleInNeed": 8996986
+  },
+  {
+    "iso3": "SDN",
+    "country": "Sudan",
+    "year": 2024,
+    "peopleInNeed": 24786370
+  },
+  {
+    "iso3": "SYR",
+    "country": "Syrian Arab Republic",
+    "year": 2024,
+    "peopleInNeed": 16661471
+  },
+  {
+    "iso3": "UKR",
+    "country": "Ukraine",
+    "year": 2024,
+    "peopleInNeed": 14622301
+  },
+  {
+    "iso3": "VEN",
+    "country": "Venezuela (Bolivarian Republic of)",
+    "year": 2024,
+    "peopleInNeed": 7581480
+  },
+  {
+    "iso3": "YEM",
+    "country": "Yemen",
+    "year": 2024,
+    "peopleInNeed": 18182658
+  }
+]

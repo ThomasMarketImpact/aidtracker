@@ -1,0 +1,2594 @@
+{
+  "status": "ok",
+  "data": [
+    {
+      "id": 11214,
+      "abbreviation": "1001 Ideas",
+      "name": "1001 Ideas Para Mi País",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2020-03-13T10:37:39.947Z",
+            "updatedAt": "2020-03-13T10:37:39.947Z",
+            "organizationId": 11214,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 10992,
+      "abbreviation": "100% DyD",
+      "name": "100% Diversidad y Derechos",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 11,
+          "adminLevel": 0,
+          "name": "Argentina",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2020-01-21T09:18:23.751Z",
+            "updatedAt": "2020-01-21T09:18:23.751Z",
+            "organizationId": 10992,
+            "locationId": 11
+          }
+        }
+      ]
+    },
+    {
+      "id": 12930,
+      "abbreviation": "100E",
+      "name": "100% ESTRÓGENO",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-05T16:38:01.717Z",
+            "updatedAt": "2023-01-05T16:38:01.717Z",
+            "organizationId": 12930,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 418,
+      "abbreviation": "11.11.11 - Koepel van de Vlaamse Noord-Zuidbeweging vzw",
+      "name": "11.11.11 - Koepel van de Vlaamse Noord-Zuidbeweging vzw",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 22,
+          "adminLevel": 0,
+          "name": "Belgium",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2020-12-09T16:50:22.234Z",
+            "updatedAt": "2020-12-09T16:50:22.234Z",
+            "organizationId": 418,
+            "locationId": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": 2356,
+      "abbreviation": "21 CUSO",
+      "name": "21 Century Unification Service Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 96,
+          "adminLevel": 0,
+          "name": "Haiti",
+          "pcode": "HT",
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:22:07.854Z",
+            "updatedAt": "2022-01-21T14:22:07.854Z",
+            "organizationId": 2356,
+            "locationId": 96
+          }
+        }
+      ]
+    },
+    {
+      "id": 11660,
+      "abbreviation": "360HSDI",
+      "name": "360-Degree Health Systems Development Initiative",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 163,
+          "adminLevel": 0,
+          "name": "Nigeria",
+          "pcode": "NG",
+          "organizationLocation": {
+            "createdAt": "2020-12-07T13:52:17.494Z",
+            "updatedAt": "2020-12-07T13:52:17.494Z",
+            "organizationId": 11660,
+            "locationId": 163
+          }
+        }
+      ]
+    },
+    {
+      "id": 5597,
+      "abbreviation": "3Com",
+      "name": "3Com",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:07:42.946Z",
+            "updatedAt": "2022-01-21T14:07:42.946Z",
+            "organizationId": 5597,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 13555,
+      "abbreviation": "3iS",
+      "name": "3iSolutions",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 76,
+          "adminLevel": 0,
+          "name": "France",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2023-11-01T16:50:10.024Z",
+            "updatedAt": "2023-11-01T16:50:10.024Z",
+            "organizationId": 13555,
+            "locationId": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": 12988,
+      "abbreviation": "3JC Tecnologies",
+      "name": "3JC Tecnologies & Services Preject, C.A.",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-22T20:21:34.246Z",
+            "updatedAt": "2023-01-22T20:21:34.246Z",
+            "organizationId": 12988,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 7423,
+      "abbreviation": "48H",
+      "name": "48 Hospital",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:37.008Z",
+            "updatedAt": "2017-01-14T00:56:37.008Z",
+            "organizationId": 7423,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 508,
+      "abbreviation": "Aadamiga USA",
+      "name": "Aadamiga USA",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2019-10-12T09:14:01.938Z",
+            "updatedAt": "2019-10-12T09:14:01.938Z",
+            "organizationId": 508,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 6339,
+      "abbreviation": "AAGAHI",
+      "name": "AAGAHI",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 169,
+          "adminLevel": 0,
+          "name": "Pakistan",
+          "pcode": "PK",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:34.501Z",
+            "updatedAt": "2017-01-14T00:56:34.501Z",
+            "organizationId": 6339,
+            "locationId": 169
+          }
+        }
+      ]
+    },
+    {
+      "id": 9789,
+      "abbreviation": "AFDH",
+      "name": "Aaile Al-furate foundation for relief and development and human rights",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 106,
+          "adminLevel": 0,
+          "name": "Iraq",
+          "pcode": "IQ",
+          "organizationLocation": {
+            "createdAt": "2018-11-15T15:51:25.669Z",
+            "updatedAt": "2018-11-15T15:51:25.669Z",
+            "organizationId": 9789,
+            "locationId": 106
+          }
+        }
+      ]
+    },
+    {
+      "id": 8329,
+      "abbreviation": "AAA",
+      "name": "Aamal Association Awareness",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:39.227Z",
+            "updatedAt": "2017-01-14T00:56:39.227Z",
+            "organizationId": 8329,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 4212,
+      "abbreviation": "Aamin",
+      "name": "Aamin Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2018-03-02T15:14:36.730Z",
+            "updatedAt": "2018-03-02T15:14:36.730Z",
+            "organizationId": 4212,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 5623,
+      "abbreviation": "AAPKI Foundation",
+      "name": "AAPKI Foundation",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 216,
+          "adminLevel": 0,
+          "name": "Sweden",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:33.068Z",
+            "updatedAt": "2017-01-14T00:56:33.068Z",
+            "organizationId": 5623,
+            "locationId": 216
+          }
+        }
+      ]
+    },
+    {
+      "id": 2074,
+      "abbreviation": "AASAA",
+      "name": "AASAA",
+      "categories": [
+        {
+          "id": 120,
+          "name": "Other",
+          "group": "organizationType"
+        }
+      ],
+      "locations": []
+    },
+    {
+      "id": 6616,
+      "abbreviation": "ADF",
+      "name": "Aayo Development Foundation",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:20:54.692Z",
+            "updatedAt": "2022-01-21T14:20:54.692Z",
+            "organizationId": 6616,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 6687,
+      "abbreviation": "ABAAD",
+      "name": "ABAAD-Resource Center for Gender Equality",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 124,
+          "adminLevel": 0,
+          "name": "Lebanon",
+          "pcode": "LB",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:35.368Z",
+            "updatedAt": "2017-01-14T00:56:35.368Z",
+            "organizationId": 6687,
+            "locationId": 124
+          }
+        }
+      ]
+    },
+    {
+      "id": 1559,
+      "abbreviation": "AF",
+      "name": "Abaseen Foundation",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 236,
+          "adminLevel": 0,
+          "name": "United Kingdom",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:26.806Z",
+            "updatedAt": "2017-01-14T00:56:26.806Z",
+            "organizationId": 1559,
+            "locationId": 236
+          }
+        }
+      ]
+    },
+    {
+      "id": 10754,
+      "abbreviation": "ASISD",
+      "name": "Abbasad Initiative for Sustainable Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 163,
+          "adminLevel": 0,
+          "name": "Nigeria",
+          "pcode": "NG",
+          "organizationLocation": {
+            "createdAt": "2019-11-15T09:54:09.838Z",
+            "updatedAt": "2019-11-15T09:54:09.838Z",
+            "organizationId": 10754,
+            "locationId": 163
+          }
+        }
+      ]
+    },
+    {
+      "id": 11335,
+      "abbreviation": "AIHC Inc.",
+      "name": "ABBA's International Healing Center Inc.",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2020-06-15T10:54:56.961Z",
+            "updatedAt": "2020-06-15T10:54:56.961Z",
+            "organizationId": 11335,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 5515,
+      "abbreviation": "ABB Foundation",
+      "name": "ABB Foundation",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-24T13:24:22.504Z",
+            "updatedAt": "2022-01-24T13:24:22.504Z",
+            "organizationId": 5515,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 3310,
+      "abbreviation": "Abbott Laboratories",
+      "name": "Abbott Laboratories",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:36:23.926Z",
+            "updatedAt": "2022-01-21T14:36:23.926Z",
+            "organizationId": 3310,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 2237,
+      "abbreviation": "ABC Children's Aid",
+      "name": "ABC Children's Aid",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 102,
+          "adminLevel": 0,
+          "name": "Iceland",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:33:17.102Z",
+            "updatedAt": "2022-01-21T14:33:17.102Z",
+            "organizationId": 2237,
+            "locationId": 102
+          }
+        }
+      ]
+    },
+    {
+      "id": 14816,
+      "abbreviation": "ABDD-ERESSE",
+      "name": "ABDD-ERESSE",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 162,
+          "adminLevel": 0,
+          "name": "Niger",
+          "pcode": "NER",
+          "organizationLocation": {
+            "createdAt": "2024-12-30T09:50:06.973Z",
+            "updatedAt": "2024-12-30T09:50:06.973Z",
+            "organizationId": 14816,
+            "locationId": 162
+          }
+        }
+      ]
+    },
+    {
+      "id": 7293,
+      "abbreviation": "AMQF",
+      "name": "Abdel Mohsen Qattan Foundation",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 236,
+          "adminLevel": 0,
+          "name": "United Kingdom",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T15:43:22.654Z",
+            "updatedAt": "2022-01-21T15:43:22.654Z",
+            "organizationId": 7293,
+            "locationId": 236
+          }
+        }
+      ]
+    },
+    {
+      "id": 2735,
+      "abbreviation": "Abdul Latif Jameel Group",
+      "name": "Abdul Latif Jameel Group",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 196,
+          "adminLevel": 0,
+          "name": "Saudi Arabia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:28.455Z",
+            "updatedAt": "2017-01-14T00:56:28.455Z",
+            "organizationId": 2735,
+            "locationId": 196
+          }
+        }
+      ]
+    },
+    {
+      "id": 12566,
+      "abbreviation": "Abibakr As-Sidiq",
+      "name": "Abibakr As-Sidiq Philanthropic Home",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 163,
+          "adminLevel": 0,
+          "name": "Nigeria",
+          "pcode": "NG",
+          "organizationLocation": {
+            "createdAt": "2022-05-12T12:36:18.422Z",
+            "updatedAt": "2022-05-12T12:36:18.422Z",
+            "organizationId": 12566,
+            "locationId": 163
+          }
+        }
+      ]
+    },
+    {
+      "id": 10796,
+      "abbreviation": "ABIFAL",
+      "name": "Abi Fall Livelihood",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 39,
+          "adminLevel": 0,
+          "name": "Cameroon",
+          "pcode": "CM",
+          "organizationLocation": {
+            "createdAt": "2019-11-26T17:38:05.348Z",
+            "updatedAt": "2019-11-26T17:38:05.348Z",
+            "organizationId": 10796,
+            "locationId": 39
+          }
+        }
+      ]
+    },
+    {
+      "id": 7948,
+      "abbreviation": "Ability",
+      "name": "Ability for Human Investment",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:38.248Z",
+            "updatedAt": "2017-01-14T00:56:38.248Z",
+            "organizationId": 7948,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 3640,
+      "abbreviation": "AIC",
+      "name": "ABKHAZINTERCONT",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 82,
+          "adminLevel": 0,
+          "name": "Georgia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T15:44:33.678Z",
+            "updatedAt": "2022-01-21T15:44:33.678Z",
+            "organizationId": 3640,
+            "locationId": 82
+          }
+        }
+      ]
+    },
+    {
+      "id": 7619,
+      "abbreviation": "ASA",
+      "name": "Abnaa Sa'ada Association",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:37.415Z",
+            "updatedAt": "2017-01-14T00:56:37.415Z",
+            "organizationId": 7619,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 831,
+      "abbreviation": "AMF",
+      "name": "Abna-Mikhlaf Foundation",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:25.571Z",
+            "updatedAt": "2017-01-14T00:56:25.571Z",
+            "organizationId": 831,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 4376,
+      "abbreviation": "AAU",
+      "name": "Abo Akademi University",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 75,
+          "adminLevel": 0,
+          "name": "Finland",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2019-10-11T09:59:14.535Z",
+            "updatedAt": "2019-10-11T09:59:14.535Z",
+            "organizationId": 4376,
+            "locationId": 75
+          }
+        }
+      ]
+    },
+    {
+      "id": 7934,
+      "abbreviation": "AMASCA",
+      "name": "Abo Mousa Alashary Social Charitable Association",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:38.213Z",
+            "updatedAt": "2017-01-14T00:56:38.213Z",
+            "organizationId": 7934,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 4269,
+      "abbreviation": "Abraham's Oasis",
+      "name": "Abraham's Oasis",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 71,
+          "adminLevel": 0,
+          "name": "Ethiopia",
+          "pcode": "ET",
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:38:11.794Z",
+            "updatedAt": "2022-01-21T14:38:11.794Z",
+            "organizationId": 4269,
+            "locationId": 71
+          }
+        }
+      ]
+    },
+    {
+      "id": 8961,
+      "abbreviation": "ABO",
+      "name": "Abrar Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 229,
+          "adminLevel": 0,
+          "name": "Türkiye",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-10-22T05:15:31.982Z",
+            "updatedAt": "2017-10-22T05:15:31.982Z",
+            "organizationId": 8961,
+            "locationId": 229
+          }
+        },
+        {
+          "id": 218,
+          "adminLevel": 0,
+          "name": "Syrian Arab Republic",
+          "pcode": "SY",
+          "organizationLocation": {
+            "createdAt": "2019-08-28T08:08:18.324Z",
+            "updatedAt": "2019-08-28T08:08:18.324Z",
+            "organizationId": 8961,
+            "locationId": 218
+          }
+        }
+      ]
+    },
+    {
+      "id": 1092,
+      "abbreviation": "ABRAR",
+      "name": "ABRAR Organization for Development and Care of People with Disablilities",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 212,
+          "adminLevel": 0,
+          "name": "Sudan",
+          "pcode": "SD",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:26.122Z",
+            "updatedAt": "2017-01-14T00:56:26.122Z",
+            "organizationId": 1092,
+            "locationId": 212
+          }
+        }
+      ]
+    },
+    {
+      "id": 12993,
+      "abbreviation": "AMEN-KENYA",
+      "name": "Abrassa Mentorship and Empowerment Network",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 116,
+          "adminLevel": 0,
+          "name": "Kenya",
+          "pcode": "KE",
+          "organizationLocation": {
+            "createdAt": "2023-01-25T09:43:55.921Z",
+            "updatedAt": "2023-01-25T09:43:55.921Z",
+            "organizationId": 12993,
+            "locationId": 116
+          }
+        }
+      ]
+    },
+    {
+      "id": 3130,
+      "abbreviation": "ABSDWC",
+      "name": "Abs Development for Women and Children",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:29.247Z",
+            "updatedAt": "2017-01-14T00:56:29.247Z",
+            "organizationId": 3130,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 2817,
+      "abbreviation": "Abt Associates",
+      "name": "Abt Associates",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 236,
+          "adminLevel": 0,
+          "name": "United Kingdom",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:31:21.401Z",
+            "updatedAt": "2022-01-21T14:31:21.401Z",
+            "organizationId": 2817,
+            "locationId": 236
+          }
+        }
+      ]
+    },
+    {
+      "id": 15558,
+      "abbreviation": "ADFD",
+      "name": "Abu Dhabi Fund for Development",
+      "categories": [
+        {
+          "id": 114,
+          "name": "Governments",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 235,
+          "adminLevel": 0,
+          "name": "United Arab Emirates",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2025-08-12T15:48:52.729Z",
+            "updatedAt": "2025-08-12T15:48:52.729Z",
+            "organizationId": 15558,
+            "locationId": 235
+          }
+        }
+      ]
+    },
+    {
+      "id": 2613,
+      "abbreviation": "TAQA",
+      "name": "Abu Dhabi National Energy Company",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 235,
+          "adminLevel": 0,
+          "name": "United Arab Emirates",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:28.308Z",
+            "updatedAt": "2017-01-14T00:56:28.308Z",
+            "organizationId": 2613,
+            "locationId": 235
+          }
+        }
+      ]
+    },
+    {
+      "id": 5224,
+      "abbreviation": "ADTA",
+      "name": "Abu Dhabi Tourism Authority",
+      "categories": [
+        {
+          "id": 114,
+          "name": "Governments",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 235,
+          "adminLevel": 0,
+          "name": "United Arab Emirates",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:32.614Z",
+            "updatedAt": "2017-01-14T00:56:32.614Z",
+            "organizationId": 5224,
+            "locationId": 235
+          }
+        }
+      ]
+    },
+    {
+      "id": 10702,
+      "abbreviation": "AF",
+      "name": "Abukloi Foundation South Sudan",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 211,
+          "adminLevel": 0,
+          "name": "South Sudan",
+          "pcode": "SS",
+          "organizationLocation": {
+            "createdAt": "2019-10-30T09:22:59.703Z",
+            "updatedAt": "2019-10-30T09:22:59.703Z",
+            "organizationId": 10702,
+            "locationId": 211
+          }
+        }
+      ]
+    },
+    {
+      "id": 2343,
+      "abbreviation": "ALC",
+      "name": "Abundant Life Church",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2019-10-11T13:44:04.675Z",
+            "updatedAt": "2019-10-11T13:44:04.675Z",
+            "organizationId": 2343,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 7762,
+      "abbreviation": "ARA",
+      "name": "Abwab Al-Rahma Relief and Development Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 106,
+          "adminLevel": 0,
+          "name": "Iraq",
+          "pcode": "IQ",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:37.755Z",
+            "updatedAt": "2017-01-14T00:56:37.755Z",
+            "organizationId": 7762,
+            "locationId": 106
+          }
+        }
+      ]
+    },
+    {
+      "id": 7675,
+      "abbreviation": "AYF",
+      "name": "Abyan Youth Foundation",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:37.559Z",
+            "updatedAt": "2017-01-14T00:56:37.559Z",
+            "organizationId": 7675,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 122,
+      "abbreviation": "ACAD",
+      "name": "Abyei Community Action for Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 116,
+          "adminLevel": 0,
+          "name": "Kenya",
+          "pcode": "KE",
+          "organizationLocation": {
+            "createdAt": "2020-11-24T16:30:30.343Z",
+            "updatedAt": "2020-11-24T16:30:30.343Z",
+            "organizationId": 122,
+            "locationId": 116
+          }
+        }
+      ]
+    },
+    {
+      "id": 8966,
+      "abbreviation": "ADA",
+      "name": "Abyei Development Association",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 211,
+          "adminLevel": 0,
+          "name": "South Sudan",
+          "pcode": "SS",
+          "organizationLocation": {
+            "createdAt": "2017-10-22T11:45:26.578Z",
+            "updatedAt": "2017-10-22T11:45:26.578Z",
+            "organizationId": 8966,
+            "locationId": 211
+          }
+        }
+      ]
+    },
+    {
+      "id": 8726,
+      "abbreviation": "ADCO",
+      "name": "Abyei Development Charity Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 212,
+          "adminLevel": 0,
+          "name": "Sudan",
+          "pcode": "SD",
+          "organizationLocation": {
+            "createdAt": "2017-02-22T19:15:29.635Z",
+            "updatedAt": "2017-02-22T19:15:29.635Z",
+            "organizationId": 8726,
+            "locationId": 212
+          }
+        }
+      ]
+    },
+    {
+      "id": 13701,
+      "abbreviation": "ACADI",
+      "name": "Academic and Career Development Initiative Cameroon",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 39,
+          "adminLevel": 0,
+          "name": "Cameroon",
+          "pcode": "CM",
+          "organizationLocation": {
+            "createdAt": "2023-12-04T04:01:12.614Z",
+            "updatedAt": "2023-12-04T04:01:12.614Z",
+            "organizationId": 13701,
+            "locationId": 39
+          }
+        }
+      ]
+    },
+    {
+      "id": 8361,
+      "abbreviation": "ASSDHR",
+      "name": "Academic for Strategic Studies and Development and Human Rights",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 248,
+          "adminLevel": 0,
+          "name": "Yemen",
+          "pcode": "YEM",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:39.300Z",
+            "updatedAt": "2017-01-14T00:56:39.300Z",
+            "organizationId": 8361,
+            "locationId": 248
+          }
+        }
+      ]
+    },
+    {
+      "id": 12194,
+      "abbreviation": "ACF-Bafoussam",
+      "name": "Academie Camerounaise des Formations",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 39,
+          "adminLevel": 0,
+          "name": "Cameroon",
+          "pcode": "CM",
+          "organizationLocation": {
+            "createdAt": "2022-01-10T09:40:38.852Z",
+            "updatedAt": "2022-01-10T09:40:38.852Z",
+            "organizationId": 12194,
+            "locationId": 39
+          }
+        }
+      ]
+    },
+    {
+      "id": 3278,
+      "abbreviation": "ACTH",
+      "name": "Academy Charity Teaching Hospital",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 212,
+          "adminLevel": 0,
+          "name": "Sudan",
+          "pcode": "SD",
+          "organizationLocation": {
+            "createdAt": "2022-01-21T14:28:28.284Z",
+            "updatedAt": "2022-01-21T14:28:28.284Z",
+            "organizationId": 3278,
+            "locationId": 212
+          }
+        }
+      ]
+    },
+    {
+      "id": 4904,
+      "abbreviation": "AED",
+      "name": "Academy for Educational Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 236,
+          "adminLevel": 0,
+          "name": "United Kingdom",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T15:48:59.571Z",
+            "updatedAt": "2022-01-21T15:48:59.571Z",
+            "organizationId": 4904,
+            "locationId": 236
+          }
+        }
+      ]
+    },
+    {
+      "id": 3421,
+      "abbreviation": "ACTS International",
+      "name": "A Call to Serve International",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 82,
+          "adminLevel": 0,
+          "name": "Georgia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2021-08-31T17:19:28.476Z",
+            "updatedAt": "2021-08-31T17:19:28.476Z",
+            "organizationId": 3421,
+            "locationId": 82
+          }
+        }
+      ]
+    },
+    {
+      "id": 13822,
+      "abbreviation": "Irmandade Sem Fronteiras",
+      "name": "Açao Social Irmandade Sem Fronteiras",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 32,
+          "adminLevel": 0,
+          "name": "Brazil",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2024-02-07T14:29:25.836Z",
+            "updatedAt": "2024-02-07T14:29:25.836Z",
+            "organizationId": 13822,
+            "locationId": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": 12536,
+      "abbreviation": "A CASA – Museu do Objeto Brasileiro",
+      "name": "A CASA – Museu do Objeto Brasileiro",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 32,
+          "adminLevel": 0,
+          "name": "Brazil",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-04-23T22:35:57.684Z",
+            "updatedAt": "2022-04-23T22:35:57.684Z",
+            "organizationId": 12536,
+            "locationId": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": 12946,
+      "abbreviation": "AL",
+      "name": "A.C Ayudame a Lograrlo",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-09T17:39:06.803Z",
+            "updatedAt": "2023-01-09T17:39:06.803Z",
+            "organizationId": 12946,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 2977,
+      "abbreviation": "ACBAR",
+      "name": "ACBAR - Agency Coordinating Body for Afghan Relief",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 1,
+          "adminLevel": 0,
+          "name": "Afghanistan",
+          "pcode": "AF",
+          "organizationLocation": {
+            "createdAt": "2019-10-08T13:08:27.377Z",
+            "updatedAt": "2019-10-08T13:08:27.377Z",
+            "organizationId": 2977,
+            "locationId": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 12950,
+      "abbreviation": "BATIDO",
+      "name": "A.C Batido Solidario",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-09T18:53:04.474Z",
+            "updatedAt": "2023-01-09T18:53:04.474Z",
+            "organizationId": 12950,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 2755,
+      "abbreviation": "ASWA",
+      "name": "Accelerated Sanitation and Water for All (ASWA)",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 169,
+          "adminLevel": 0,
+          "name": "Pakistan",
+          "pcode": "PK",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:28.516Z",
+            "updatedAt": "2017-01-14T00:56:28.516Z",
+            "organizationId": 2755,
+            "locationId": 169
+          }
+        }
+      ]
+    },
+    {
+      "id": 767,
+      "abbreviation": "Accenture",
+      "name": "Accenture",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 107,
+          "adminLevel": 0,
+          "name": "Ireland",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2021-08-07T21:21:35.128Z",
+            "updatedAt": "2021-08-07T21:21:35.128Z",
+            "organizationId": 767,
+            "locationId": 107
+          }
+        }
+      ]
+    },
+    {
+      "id": 12914,
+      "abbreviation": "accept-int.org",
+      "name": "Accept International",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 112,
+          "adminLevel": 0,
+          "name": "Japan",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-12-19T10:01:51.270Z",
+            "updatedAt": "2022-12-19T10:01:51.270Z",
+            "organizationId": 12914,
+            "locationId": 112
+          }
+        }
+      ]
+    },
+    {
+      "id": 3753,
+      "abbreviation": "Access Aid ",
+      "name": "Access Aid and Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:30.213Z",
+            "updatedAt": "2017-01-14T00:56:30.213Z",
+            "organizationId": 3753,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 9241,
+      "abbreviation": "AAF",
+      "name": "Access Aid Foundation",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 106,
+          "adminLevel": 0,
+          "name": "Iraq",
+          "pcode": "IQ",
+          "organizationLocation": {
+            "createdAt": "2017-11-24T10:45:23.541Z",
+            "updatedAt": "2017-11-24T10:45:23.541Z",
+            "organizationId": 9241,
+            "locationId": 106
+          }
+        }
+      ]
+    },
+    {
+      "id": 769,
+      "abbreviation": "AAI",
+      "name": "Access Aid International",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 14,
+          "adminLevel": 0,
+          "name": "Australia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:25.457Z",
+            "updatedAt": "2017-01-14T00:56:25.457Z",
+            "organizationId": 769,
+            "locationId": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": 1563,
+      "abbreviation": "ADRO",
+      "name": "Access Development and Relief Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:26.813Z",
+            "updatedAt": "2017-01-14T00:56:26.813Z",
+            "organizationId": 1563,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 3275,
+      "abbreviation": "AEI",
+      "name": "Access Education International",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 116,
+          "adminLevel": 0,
+          "name": "Kenya",
+          "pcode": "KE",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:29.416Z",
+            "updatedAt": "2017-01-14T00:56:29.416Z",
+            "organizationId": 3275,
+            "locationId": 116
+          }
+        }
+      ]
+    },
+    {
+      "id": 14653,
+      "abbreviation": "AFH",
+      "name": "Access for Humanity",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 211,
+          "adminLevel": 0,
+          "name": "South Sudan",
+          "pcode": "SS",
+          "organizationLocation": {
+            "createdAt": "2024-11-28T08:37:10.001Z",
+            "updatedAt": "2024-11-28T08:37:10.001Z",
+            "organizationId": 14653,
+            "locationId": 211
+          }
+        }
+      ]
+    },
+    {
+      "id": 12655,
+      "abbreviation": "AOAD",
+      "name": "Accessibility Organization for Afghan Disabled",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 1,
+          "adminLevel": 0,
+          "name": "Afghanistan",
+          "pcode": "AF",
+          "organizationLocation": {
+            "createdAt": "2022-09-20T12:14:11.686Z",
+            "updatedAt": "2022-09-20T12:14:11.686Z",
+            "organizationId": 12655,
+            "locationId": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": 7998,
+      "abbreviation": "Aid-Africa",
+      "name": "Access Initiative for African Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:38.398Z",
+            "updatedAt": "2017-01-14T00:56:38.398Z",
+            "organizationId": 7998,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 13756,
+      "abbreviation": "Access Now",
+      "name": "Access Now",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2024-01-03T09:38:59.787Z",
+            "updatedAt": "2024-01-03T09:38:59.787Z",
+            "organizationId": 13756,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 626,
+      "abbreviation": "ARD",
+      "name": "Access Relief and Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:25.084Z",
+            "updatedAt": "2017-01-14T00:56:25.084Z",
+            "organizationId": 626,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 12393,
+      "abbreviation": "Access to Health Fund",
+      "name": "Access to Health Fund",
+      "categories": [
+        {
+          "id": 121,
+          "name": "Pooled Funds",
+          "group": "organizationType"
+        }
+      ],
+      "locations": []
+    },
+    {
+      "id": 5619,
+      "abbreviation": "APET",
+      "name": "Access to Prevention, Education, and Treatment",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:33.057Z",
+            "updatedAt": "2017-01-14T00:56:33.057Z",
+            "organizationId": 5619,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 722,
+      "abbreviation": "AQEP",
+      "name": "Access to Quality Education Program",
+      "categories": [
+        {
+          "id": 120,
+          "name": "Other",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 14,
+          "adminLevel": 0,
+          "name": "Australia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-24T22:20:35.114Z",
+            "updatedAt": "2022-01-24T22:20:35.114Z",
+            "organizationId": 722,
+            "locationId": 14
+          }
+        }
+      ]
+    },
+    {
+      "id": 294,
+      "abbreviation": "ASD",
+      "name": "Access to Social Development",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 206,
+          "adminLevel": 0,
+          "name": "Somalia",
+          "pcode": "SO",
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:24.523Z",
+            "updatedAt": "2017-01-14T00:56:24.523Z",
+            "organizationId": 294,
+            "locationId": 206
+          }
+        }
+      ]
+    },
+    {
+      "id": 10235,
+      "abbreviation": "ACCSI",
+      "name": "Acción Ciudadana Contra el SIDA",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2019-05-31T13:28:23.041Z",
+            "updatedAt": "2019-05-31T13:28:23.041Z",
+            "organizationId": 10235,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 8516,
+      "abbreviation": "ACF - Spain",
+      "name": "Acción Contra el Hambre - Spain",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 209,
+          "adminLevel": 0,
+          "name": "Spain",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:57:54.741Z",
+            "updatedAt": "2017-01-14T00:57:54.741Z",
+            "organizationId": 8516,
+            "locationId": 209
+          }
+        }
+      ]
+    },
+    {
+      "id": 11559,
+      "abbreviation": "AHPV",
+      "name": "Acción Humanitaria por Venezuela",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2020-11-09T14:58:30.550Z",
+            "updatedAt": "2020-11-09T14:58:30.550Z",
+            "organizationId": 11559,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 11362,
+      "abbreviation": "ACSOL",
+      "name": "Acción Solidaria",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2020-07-02T13:50:47.340Z",
+            "updatedAt": "2020-07-02T13:50:47.340Z",
+            "organizationId": 11362,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 12496,
+      "abbreviation": "Acción y Desarrollo",
+      "name": "Acción y Desarrollo",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 175,
+          "adminLevel": 0,
+          "name": "Peru",
+          "pcode": "PE",
+          "organizationLocation": {
+            "createdAt": "2022-04-22T23:08:17.812Z",
+            "updatedAt": "2022-04-22T23:08:17.812Z",
+            "organizationId": 12496,
+            "locationId": 175
+          }
+        }
+      ]
+    },
+    {
+      "id": 12413,
+      "abbreviation": "ACCDJ",
+      "name": "A.C. CONSORCIO DESARROLLO Y JUSTICIA",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2022-02-11T19:11:19.387Z",
+            "updatedAt": "2022-02-11T19:11:19.387Z",
+            "organizationId": 12413,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 14016,
+      "abbreviation": "ACCOR",
+      "name": "Accor Heartist Solidarity",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 76,
+          "adminLevel": 0,
+          "name": "France",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2024-04-06T12:15:57.976Z",
+            "updatedAt": "2024-04-06T12:15:57.976Z",
+            "organizationId": 14016,
+            "locationId": 76
+          }
+        }
+      ]
+    },
+    {
+      "id": 12369,
+      "abbreviation": "AC CVV",
+      "name": "A.C. Cosechando Valores Para la Vida",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2022-01-26T23:05:21.743Z",
+            "updatedAt": "2022-01-26T23:05:21.743Z",
+            "organizationId": 12369,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 12947,
+      "abbreviation": "ADHAM",
+      "name": "A.C Derechos Humanos ADHAM",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-09T17:52:03.957Z",
+            "updatedAt": "2023-01-09T17:52:03.957Z",
+            "organizationId": 12947,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 1723,
+      "abbreviation": "ACE Foundation",
+      "name": "Ace Hardware Foundation",
+      "categories": [
+        {
+          "id": 119,
+          "name": "Private Organizations",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 237,
+          "adminLevel": 0,
+          "name": "United States",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-24T13:26:17.541Z",
+            "updatedAt": "2022-01-24T13:26:17.541Z",
+            "organizationId": 1723,
+            "locationId": 237
+          }
+        }
+      ]
+    },
+    {
+      "id": 2831,
+      "abbreviation": "Aceh’s People Forum",
+      "name": "Aceh’s People Forum",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 104,
+          "adminLevel": 0,
+          "name": "Indonesia",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2022-01-21T16:18:10.133Z",
+            "updatedAt": "2022-01-21T16:18:10.133Z",
+            "organizationId": 2831,
+            "locationId": 104
+          }
+        }
+      ]
+    },
+    {
+      "id": 169,
+      "abbreviation": "APOC",
+      "name": "Achieving the Potential in Crops",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 250,
+          "adminLevel": 0,
+          "name": "Zimbabwe",
+          "pcode": "ZW",
+          "organizationLocation": {
+            "createdAt": "2021-08-07T14:54:24.086Z",
+            "updatedAt": "2021-08-07T14:54:24.086Z",
+            "organizationId": 169,
+            "locationId": 250
+          }
+        }
+      ]
+    },
+    {
+      "id": 2442,
+      "abbreviation": "ACH-UK/INTERMON",
+      "name": "ACH-UK/INTERMON",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 236,
+          "adminLevel": 0,
+          "name": "United Kingdom",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2019-10-12T12:24:00.999Z",
+            "updatedAt": "2019-10-12T12:24:00.999Z",
+            "organizationId": 2442,
+            "locationId": 236
+          }
+        }
+      ]
+    },
+    {
+      "id": 11712,
+      "abbreviation": "ASF",
+      "name": "Acid survivors Foundation",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 169,
+          "adminLevel": 0,
+          "name": "Pakistan",
+          "pcode": "PK",
+          "organizationLocation": {
+            "createdAt": "2020-12-11T10:03:36.028Z",
+            "updatedAt": "2020-12-11T10:03:36.028Z",
+            "organizationId": 11712,
+            "locationId": 169
+          }
+        }
+      ]
+    },
+    {
+      "id": 12949,
+      "abbreviation": "MMSP",
+      "name": "A.C Misioneros Manos de Servicio Pampatar ",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-09T18:24:36.624Z",
+            "updatedAt": "2023-01-09T18:24:36.624Z",
+            "organizationId": 12949,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 15093,
+      "abbreviation": "MPRDH",
+      "name": "A.C. Movimiento de Promoción Al Respecto de Los Derechos Humanos",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 175,
+          "adminLevel": 0,
+          "name": "Peru",
+          "pcode": "PE",
+          "organizationLocation": {
+            "createdAt": "2025-02-18T08:53:31.087Z",
+            "updatedAt": "2025-02-18T08:53:31.087Z",
+            "organizationId": 15093,
+            "locationId": 175
+          }
+        }
+      ]
+    },
+    {
+      "id": 2838,
+      "abbreviation": "ACM-YMCA",
+      "name": "ACM-YMCA",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 32,
+          "adminLevel": 0,
+          "name": "Brazil",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2021-07-22T08:18:52.382Z",
+            "updatedAt": "2021-07-22T08:18:52.382Z",
+            "organizationId": 2838,
+            "locationId": 32
+          }
+        }
+      ]
+    },
+    {
+      "id": 12948,
+      "abbreviation": "ASOMAYOR",
+      "name": "A.C Para el Adulto Mayor",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 242,
+          "adminLevel": 0,
+          "name": "Venezuela, Bolivarian Republic of",
+          "pcode": "VE",
+          "organizationLocation": {
+            "createdAt": "2023-01-09T18:01:33.911Z",
+            "updatedAt": "2023-01-09T18:01:33.911Z",
+            "organizationId": 12948,
+            "locationId": 242
+          }
+        }
+      ]
+    },
+    {
+      "id": 1045,
+      "abbreviation": "ACRA",
+      "name": "ACRA - Cooperazione Rurale in Africa e America Latina (Fondazione ACRA)",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 110,
+          "adminLevel": 0,
+          "name": "Italy",
+          "pcode": null,
+          "organizationLocation": {
+            "createdAt": "2017-01-14T00:56:26.000Z",
+            "updatedAt": "2017-01-14T00:56:26.000Z",
+            "organizationId": 1045,
+            "locationId": 110
+          }
+        }
+      ]
+    },
+    {
+      "id": 11872,
+      "abbreviation": "AADO",
+      "name": "Across African Development Organization",
+      "categories": [
+        {
+          "id": 118,
+          "name": "NGOs",
+          "group": "organizationType"
+        }
+      ],
+      "locations": [
+        {
+          "id": 211,
+          "adminLevel": 0,
+          "name": "South Sudan",
+          "pcode": "SS",
+          "organizationLocation": {
+            "createdAt": "2021-02-12T21:18:29.919Z",
+            "updatedAt": "2021-02-12T21:18:29.919Z",
+            "organizationId": 11872,
+            "locationId": 211
+          }
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "language": "en"
+  }
+}

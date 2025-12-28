@@ -1,0 +1,185 @@
+[
+  {
+    "name": "FTS Flows (2024)",
+    "url": "https://api.hpc.tools/v1/public/fts/flow?year=2024",
+    "version": "v1",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 1198
+  },
+  {
+    "name": "FTS Flows with groupby=plan",
+    "url": "https://api.hpc.tools/v1/public/fts/flow?year=2024&groupby=plan",
+    "version": "v1",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 11533
+  },
+  {
+    "name": "FTS Flows by country (Syria)",
+    "url": "https://api.hpc.tools/v1/public/fts/flow?year=2024&locationISO3=SYR",
+    "version": "v1",
+    "status": 400,
+    "success": false,
+    "expectedSuccess": true,
+    "responseTime": 199
+  },
+  {
+    "name": "FTS Organizations",
+    "url": "https://api.hpc.tools/v1/public/organization",
+    "version": "v1",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 4173,
+    "recordCount": 14319,
+    "sampleKeys": [
+      "id",
+      "abbreviation",
+      "name",
+      "categories",
+      "locations"
+    ]
+  },
+  {
+    "name": "FTS Plans by Year (2024)",
+    "url": "https://api.hpc.tools/v1/public/plan/year/2024",
+    "version": "v1",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 311,
+    "recordCount": 50,
+    "sampleKeys": [
+      "id",
+      "revisionState",
+      "isReleased",
+      "releasedDate",
+      "createdAt",
+      "updatedAt",
+      "planVersion",
+      "categories",
+      "emergencies",
+      "locations",
+      "years",
+      "origRequirements",
+      "revisedRequirements"
+    ]
+  },
+  {
+    "name": "FTS Global Clusters",
+    "url": "https://api.hpc.tools/v1/public/global-cluster",
+    "version": "v1",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 147,
+    "recordCount": 22,
+    "sampleKeys": [
+      "id",
+      "name",
+      "code",
+      "type",
+      "parentId"
+    ]
+  },
+  {
+    "name": "FTS Emergency (EXPECTED TO FAIL)",
+    "url": "https://api.hpc.tools/v1/public/emergency",
+    "version": "v1",
+    "status": 404,
+    "success": false,
+    "expectedSuccess": false,
+    "responseTime": 147
+  },
+  {
+    "name": "FTS v2 Locations",
+    "url": "https://api.hpc.tools/v2/public/location",
+    "version": "v2",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 166,
+    "recordCount": 258,
+    "sampleKeys": [
+      "id",
+      "iso3",
+      "name",
+      "adminLevel",
+      "pcode",
+      "isRegion"
+    ]
+  },
+  {
+    "name": "FTS v2 Plans (all)",
+    "url": "https://api.hpc.tools/v2/public/plan",
+    "version": "v2",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 3628,
+    "recordCount": 910,
+    "sampleKeys": [
+      "id",
+      "revisionState",
+      "isReleased",
+      "releasedDate",
+      "createdAt",
+      "updatedAt",
+      "planVersion",
+      "categories",
+      "emergencies",
+      "locations",
+      "years",
+      "origRequirements",
+      "revisedRequirements"
+    ]
+  },
+  {
+    "name": "FTS v2 Plan Details (Syria 2024 - ID 1124)",
+    "url": "https://api.hpc.tools/v2/public/plan/1124?content=entities",
+    "version": "v2",
+    "status": 200,
+    "success": true,
+    "expectedSuccess": true,
+    "responseTime": 836
+  },
+  {
+    "name": "FTS v2 Flows (EXPECTED TO FAIL)",
+    "url": "https://api.hpc.tools/v2/public/fts/flow?year=2024",
+    "version": "v2",
+    "status": 404,
+    "success": false,
+    "expectedSuccess": false,
+    "responseTime": 148
+  },
+  {
+    "name": "HAPI Humanitarian Needs",
+    "url": "https://hapi.humdata.org/api/v1/affected-people/humanitarian-needs?output_format=json&limit=10&app_identifier=test",
+    "version": "hapi",
+    "status": 403,
+    "success": false,
+    "expectedSuccess": true,
+    "responseTime": 723
+  },
+  {
+    "name": "HAPI Funding",
+    "url": "https://hapi.humdata.org/api/v1/coordination-context/funding?output_format=json&limit=10&app_identifier=test",
+    "version": "hapi",
+    "status": 403,
+    "success": false,
+    "expectedSuccess": true,
+    "responseTime": 153
+  },
+  {
+    "name": "HAPI Population",
+    "url": "https://hapi.humdata.org/api/v1/population-social/population?output_format=json&limit=10&app_identifier=test",
+    "version": "hapi",
+    "status": 403,
+    "success": false,
+    "expectedSuccess": true,
+    "responseTime": 151
+  }
+]

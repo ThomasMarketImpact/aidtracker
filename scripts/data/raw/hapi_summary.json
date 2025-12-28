@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-12-24T19:29:09.363Z",
+  "apiVersion": "v2",
+  "appIdentifier": "ZnRzLW5lZWRzLWRhc2hib2FyZDpmdHMtcHJvamVjdEBleGFtcGxlLmNvbQ==",
+  "statistics": {
+    "totalLocations": 249,
+    "ghoCountries": 72,
+    "hrpCountries": 24,
+    "needsRecords": 9018,
+    "countriesWithNeeds": 24,
+    "sectors": [
+      "CCM",
+      "Cash",
+      "EDU",
+      "ERY",
+      "FSC",
+      "HEA",
+      "Intersectoral",
+      "LOG",
+      "Multi",
+      "NUT",
+      "PRO",
+      "PRO-CPN",
+      "PRO-GBV",
+      "PRO-HLP",
+      "PRO-MIN",
+      "SHL",
+      "WSH"
+    ],
+    "years": [
+      "2024",
+      "2025"
+    ],
+    "intersectoralPinByYear": {
+      "2024": 250022620,
+      "2025": 188543451
+    }
+  },
+  "dataFiles": [
+    "hapi_locations.json",
+    "hapi_gho_countries.json",
+    "hapi_humanitarian_needs.json",
+    "hapi_pin_by_country_year.json"
+  ]
+}

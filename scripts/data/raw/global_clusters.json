@@ -1,0 +1,159 @@
+{
+  "data": [
+    {
+      "id": 26512,
+      "name": "Agriculture",
+      "code": "AGR",
+      "type": "custom",
+      "parentId": 6
+    },
+    {
+      "id": 1,
+      "name": "Camp Coordination / Management",
+      "code": "CCM",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 26480,
+      "name": "Coordination and support services",
+      "code": "CSS",
+      "type": "custom",
+      "parentId": null
+    },
+    {
+      "id": 26513,
+      "name": "COVID-19",
+      "code": "COV19",
+      "type": "custom",
+      "parentId": null
+    },
+    {
+      "id": 2,
+      "name": "Early Recovery",
+      "code": "ERY",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 3,
+      "name": "Education",
+      "code": "EDU",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 4,
+      "name": "Emergency Shelter and NFI",
+      "code": "SHL",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 5,
+      "name": "Emergency Telecommunications",
+      "code": "TEL",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 6,
+      "name": "Food Security",
+      "code": "FSC",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 7,
+      "name": "Health",
+      "code": "HEA",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 8,
+      "name": "Logistics",
+      "code": "LOG",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 16,
+      "name": "Multipurpose Cash",
+      "code": "MPC",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 26479,
+      "name": "Multi-sector",
+      "code": "MS",
+      "type": "custom",
+      "parentId": null
+    },
+    {
+      "id": 9,
+      "name": "Nutrition",
+      "code": "NUT",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 26481,
+      "name": "Other",
+      "code": "OTH",
+      "type": "custom",
+      "parentId": null
+    },
+    {
+      "id": 10,
+      "name": "Protection",
+      "code": "PRO",
+      "type": "global",
+      "parentId": null
+    },
+    {
+      "id": 12,
+      "name": "Protection - Child Protection",
+      "code": "PRO-CPN",
+      "type": "aor",
+      "parentId": null
+    },
+    {
+      "id": 13,
+      "name": "Protection - Gender-Based Violence",
+      "code": "PRO-GBV",
+      "type": "aor",
+      "parentId": null
+    },
+    {
+      "id": 14,
+      "name": "Protection - Housing, Land and Property",
+      "code": "PRO-HLP",
+      "type": "aor",
+      "parentId": null
+    },
+    {
+      "id": 26546,
+      "name": "Protection - Human Trafficking & Smuggling",
+      "code": "PRO-HTS",
+      "type": "aor",
+      "parentId": null
+    },
+    {
+      "id": 15,
+      "name": "Protection - Mine Action",
+      "code": "PRO-MIN",
+      "type": "aor",
+      "parentId": null
+    },
+    {
+      "id": 11,
+      "name": "Water Sanitation Hygiene",
+      "code": "WSH",
+      "type": "global",
+      "parentId": null
+    }
+  ],
+  "status": "ok"
+}
