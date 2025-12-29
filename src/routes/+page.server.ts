@@ -122,31 +122,34 @@ export const load: PageServerLoad = async ({ url }) => {
       ORDER BY fs.year ASC
     `),
 
-    // Get funding by year for top 15 UN agency recipients (for multi-line chart)
+    // Get funding by year for top 15 humanitarian agency recipients (for multi-line chart)
     db.execute(sql`
-      WITH top_un_agencies AS (
+      WITH top_agencies AS (
         SELECT
           o.id,
           o.name,
           o.abbreviation,
+          o.org_type,
           SUM(fs.total_amount_usd::numeric) as total_funding
         FROM flow_summaries fs
         JOIN organizations o ON o.id = fs.recipient_org_id
-        WHERE fs.year >= 2016 AND o.org_type = 'UN Agency'
-        GROUP BY o.id, o.name, o.abbreviation
+        WHERE fs.year >= 2016
+          AND fs.recipient_org_id IS NOT NULL
+        GROUP BY o.id, o.name, o.abbreviation, o.org_type
         ORDER BY total_funding DESC
         LIMIT 15
       )
       SELECT
-        tua.name,
-        tua.abbreviation,
+        ta.name,
+        ta.abbreviation,
+        ta.org_type,
         fs.year,
         SUM(fs.total_amount_usd::numeric) as funding
-      FROM top_un_agencies tua
-      JOIN flow_summaries fs ON fs.recipient_org_id = tua.id
+      FROM top_agencies ta
+      JOIN flow_summaries fs ON fs.recipient_org_id = ta.id
       WHERE fs.year >= 2016
-      GROUP BY tua.name, tua.abbreviation, fs.year
-      ORDER BY tua.name, fs.year
+      GROUP BY ta.name, ta.abbreviation, ta.org_type, fs.year
+      ORDER BY ta.name, fs.year
     `)
   ]);
 

@@ -880,7 +880,7 @@
   };
 
   $: unAgencyFundingTrendExportConfig = {
-    title: 'Top 15 UN Agencies - Funding Trend (2016-2025)',
+    title: 'Top 15 Humanitarian Agencies - Funding Trend (2016-2025)',
     data: data.unAgencyFundingByYear.agencies.flatMap(agency =>
       data.unAgencyFundingByYear.years.map((year, i) => ({
         agency: agency.name,
@@ -890,13 +890,13 @@
       }))
     ),
     columns: [
-      { key: 'agency', header: 'UN Agency' },
+      { key: 'agency', header: 'Agency' },
       { key: 'abbreviation', header: 'Abbreviation' },
       { key: 'year', header: 'Year' },
       { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
     ],
     sources: [DATA_SOURCES.FTS],
-    filename: 'top-15-un-agencies-funding-trend',
+    filename: 'top-15-humanitarian-agencies-funding-trend',
     additionalInfo: 'All values inflation-adjusted to 2025 USD'
   };
 
@@ -1321,13 +1321,13 @@
       <Chart options={countryFundingTrendOptions} height="400px" />
     </div>
 
-    <!-- UN Agency Funding Trends (Multi-line) -->
+    <!-- Humanitarian Agency Funding Trends (Multi-line) -->
     <div class="chart-card">
       <div class="chart-header">
-        <h3>Top 15 UN Agencies - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
+        <h3>Top 15 Humanitarian Agencies - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
         <DownloadButton config={unAgencyFundingTrendExportConfig} />
       </div>
-      <p class="chart-hint">Funding received by UN agencies. All values adjusted to 2025 USD. Click legend to show/hide agencies.</p>
+      <p class="chart-hint">Top recipient organizations by funding. All values adjusted to 2025 USD. Click legend to show/hide agencies.</p>
       <Chart options={unAgencyFundingTrendOptions} height="400px" />
     </div>
 
