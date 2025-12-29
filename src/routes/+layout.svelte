@@ -9,8 +9,6 @@
     </a>
     <div style="display: flex; gap: 0.5rem;">
       <a href="/">Dashboard</a>
-      <a href="/countries">Countries</a>
-      <a href="/donors">Donors</a>
     </div>
   </div>
 </nav>
