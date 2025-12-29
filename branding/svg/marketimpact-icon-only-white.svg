@@ -1,0 +1,13 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Three overlapping circles in triangular arrangement -->
+  <g transform="translate(30, 30)">
+    <!-- Top circle -->
+    <circle cx="0" cy="-10" r="16" fill="none" stroke="#ffffff" stroke-width="3"/>
+    
+    <!-- Bottom left circle -->
+    <circle cx="-8" cy="8" r="16" fill="none" stroke="#ffffff" stroke-width="3"/>
+    
+    <!-- Bottom right circle -->
+    <circle cx="8" cy="8" r="16" fill="none" stroke="#ffffff" stroke-width="3"/>
+  </g>
+</svg>

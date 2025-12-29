@@ -728,10 +728,12 @@ export const load: PageServerLoad = async ({ url }) => {
       };
     })(),
 
-    // Top 15 UN agencies funding by year (for multi-line chart) - inflation adjusted to 2025 USD
+    // Top 15 humanitarian agencies funding by year (for multi-line chart) - inflation adjusted to 2025 USD
     unAgencyFundingByYear: (() => {
       const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
       const agencies = new Map<string, { name: string; abbreviation: string; data: Map<number, number> }>();
+
+      console.log('UN Agency rows count:', unAgencyFundingByYear.rows.length);
 
       unAgencyFundingByYear.rows.forEach((r: any) => {
         if (!agencies.has(r.name)) {
@@ -743,7 +745,7 @@ export const load: PageServerLoad = async ({ url }) => {
         agencies.get(r.name)!.data.set(r.year, adjustedFunding);
       });
 
-      return {
+      const result = {
         years,
         agencies: Array.from(agencies.values()).map(a => ({
           name: a.name,
@@ -751,6 +753,10 @@ export const load: PageServerLoad = async ({ url }) => {
           funding: years.map(y => a.data.get(y) || 0),
         })),
       };
+
+      console.log('Agencies found:', result.agencies.length, result.agencies.map(a => a.name));
+
+      return result;
     })(),
 
     countriesData: countriesData.rows.map((r: any) => {

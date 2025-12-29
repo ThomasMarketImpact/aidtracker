@@ -1,0 +1,18 @@
+<svg width="260" height="60" viewBox="0 0 260 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Three overlapping circles in triangular arrangement -->
+  <g transform="translate(30, 30)">
+    <!-- Top circle -->
+    <circle cx="15" cy="-8" r="15" fill="none" stroke="#0a9396" stroke-width="2.5"/>
+    
+    <!-- Bottom left circle -->
+    <circle cx="5" cy="8" r="15" fill="none" stroke="#0a9396" stroke-width="2.5"/>
+    
+    <!-- Bottom right circle -->
+    <circle cx="25" cy="8" r="15" fill="none" stroke="#0a9396" stroke-width="2.5"/>
+  </g>
+  
+  <!-- Brand name -->
+  <text x="80" y="38" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="700" fill="#001219" text-rendering="optimizeLegibility">
+    MarketImpact
+  </text>
+</svg>
