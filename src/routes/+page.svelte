@@ -576,66 +576,6 @@
     }))
   };
 
-  // Multi-line chart for top 15 UN agencies funding over time
-  $: unAgencyFundingTrendOptions = {
-    tooltip: {
-      trigger: 'axis',
-      formatter: (params: any) => {
-        const year = params[0].name;
-        const yearIndex = data.unAgencyFundingByYear.years.indexOf(Number(year));
-        let html = `<strong>${year}</strong><br/>`;
-        params.sort((a: any, b: any) => b.value - a.value);
-        params.forEach((p: any) => {
-          if (p.value > 0) {
-            const agency = data.unAgencyFundingByYear.agencies.find(a => a.name === p.seriesName);
-            let changeHtml = '';
-            if (agency && yearIndex > 0) {
-              const prevValue = agency.funding[yearIndex - 1];
-              if (prevValue > 0) {
-                const change = ((p.value - prevValue) / prevValue) * 100;
-                const sign = change >= 0 ? '+' : '';
-                const color = change >= 0 ? '#22c55e' : '#ef4444';
-                changeHtml = ` <span style="color:${color}">${sign}${change.toFixed(0)}%</span>`;
-              }
-            }
-            html += `${p.marker} ${p.seriesName}: ${formatMoney(p.value)}${changeHtml}<br/>`;
-          }
-        });
-        return html;
-      }
-    },
-    legend: {
-      type: 'scroll',
-      bottom: 0,
-      data: data.unAgencyFundingByYear.agencies.map(a => a.name)
-    },
-    grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: data.unAgencyFundingByYear.years,
-      axisLabel: { color: '#666' }
-    },
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        color: '#666',
-        formatter: (val: number) => formatMoney(val)
-      }
-    },
-    series: data.unAgencyFundingByYear.agencies.map((agency, i) => ({
-      name: agency.name,
-      type: 'line',
-      data: agency.funding,
-      smooth: true,
-      symbol: 'circle',
-      symbolSize: 4,
-      lineStyle: { width: 2 },
-      itemStyle: { color: countryColors[i % countryColors.length] },
-      emphasis: { focus: 'series' }
-    }))
-  };
-
   // Country detail chart options
   $: countryHistoryOptions = data.countryDetail ? {
     tooltip: {
@@ -877,27 +817,6 @@
     sources: [DATA_SOURCES.FTS],
     filename: `top-15-recipients-funding-trend${data.donorFilter !== 'all' ? `-${data.donorFilter}` : ''}`,
     additionalInfo: `All values inflation-adjusted to 2025 USD${data.donorFilter !== 'all' ? `. Filtered by: ${donorFilterLabels[data.donorFilter]}` : ''}`
-  };
-
-  $: unAgencyFundingTrendExportConfig = {
-    title: 'Top 15 Humanitarian Agencies - Funding Trend (2016-2025)',
-    data: data.unAgencyFundingByYear.agencies.flatMap(agency =>
-      data.unAgencyFundingByYear.years.map((year, i) => ({
-        agency: agency.name,
-        abbreviation: agency.abbreviation,
-        year: year,
-        funding: agency.funding[i]
-      }))
-    ),
-    columns: [
-      { key: 'agency', header: 'Agency' },
-      { key: 'abbreviation', header: 'Abbreviation' },
-      { key: 'year', header: 'Year' },
-      { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
-    ],
-    sources: [DATA_SOURCES.FTS],
-    filename: 'top-15-humanitarian-agencies-funding-trend',
-    additionalInfo: 'All values inflation-adjusted to 2025 USD'
   };
 
   $: fundingNeedsTableExportConfig = {
@@ -1319,16 +1238,6 @@
         All values adjusted to 2025 USD. Click legend to show/hide countries.
       </p>
       <Chart options={countryFundingTrendOptions} height="400px" />
-    </div>
-
-    <!-- Humanitarian Agency Funding Trends (Multi-line) -->
-    <div class="chart-card">
-      <div class="chart-header">
-        <h3>Top 15 Humanitarian Agencies - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
-        <DownloadButton config={unAgencyFundingTrendExportConfig} />
-      </div>
-      <p class="chart-hint">Top recipient organizations by funding. All values adjusted to 2025 USD. Click legend to show/hide agencies.</p>
-      <Chart options={unAgencyFundingTrendOptions} height="400px" />
     </div>
 
     <!-- Funding vs Needs Table -->

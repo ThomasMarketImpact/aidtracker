@@ -100,7 +100,7 @@ export const load: PageServerLoad = async ({ url }) => {
   const donorFilter = (url.searchParams.get('donorFilter') || 'all') as DonorFilter;
 
   // Run independent queries in parallel for better performance
-  const [fundingByYear, fundingTrend, unAgencyFundingByYear] = await Promise.all([
+  const [fundingByYear, fundingTrend] = await Promise.all([
     // Get all years with funding data
     db.select({
       year: schema.flowSummaries.year,
@@ -120,36 +120,6 @@ export const load: PageServerLoad = async ({ url }) => {
       FROM flow_summaries fs
       GROUP BY fs.year
       ORDER BY fs.year ASC
-    `),
-
-    // Get funding by year for top 15 humanitarian agency recipients (for multi-line chart)
-    db.execute(sql`
-      WITH top_agencies AS (
-        SELECT
-          o.id,
-          o.name,
-          o.abbreviation,
-          o.org_type,
-          SUM(fs.total_amount_usd::numeric) as total_funding
-        FROM flow_summaries fs
-        JOIN organizations o ON o.id = fs.recipient_org_id
-        WHERE fs.year >= 2016
-          AND fs.recipient_org_id IS NOT NULL
-        GROUP BY o.id, o.name, o.abbreviation, o.org_type
-        ORDER BY total_funding DESC
-        LIMIT 15
-      )
-      SELECT
-        ta.name,
-        ta.abbreviation,
-        ta.org_type,
-        fs.year,
-        SUM(fs.total_amount_usd::numeric) as funding
-      FROM top_agencies ta
-      JOIN flow_summaries fs ON fs.recipient_org_id = ta.id
-      WHERE fs.year >= 2016
-      GROUP BY ta.name, ta.abbreviation, ta.org_type, fs.year
-      ORDER BY ta.name, fs.year
     `)
   ]);
 
@@ -726,37 +696,6 @@ export const load: PageServerLoad = async ({ url }) => {
           funding: years.map(y => c.data.get(y) || 0),
         })),
       };
-    })(),
-
-    // Top 15 humanitarian agencies funding by year (for multi-line chart) - inflation adjusted to 2025 USD
-    unAgencyFundingByYear: (() => {
-      const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
-      const agencies = new Map<string, { name: string; abbreviation: string; data: Map<number, number> }>();
-
-      console.log('UN Agency rows count:', unAgencyFundingByYear.rows.length);
-
-      unAgencyFundingByYear.rows.forEach((r: any) => {
-        if (!agencies.has(r.name)) {
-          agencies.set(r.name, { name: r.name, abbreviation: r.abbreviation || '', data: new Map() });
-        }
-        // Apply inflation adjustment to convert to 2025 USD
-        const nominalFunding = Number(r.funding);
-        const adjustedFunding = nominalFunding * getInflationMultiplier(r.year);
-        agencies.get(r.name)!.data.set(r.year, adjustedFunding);
-      });
-
-      const result = {
-        years,
-        agencies: Array.from(agencies.values()).map(a => ({
-          name: a.name,
-          abbreviation: a.abbreviation,
-          funding: years.map(y => a.data.get(y) || 0),
-        })),
-      };
-
-      console.log('Agencies found:', result.agencies.length, result.agencies.map(a => a.name));
-
-      return result;
     })(),
 
     countriesData: countriesData.rows.map((r: any) => {
