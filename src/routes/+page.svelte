@@ -66,6 +66,23 @@
     goto(`?year=${data.selectedYear}`);
   }
 
+  function handleDonorFilterChange(filter: string) {
+    const params = new URLSearchParams();
+    params.set('year', data.selectedYear.toString());
+    if (data.selectedCountry) params.set('country', data.selectedCountry);
+    if (filter !== 'all') params.set('donorFilter', filter);
+    goto(`?${params.toString()}`);
+  }
+
+  // Donor filter labels for display
+  const donorFilterLabels: Record<string, string> = {
+    'all': 'All Donors',
+    'us': 'US Government',
+    'eu_echo': 'EU + Member States',
+    'gulf': 'Gulf States',
+    'oecd': 'OECD Members'
+  };
+
   // Modal state for US/EU breakdown
   let showBreakdownModal = false;
   let breakdownType: 'US' | 'EU' | null = null;
@@ -84,22 +101,6 @@
   function closeBreakdownModal() {
     showBreakdownModal = false;
     breakdownType = null;
-  }
-
-  // Donor filter for Top 15 Recipients chart
-  type DonorFilterType = 'all' | 'oecd' | 'eu_echo' | 'us';
-  const donorFilterLabels: Record<DonorFilterType, string> = {
-    'all': 'All Donors',
-    'oecd': 'OECD DAC',
-    'eu_echo': 'EU & ECHO',
-    'us': 'US Only'
-  };
-
-  function handleDonorFilterChange(filter: DonorFilterType) {
-    const params = new URLSearchParams();
-    params.set('year', data.selectedYear.toString());
-    if (filter !== 'all') params.set('donorFilter', filter);
-    goto(`?${params.toString()}`);
   }
 
   function handleYearChartClick(params: any) {
@@ -388,8 +389,8 @@
   // Breakdown chart options for US agencies
   $: usBreakdownOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         const agencyName = params[0].name;
         const agencyData = data.usAgenciesBreakdown.find(d => d.donor === agencyName);
@@ -405,31 +406,31 @@
     },
     grid: { left: '3%', right: '20%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => formatMoney(val)
       }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: [...data.usAgenciesBreakdown].slice(0, 15).reverse().map(d => d.donor),
       axisLabel: {
         color: '#666',
         width: 180,
-        overflow: 'truncate',
+        overflow: 'truncate' as const,
         fontSize: 11
       }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: [...data.usAgenciesBreakdown].slice(0, 15).reverse().map(d => ({
         value: d.funding,
         itemStyle: { color: '#3b82f6' }
       })),
       label: {
         show: true,
-        position: 'right',
+        position: 'right' as const,
         formatter: (params: any) => {
           const reversedData = [...data.usAgenciesBreakdown].slice(0, 15).reverse();
           const agency = reversedData[params.dataIndex];
@@ -450,8 +451,8 @@
   // Breakdown chart options for EU member states
   $: euBreakdownOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         const countryName = params[0].name;
         const countryData = data.euMemberStatesBreakdown.find(d => d.donor === countryName);
@@ -467,31 +468,31 @@
     },
     grid: { left: '3%', right: '20%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => formatMoney(val)
       }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: [...data.euMemberStatesBreakdown].slice(0, 20).reverse().map(d => d.donor),
       axisLabel: {
         color: '#666',
         width: 180,
-        overflow: 'truncate',
+        overflow: 'truncate' as const,
         fontSize: 11
       }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: [...data.euMemberStatesBreakdown].slice(0, 20).reverse().map(d => ({
         value: d.funding,
         itemStyle: { color: '#eab308' }
       })),
       label: {
         show: true,
-        position: 'right',
+        position: 'right' as const,
         formatter: (params: any) => {
           const reversedData = [...data.euMemberStatesBreakdown].slice(0, 20).reverse();
           const country = reversedData[params.dataIndex];
@@ -566,6 +567,66 @@
       name: country.name,
       type: 'line',
       data: country.funding,
+      smooth: true,
+      symbol: 'circle',
+      symbolSize: 4,
+      lineStyle: { width: 2 },
+      itemStyle: { color: countryColors[i % countryColors.length] },
+      emphasis: { focus: 'series' }
+    }))
+  };
+
+  // Multi-line chart for top 15 UN agencies funding over time
+  $: unAgencyFundingTrendOptions = {
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any) => {
+        const year = params[0].name;
+        const yearIndex = data.unAgencyFundingByYear.years.indexOf(Number(year));
+        let html = `<strong>${year}</strong><br/>`;
+        params.sort((a: any, b: any) => b.value - a.value);
+        params.forEach((p: any) => {
+          if (p.value > 0) {
+            const agency = data.unAgencyFundingByYear.agencies.find(a => a.name === p.seriesName);
+            let changeHtml = '';
+            if (agency && yearIndex > 0) {
+              const prevValue = agency.funding[yearIndex - 1];
+              if (prevValue > 0) {
+                const change = ((p.value - prevValue) / prevValue) * 100;
+                const sign = change >= 0 ? '+' : '';
+                const color = change >= 0 ? '#22c55e' : '#ef4444';
+                changeHtml = ` <span style="color:${color}">${sign}${change.toFixed(0)}%</span>`;
+              }
+            }
+            html += `${p.marker} ${p.seriesName}: ${formatMoney(p.value)}${changeHtml}<br/>`;
+          }
+        });
+        return html;
+      }
+    },
+    legend: {
+      type: 'scroll',
+      bottom: 0,
+      data: data.unAgencyFundingByYear.agencies.map(a => a.name)
+    },
+    grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: data.unAgencyFundingByYear.years,
+      axisLabel: { color: '#666' }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#666',
+        formatter: (val: number) => formatMoney(val)
+      }
+    },
+    series: data.unAgencyFundingByYear.agencies.map((agency, i) => ({
+      name: agency.name,
+      type: 'line',
+      data: agency.funding,
       smooth: true,
       symbol: 'circle',
       symbolSize: 4,
@@ -798,7 +859,7 @@
   };
 
   $: countryFundingTrendExportConfig = {
-    title: 'Top 15 Recipients - Funding Trend (2016-2025)',
+    title: `Top 15 Recipients - Funding Trend (2016-2025)${data.donorFilter !== 'all' ? ` - ${donorFilterLabels[data.donorFilter]}` : ''}`,
     data: data.countryFundingByYear.countries.flatMap(country =>
       data.countryFundingByYear.years.map((year, i) => ({
         country: country.name,
@@ -814,7 +875,28 @@
       { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
     ],
     sources: [DATA_SOURCES.FTS],
-    filename: 'top-15-recipients-funding-trend',
+    filename: `top-15-recipients-funding-trend${data.donorFilter !== 'all' ? `-${data.donorFilter}` : ''}`,
+    additionalInfo: `All values inflation-adjusted to 2025 USD${data.donorFilter !== 'all' ? `. Filtered by: ${donorFilterLabels[data.donorFilter]}` : ''}`
+  };
+
+  $: unAgencyFundingTrendExportConfig = {
+    title: 'Top 15 UN Agencies - Funding Trend (2016-2025)',
+    data: data.unAgencyFundingByYear.agencies.flatMap(agency =>
+      data.unAgencyFundingByYear.years.map((year, i) => ({
+        agency: agency.name,
+        abbreviation: agency.abbreviation,
+        year: year,
+        funding: agency.funding[i]
+      }))
+    ),
+    columns: [
+      { key: 'agency', header: 'UN Agency' },
+      { key: 'abbreviation', header: 'Abbreviation' },
+      { key: 'year', header: 'Year' },
+      { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: 'top-15-un-agencies-funding-trend',
     additionalInfo: 'All values inflation-adjusted to 2025 USD'
   };
 
@@ -1184,7 +1266,7 @@
         </div>
         <div class="chart-card">
           <div class="chart-header">
-            <h3>Top 15 Recipient Countries ({data.selectedYear}){data.donorFilter !== 'all' ? ` - ${donorFilterLabels[data.donorFilter as DonorFilterType]}` : ''}</h3>
+            <h3>Top 15 Recipient Countries ({data.selectedYear}){data.donorFilter !== 'all' ? ` - ${donorFilterLabels[data.donorFilter]}` : ''}</h3>
             <DownloadButton config={topCountriesExportConfig} />
           </div>
           <div class="filter-buttons">
@@ -1192,7 +1274,7 @@
               <button
                 class="filter-btn"
                 class:active={data.donorFilter === filter}
-                on:click={() => handleDonorFilterChange(filter as DonorFilterType)}
+                on:click={() => handleDonorFilterChange(filter)}
               >
                 {label}
               </button>
@@ -1219,10 +1301,34 @@
     <div class="chart-card">
       <div class="chart-header">
         <h3>Top 15 Recipients - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
-        <DownloadButton config={countryFundingTrendExportConfig} />
+        <div class="chart-controls">
+          <select class="donor-filter-select" value={data.donorFilter} on:change={handleDonorFilterChange}>
+            <option value="all">All Donors</option>
+            <option value="us">US Government</option>
+            <option value="eu_echo">EU + Member States</option>
+            <option value="gulf">Gulf States</option>
+            <option value="oecd">OECD Members</option>
+          </select>
+          <DownloadButton config={countryFundingTrendExportConfig} />
+        </div>
       </div>
-      <p class="chart-hint">All values adjusted to 2025 USD. Click legend to show/hide countries.</p>
+      <p class="chart-hint">
+        {#if data.donorFilter !== 'all'}
+          <strong>Filtered by: {donorFilterLabels[data.donorFilter]}</strong> |
+        {/if}
+        All values adjusted to 2025 USD. Click legend to show/hide countries.
+      </p>
       <Chart options={countryFundingTrendOptions} height="400px" />
+    </div>
+
+    <!-- UN Agency Funding Trends (Multi-line) -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3>Top 15 UN Agencies - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
+        <DownloadButton config={unAgencyFundingTrendExportConfig} />
+      </div>
+      <p class="chart-hint">Funding received by UN agencies. All values adjusted to 2025 USD. Click legend to show/hide agencies.</p>
+      <Chart options={unAgencyFundingTrendOptions} height="400px" />
     </div>
 
     <!-- Funding vs Needs Table -->
@@ -1321,7 +1427,7 @@
 
   <!-- Breakdown Modal -->
   {#if showBreakdownModal}
-    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions a11y_interactive_supports_focus -->
     <div class="modal-overlay" on:click={closeBreakdownModal} role="dialog" aria-modal="true">
       <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
       <div class="modal-content" on:click|stopPropagation role="document">
@@ -1519,6 +1625,25 @@
   .chart-header h3 {
     margin: 0;
     flex: 1;
+  }
+
+  .chart-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .donor-filter-select {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 4px;
+    background: var(--color-card, #fff);
+    cursor: pointer;
+  }
+
+  .donor-filter-select:hover {
+    border-color: var(--color-primary, #3b82f6);
   }
 
   .chart-hint {

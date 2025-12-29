@@ -57,8 +57,16 @@ const EU_ECHO_PATTERNS = [
   'European Commission', 'European Union', 'ECHO', 'EU '
 ];
 
+// Gulf Cooperation Council States + Sovereign Wealth Funds
+const GULF_PATTERNS = [
+  'United Arab Emirates', 'UAE', 'Saudi Arabia', 'Kuwait',
+  'Qatar', 'Bahrain', 'Oman', 'Abu Dhabi', 'Dubai',
+  'Abu Dhabi Fund', 'Kuwait Fund', 'Saudi Fund', 'Qatar Fund',
+  'Islamic Development Bank', 'OPEC Fund'
+];
+
 // Donor filter types
-export type DonorFilter = 'all' | 'oecd' | 'eu_echo' | 'us';
+export type DonorFilter = 'all' | 'oecd' | 'eu_echo' | 'us' | 'gulf';
 
 // Helper to check if donor matches a pattern list
 const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
@@ -92,7 +100,7 @@ export const load: PageServerLoad = async ({ url }) => {
   const donorFilter = (url.searchParams.get('donorFilter') || 'all') as DonorFilter;
 
   // Run independent queries in parallel for better performance
-  const [fundingByYear, fundingTrend, countryFundingByYear] = await Promise.all([
+  const [fundingByYear, fundingTrend, unAgencyFundingByYear] = await Promise.all([
     // Get all years with funding data
     db.select({
       year: schema.flowSummaries.year,
@@ -114,31 +122,31 @@ export const load: PageServerLoad = async ({ url }) => {
       ORDER BY fs.year ASC
     `),
 
-    // Get funding by year for top 15 recipient countries (for multi-line chart)
+    // Get funding by year for top 15 UN agency recipients (for multi-line chart)
     db.execute(sql`
-      WITH top_countries AS (
+      WITH top_un_agencies AS (
         SELECT
-          c.id,
-          c.name,
-          c.iso3,
+          o.id,
+          o.name,
+          o.abbreviation,
           SUM(fs.total_amount_usd::numeric) as total_funding
         FROM flow_summaries fs
-        JOIN countries c ON c.id = fs.recipient_country_id
-        WHERE fs.year >= 2016
-        GROUP BY c.id, c.name, c.iso3
+        JOIN organizations o ON o.id = fs.recipient_org_id
+        WHERE fs.year >= 2016 AND o.org_type = 'UN Agency'
+        GROUP BY o.id, o.name, o.abbreviation
         ORDER BY total_funding DESC
         LIMIT 15
       )
       SELECT
-        tc.name,
-        tc.iso3,
+        tua.name,
+        tua.abbreviation,
         fs.year,
         SUM(fs.total_amount_usd::numeric) as funding
-      FROM top_countries tc
-      JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
+      FROM top_un_agencies tua
+      JOIN flow_summaries fs ON fs.recipient_org_id = tua.id
       WHERE fs.year >= 2016
-      GROUP BY tc.name, tc.iso3, fs.year
-      ORDER BY tc.name, fs.year
+      GROUP BY tua.name, tua.abbreviation, fs.year
+      ORDER BY tua.name, fs.year
     `)
   ]);
 
@@ -171,10 +179,73 @@ export const load: PageServerLoad = async ({ url }) => {
         return `(${OECD_DAC_PATTERNS.map(p => `o.name LIKE '${p}%'`).join(' OR ')})`;
       case 'eu_echo':
         return `(${EU_ECHO_PATTERNS.map(p => `o.name LIKE '${p}%'`).join(' OR ')})`;
+      case 'gulf':
+        return `(${GULF_PATTERNS.map(p => `o.name LIKE '%${p}%'`).join(' OR ')})`;
       default:
         return '1=1';
     }
   };
+
+  // Get funding by year for top 15 recipient countries (for multi-line chart)
+  // Filtered by donor group if a filter is selected
+  let countryFundingByYear;
+  if (donorFilter === 'all') {
+    countryFundingByYear = await db.execute(sql`
+      WITH top_countries AS (
+        SELECT
+          c.id,
+          c.name,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as total_funding
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE fs.year >= 2016
+        GROUP BY c.id, c.name, c.iso3
+        ORDER BY total_funding DESC
+        LIMIT 15
+      )
+      SELECT
+        tc.name,
+        tc.iso3,
+        fs.year,
+        SUM(fs.total_amount_usd::numeric) as funding
+      FROM top_countries tc
+      JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
+      WHERE fs.year >= 2016
+      GROUP BY tc.name, tc.iso3, fs.year
+      ORDER BY tc.name, fs.year
+    `);
+  } else {
+    // Query with donor filter
+    const filterCondition = buildDonorFilterCondition(donorFilter);
+    countryFundingByYear = await db.execute(sql.raw(`
+      WITH top_countries AS (
+        SELECT
+          c.id,
+          c.name,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as total_funding
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        JOIN organizations o ON o.id = fs.donor_org_id
+        WHERE fs.year >= 2016 AND ${filterCondition}
+        GROUP BY c.id, c.name, c.iso3
+        ORDER BY total_funding DESC
+        LIMIT 15
+      )
+      SELECT
+        tc.name,
+        tc.iso3,
+        fs.year,
+        SUM(fs.total_amount_usd::numeric) as funding
+      FROM top_countries tc
+      JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
+      JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year >= 2016 AND ${filterCondition}
+      GROUP BY tc.name, tc.iso3, fs.year
+      ORDER BY tc.name, fs.year
+    `));
+  }
 
   // Get top recipient countries for selected year with needs data and YoY change
   // When donorFilter is set, filter by specific donor organizations
@@ -650,6 +721,31 @@ export const load: PageServerLoad = async ({ url }) => {
           name: c.name,
           iso3: c.iso3,
           funding: years.map(y => c.data.get(y) || 0),
+        })),
+      };
+    })(),
+
+    // Top 15 UN agencies funding by year (for multi-line chart) - inflation adjusted to 2025 USD
+    unAgencyFundingByYear: (() => {
+      const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+      const agencies = new Map<string, { name: string; abbreviation: string; data: Map<number, number> }>();
+
+      unAgencyFundingByYear.rows.forEach((r: any) => {
+        if (!agencies.has(r.name)) {
+          agencies.set(r.name, { name: r.name, abbreviation: r.abbreviation || '', data: new Map() });
+        }
+        // Apply inflation adjustment to convert to 2025 USD
+        const nominalFunding = Number(r.funding);
+        const adjustedFunding = nominalFunding * getInflationMultiplier(r.year);
+        agencies.get(r.name)!.data.set(r.year, adjustedFunding);
+      });
+
+      return {
+        years,
+        agencies: Array.from(agencies.values()).map(a => ({
+          name: a.name,
+          abbreviation: a.abbreviation,
+          funding: years.map(y => a.data.get(y) || 0),
         })),
       };
     })(),
