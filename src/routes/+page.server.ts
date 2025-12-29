@@ -42,6 +42,7 @@ function getInflationMultiplier(year: number): number {
 export const load: PageServerLoad = async ({ url }) => {
   const selectedYear = parseInt(url.searchParams.get('year') || '2025');
   const selectedCountry = url.searchParams.get('country') || null;
+  const selectedDonor = url.searchParams.get('donor') || null;
 
   // Get all years with funding data
   const fundingByYear = await db
@@ -373,6 +374,86 @@ export const load: PageServerLoad = async ({ url }) => {
     };
   }
 
+  // Donor detail data if a donor is selected
+  let donorDetail = null;
+  if (selectedDonor) {
+    // Get donor info
+    const donorInfo = await db.execute(sql`
+      SELECT id, name, org_type
+      FROM organizations
+      WHERE name = ${selectedDonor}
+      LIMIT 1
+    `);
+
+    if (donorInfo.rows.length > 0) {
+      const donor = donorInfo.rows[0] as any;
+
+      // Get funding history by year
+      const donorHistory = await db.execute(sql`
+        SELECT
+          fs.year,
+          SUM(fs.total_amount_usd::numeric) as funding_usd,
+          COUNT(DISTINCT fs.recipient_country_id) as countries_funded
+        FROM flow_summaries fs
+        WHERE fs.donor_org_id = ${donor.id}
+        GROUP BY fs.year
+        ORDER BY fs.year ASC
+      `);
+
+      // Get flows to recipient countries for selected year
+      const donorFlows = await db.execute(sql`
+        SELECT
+          c.name as country,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as funding_usd,
+          SUM(fs.flow_count) as flow_count
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE fs.donor_org_id = ${donor.id} AND fs.year = ${selectedYear}
+        GROUP BY c.name, c.iso3
+        ORDER BY funding_usd DESC
+      `);
+
+      // Get sector breakdown for this donor
+      const donorSectors = await db.execute(sql`
+        SELECT
+          COALESCE(s.name, 'Unspecified') as sector,
+          SUM(fs.total_amount_usd::numeric) as funding_usd
+        FROM flow_summaries fs
+        LEFT JOIN sectors s ON s.id = fs.sector_id
+        WHERE fs.donor_org_id = ${donor.id} AND fs.year = ${selectedYear}
+        GROUP BY s.name
+        ORDER BY funding_usd DESC
+      `);
+
+      // Calculate total for this year
+      const totalThisYear = donorFlows.rows.reduce((sum: number, r: any) => sum + Number(r.funding_usd), 0);
+
+      donorDetail = {
+        id: donor.id,
+        name: donor.name,
+        type: donor.org_type,
+        currentFunding: totalThisYear,
+        countriesFunded: donorFlows.rows.length,
+        fundingHistory: donorHistory.rows.map((r: any) => ({
+          year: r.year,
+          funding: Number(r.funding_usd),
+          countries: Number(r.countries_funded),
+        })),
+        flows: donorFlows.rows.map((r: any) => ({
+          country: r.country,
+          iso3: r.iso3,
+          funding: Number(r.funding_usd),
+          flowCount: Number(r.flow_count),
+        })),
+        sectors: donorSectors.rows.map((r: any) => ({
+          sector: r.sector,
+          funding: Number(r.funding_usd),
+        })),
+      };
+    }
+  }
+
   // Calculate summary stats
   const totalFunding = fundingByYear.find(f => f.year === selectedYear)?.totalUsd || '0';
 
@@ -386,6 +467,7 @@ export const load: PageServerLoad = async ({ url }) => {
   return {
     selectedYear,
     selectedCountry,
+    selectedDonor,
     availableYears: fundingByYear.map(f => f.year).sort((a, b) => b - a),
     countriesList: countriesList.map(c => ({ iso3: c.iso3, name: c.name })),
 
@@ -479,6 +561,7 @@ export const load: PageServerLoad = async ({ url }) => {
     })),
 
     countryDetail,
+    donorDetail,
 
     summary: {
       totalFunding: Number(totalFunding),

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import Chart from '$lib/components/Chart.svelte';
+  import DownloadButton from '$lib/components/DownloadButton.svelte';
+  import { DATA_SOURCES } from '$lib/utils/excelExport';
   import type { PageData } from './$types';
 
   export let data: PageData;
@@ -50,6 +52,17 @@
   }
 
   function clearCountry() {
+    goto(`?year=${data.selectedYear}`);
+  }
+
+  function selectDonor(donorName: string) {
+    const params = new URLSearchParams();
+    params.set('year', data.selectedYear.toString());
+    params.set('donor', donorName);
+    goto(`?${params.toString()}`);
+  }
+
+  function clearDonor() {
     goto(`?year=${data.selectedYear}`);
   }
 
@@ -466,6 +479,84 @@
     }]
   } : {};
 
+  // Donor detail chart options
+  $: donorHistoryOptions = data.donorDetail ? {
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any) => {
+        const d = data.donorDetail?.fundingHistory.find(h => h.year == params[0].name);
+        return `${params[0].name}<br/>Funding: ${formatMoney(params[0].value)}<br/>Countries: ${d?.countries || 0}`;
+      }
+    },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: {
+      type: 'category',
+      data: data.donorDetail.fundingHistory.map(d => d.year),
+      axisLabel: { color: '#666' }
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
+    },
+    series: [{
+      data: data.donorDetail.fundingHistory.map(d => d.funding),
+      type: 'bar',
+      itemStyle: { color: '#3b82f6' }
+    }]
+  } : {};
+
+  $: donorFlowsChartOptions = data.donorDetail ? {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: (params: any) => {
+        const flow = data.donorDetail?.flows.find(f => f.country === params[0].name);
+        return `<strong>${params[0].name}</strong><br/>Funding: ${formatMoney(params[0].value)}<br/>Flows: ${flow?.flowCount || 0}`;
+      }
+    },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    xAxis: {
+      type: 'value',
+      axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
+    },
+    yAxis: {
+      type: 'category',
+      data: data.donorDetail.flows.slice(0, 15).map(f => f.country).reverse(),
+      axisLabel: { color: '#666', width: 120, overflow: 'truncate' }
+    },
+    series: [{
+      type: 'bar',
+      data: data.donorDetail.flows.slice(0, 15).map(f => f.funding).reverse(),
+      itemStyle: { color: '#22c55e' },
+      label: {
+        show: true,
+        position: 'right',
+        formatter: (params: any) => formatMoney(params.value),
+        fontSize: 10,
+        color: '#666'
+      }
+    }]
+  } : {};
+
+  $: donorSectorsOptions = data.donorDetail ? {
+    tooltip: {
+      trigger: 'item',
+      formatter: (params: any) => `${params.name}: ${formatMoney(params.value)} (${params.percent}%)`
+    },
+    series: [{
+      type: 'pie',
+      radius: ['30%', '70%'],
+      data: data.donorDetail.sectors.slice(0, 8).map((s, i) => ({
+        value: s.funding,
+        name: s.sector,
+        itemStyle: {
+          color: ['#3b82f6', '#22c55e', '#eab308', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i]
+        }
+      })),
+      label: { formatter: '{b}', fontSize: 10 }
+    }]
+  } : {};
+
   // Chart click handlers
   function handleCountryChartClick(params: any) {
     const countryName = params.name;
@@ -474,6 +565,254 @@
       selectCountry(country.iso3);
     }
   }
+
+  // Export configurations for download buttons
+  $: fundingTrendExportConfig = {
+    title: 'Humanitarian Funding Trend Over Time',
+    data: data.fundingTrend.map(d => ({
+      year: d.year,
+      nominalUSD: d.funding,
+      real2025USD: d.fundingReal2025,
+      inflationMultiplier: d.inflationMultiplier,
+      countries: d.countries,
+      peopleInNeed: d.peopleInNeed
+    })),
+    columns: [
+      { key: 'year', header: 'Year' },
+      { key: 'nominalUSD', header: 'Nominal USD', format: 'currency' },
+      { key: 'real2025USD', header: '2025 USD (Inflation Adjusted)', format: 'currency' },
+      { key: 'inflationMultiplier', header: 'Inflation Multiplier', format: 'number' },
+      { key: 'countries', header: 'Countries Funded', format: 'number' },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' }
+    ],
+    sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI, DATA_SOURCES.GHO],
+    filename: 'funding-trend-over-time',
+    additionalInfo: 'Inflation adjusted to 2025 USD using US CPI data'
+  };
+
+  $: topCountriesExportConfig = {
+    title: `Top 15 Recipient Countries - ${data.selectedYear}`,
+    data: data.countriesData.slice(0, 15).map(c => ({
+      country: c.name,
+      iso3: c.iso3,
+      funding: c.funding,
+      flowCount: c.flowCount,
+      yoyChange: c.yoyChange,
+      peopleInNeed: c.peopleInNeed,
+      fundingPerPerson: c.fundingPerPerson
+    })),
+    columns: [
+      { key: 'country', header: 'Country' },
+      { key: 'iso3', header: 'ISO3' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'flowCount', header: 'Flow Count', format: 'number' },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' },
+      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI],
+    filename: `top-15-recipient-countries-${data.selectedYear}`,
+    year: data.selectedYear
+  };
+
+  $: topDonorsExportConfig = {
+    title: `Top Government Donors - ${data.selectedYear}`,
+    data: data.topGovernmentDonors.slice(0, 12).map(d => ({
+      donor: d.donor,
+      category: d.category,
+      funding: d.funding,
+      prevFunding: d.prevFunding,
+      yoyChange: d.yoyChange
+    })),
+    columns: [
+      { key: 'donor', header: 'Donor' },
+      { key: 'category', header: 'Category' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'prevFunding', header: 'Previous Year (USD)', format: 'currency' },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `top-government-donors-${data.selectedYear}`,
+    year: data.selectedYear,
+    additionalInfo: 'Categories: US = United States, EU = European Union and member states, Other = All other government donors'
+  };
+
+  $: countryFundingTrendExportConfig = {
+    title: 'Top 15 Recipients - Funding Trend (2016-2025)',
+    data: data.countryFundingByYear.countries.flatMap(country =>
+      data.countryFundingByYear.years.map((year, i) => ({
+        country: country.name,
+        iso3: country.iso3,
+        year: year,
+        funding: country.funding[i]
+      }))
+    ),
+    columns: [
+      { key: 'country', header: 'Country' },
+      { key: 'iso3', header: 'ISO3' },
+      { key: 'year', header: 'Year' },
+      { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: 'top-15-recipients-funding-trend',
+    additionalInfo: 'All values inflation-adjusted to 2025 USD'
+  };
+
+  $: fundingNeedsTableExportConfig = {
+    title: `Funding vs Needs Analysis - ${data.selectedYear}`,
+    data: data.countriesData.slice(0, 20).map(c => ({
+      country: c.name,
+      iso3: c.iso3,
+      funding: c.funding,
+      yoyChange: c.yoyChange,
+      peopleInNeed: c.peopleInNeed,
+      fundingPerPerson: c.fundingPerPerson,
+      status: getFundingLevel(c.fundingPerPerson).label
+    })),
+    columns: [
+      { key: 'country', header: 'Country' },
+      { key: 'iso3', header: 'ISO3' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' },
+      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' },
+      { key: 'status', header: 'Funding Status' }
+    ],
+    sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI, DATA_SOURCES.GHO],
+    filename: `funding-vs-needs-${data.selectedYear}`,
+    year: data.selectedYear,
+    additionalInfo: 'Status: High (>=$150/person), Medium ($80-149/person), Low (<$80/person)'
+  };
+
+  $: donorTableExportConfig = {
+    title: `Top 15 Donors - ${data.selectedYear}`,
+    data: data.donorData.slice(0, 15).map(d => ({
+      donor: d.donor,
+      type: d.donorType,
+      funding: d.funding,
+      countriesFunded: d.countriesFunded
+    })),
+    columns: [
+      { key: 'donor', header: 'Donor' },
+      { key: 'type', header: 'Type' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'countriesFunded', header: 'Countries Funded', format: 'number' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `top-15-donors-${data.selectedYear}`,
+    year: data.selectedYear
+  };
+
+  $: sectorExportConfig = {
+    title: `Sector Funding Breakdown - ${data.selectedYear}`,
+    data: data.sectorData.slice(0, 10).map(s => ({
+      sector: s.sector,
+      funding: s.funding
+    })),
+    columns: [
+      { key: 'sector', header: 'Sector' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `sector-breakdown-${data.selectedYear}`,
+    year: data.selectedYear
+  };
+
+  // Country detail export configs
+  $: countryHistoryExportConfig = data.countryDetail ? {
+    title: `${data.countryDetail.name} - Funding History`,
+    data: data.countryDetail.fundingHistory.map(d => ({
+      year: d.year,
+      funding: d.funding
+    })),
+    columns: [
+      { key: 'year', header: 'Year' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.countryDetail.iso3}-funding-history`
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+
+  $: countryDonorsExportConfig = data.countryDetail ? {
+    title: `${data.countryDetail.name} - Top Donors (${data.selectedYear})`,
+    data: data.countryDetail.topDonors.slice(0, 8).map(d => ({
+      donor: d.donor,
+      funding: d.funding
+    })),
+    columns: [
+      { key: 'donor', header: 'Donor' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.countryDetail.iso3}-top-donors-${data.selectedYear}`,
+    year: data.selectedYear
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+
+  $: countrySectorsExportConfig = data.countryDetail ? {
+    title: `${data.countryDetail.name} - Sector Breakdown (${data.selectedYear})`,
+    data: data.countryDetail.sectors.slice(0, 8).map(s => ({
+      sector: s.sector,
+      funding: s.funding
+    })),
+    columns: [
+      { key: 'sector', header: 'Sector' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.countryDetail.iso3}-sector-breakdown-${data.selectedYear}`,
+    year: data.selectedYear
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+
+  // Donor detail export configs
+  $: donorHistoryExportConfig = data.donorDetail ? {
+    title: `${data.donorDetail.name} - Funding History`,
+    data: data.donorDetail.fundingHistory.map(d => ({
+      year: d.year,
+      funding: d.funding,
+      countries: d.countries
+    })),
+    columns: [
+      { key: 'year', header: 'Year' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'countries', header: 'Countries Funded', format: 'number' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-funding-history`
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+
+  $: donorFlowsExportConfig = data.donorDetail ? {
+    title: `${data.donorDetail.name} - Funding Flows to Countries (${data.selectedYear})`,
+    data: data.donorDetail.flows.map(f => ({
+      country: f.country,
+      iso3: f.iso3,
+      funding: f.funding,
+      flowCount: f.flowCount
+    })),
+    columns: [
+      { key: 'country', header: 'Recipient Country' },
+      { key: 'iso3', header: 'ISO3' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
+      { key: 'flowCount', header: 'Flow Count', format: 'number' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-flows-${data.selectedYear}`,
+    year: data.selectedYear
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+
+  $: donorSectorsExportConfig = data.donorDetail ? {
+    title: `${data.donorDetail.name} - Sector Breakdown (${data.selectedYear})`,
+    data: data.donorDetail.sectors.slice(0, 8).map(s => ({
+      sector: s.sector,
+      funding: s.funding
+    })),
+    columns: [
+      { key: 'sector', header: 'Sector' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+    ],
+    sources: [DATA_SOURCES.FTS],
+    filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-sectors-${data.selectedYear}`,
+    year: data.selectedYear
+  } : { title: '', data: [], columns: [], sources: [], filename: '' };
 </script>
 
 <svelte:head>
@@ -561,16 +900,112 @@
 
       <div class="charts-grid-3">
         <div class="chart-card">
-          <h3>Funding History</h3>
+          <div class="chart-header">
+            <h3>Funding History</h3>
+            <DownloadButton config={countryHistoryExportConfig} />
+          </div>
           <Chart options={countryHistoryOptions} height="250px" />
         </div>
         <div class="chart-card">
-          <h3>Top Donors ({data.selectedYear})</h3>
+          <div class="chart-header">
+            <h3>Top Donors ({data.selectedYear})</h3>
+            <DownloadButton config={countryDonorsExportConfig} />
+          </div>
           <Chart options={countryDonorsOptions} height="250px" />
         </div>
         <div class="chart-card">
-          <h3>Sector Breakdown</h3>
+          <div class="chart-header">
+            <h3>Sector Breakdown</h3>
+            <DownloadButton config={countrySectorsExportConfig} />
+          </div>
           <Chart options={countrySectorsOptions} height="250px" />
+        </div>
+      </div>
+    </div>
+  {:else if data.donorDetail}
+    <!-- Donor Detail View -->
+    <div class="donor-detail-panel">
+      <div class="panel-header">
+        <div>
+          <h2>{data.donorDetail.name}</h2>
+          <span class="donor-type-badge">{data.donorDetail.type}</span>
+        </div>
+        <button class="close-btn" on:click={clearDonor}>Back to Overview</button>
+      </div>
+
+      <div class="country-kpis">
+        <div class="kpi-card small">
+          <span class="kpi-value">{formatMoney(data.donorDetail.currentFunding)}</span>
+          <span class="kpi-label">{data.selectedYear} Funding</span>
+        </div>
+        <div class="kpi-card small">
+          <span class="kpi-value">{data.donorDetail.countriesFunded}</span>
+          <span class="kpi-label">Countries Funded</span>
+        </div>
+        <div class="kpi-card small">
+          <span class="kpi-value">{data.donorDetail.sectors.length}</span>
+          <span class="kpi-label">Sectors Supported</span>
+        </div>
+      </div>
+
+      <div class="charts-grid-3">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Funding History</h3>
+            <DownloadButton config={donorHistoryExportConfig} />
+          </div>
+          <Chart options={donorHistoryOptions} height="250px" />
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Top Recipients ({data.selectedYear})</h3>
+            <DownloadButton config={donorFlowsExportConfig} />
+          </div>
+          <Chart options={donorFlowsChartOptions} height="250px" />
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Sector Breakdown</h3>
+            <DownloadButton config={donorSectorsExportConfig} />
+          </div>
+          <Chart options={donorSectorsOptions} height="250px" />
+        </div>
+      </div>
+
+      <!-- Flows Table -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>All Funding Flows ({data.selectedYear})</h3>
+          <DownloadButton config={donorFlowsExportConfig} />
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Recipient Country</th>
+                <th class="right">Funding</th>
+                <th class="right">Flows</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each data.donorDetail.flows as flow}
+                <tr>
+                  <td>
+                    <strong>{flow.country}</strong>
+                    <span class="iso-code">{flow.iso3}</span>
+                  </td>
+                  <td class="right">{formatMoney(flow.funding)}</td>
+                  <td class="right">{flow.flowCount}</td>
+                  <td>
+                    <button class="drill-btn" on:click={() => selectCountry(flow.iso3)}>
+                      View Country
+                    </button>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -580,12 +1015,18 @@
       <!-- Left Column: Stacked charts -->
       <div class="left-column">
         <div class="chart-card">
-          <h3>Funding Trend Over Time</h3>
+          <div class="chart-header">
+            <h3>Funding Trend Over Time</h3>
+            <DownloadButton config={fundingTrendExportConfig} />
+          </div>
           <p class="chart-hint">Click on any year to view detailed data for that year</p>
           <Chart options={fundingTrendOptions} height="280px" onChartClick={handleYearChartClick} />
         </div>
         <div class="chart-card">
-          <h3>Top 15 Recipient Countries ({data.selectedYear})</h3>
+          <div class="chart-header">
+            <h3>Top 15 Recipient Countries ({data.selectedYear})</h3>
+            <DownloadButton config={topCountriesExportConfig} />
+          </div>
           <p class="chart-hint">Click a country to see detailed breakdown</p>
           <Chart options={topCountriesOptions} height="400px" onChartClick={handleCountryChartClick} />
         </div>
@@ -593,7 +1034,10 @@
       <!-- Right Column: Tall donors chart -->
       <div class="right-column">
         <div class="chart-card full-height">
-          <h3>Top Government Donors ({data.selectedYear})</h3>
+          <div class="chart-header">
+            <h3>Top Government Donors ({data.selectedYear})</h3>
+            <DownloadButton config={topDonorsExportConfig} />
+          </div>
           <p class="chart-hint">🔵 US | 🟡 EU | ⚫ Other. Shows YoY % change.</p>
           <Chart options={topGovernmentDonorsOptions} height="680px" />
         </div>
@@ -602,14 +1046,20 @@
 
     <!-- Country Funding Trends (Multi-line) -->
     <div class="chart-card">
-      <h3>Top 15 Recipients - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
+      <div class="chart-header">
+        <h3>Top 15 Recipients - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
+        <DownloadButton config={countryFundingTrendExportConfig} />
+      </div>
       <p class="chart-hint">All values adjusted to 2025 USD. Click legend to show/hide countries.</p>
       <Chart options={countryFundingTrendOptions} height="400px" />
     </div>
 
     <!-- Funding vs Needs Table -->
     <div class="chart-card">
-      <h3>Funding vs Needs Analysis ({data.selectedYear})</h3>
+      <div class="chart-header">
+        <h3>Funding vs Needs Analysis ({data.selectedYear})</h3>
+        <DownloadButton config={fundingNeedsTableExportConfig} />
+      </div>
       <p class="chart-hint">Countries color-coded by funding adequacy per person in need. YoY = Year-over-Year change.</p>
       <div class="table-container">
         <table>
@@ -662,7 +1112,11 @@
 
     <!-- Top Donors -->
     <div class="chart-card">
-      <h3>Top 15 Donors ({data.selectedYear})</h3>
+      <div class="chart-header">
+        <h3>Top 15 Donors ({data.selectedYear})</h3>
+        <DownloadButton config={donorTableExportConfig} />
+      </div>
+      <p class="chart-hint">Click "View Flows" to see funding breakdown by recipient country</p>
       <div class="table-container">
         <table>
           <thead>
@@ -671,6 +1125,7 @@
               <th>Type</th>
               <th class="right">Funding</th>
               <th class="right">Countries</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -680,6 +1135,11 @@
                 <td><span class="badge badge-neutral">{donor.donorType}</span></td>
                 <td class="right">{formatMoney(donor.funding)}</td>
                 <td class="right">{donor.countriesFunded}</td>
+                <td>
+                  <button class="drill-btn" on:click={() => selectDonor(donor.donor)}>
+                    View Flows
+                  </button>
+                </td>
               </tr>
             {/each}
           </tbody>
@@ -842,6 +1302,19 @@
     font-weight: 600;
   }
 
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .chart-header h3 {
+    margin: 0;
+    flex: 1;
+  }
+
   .chart-hint {
     font-size: 0.75rem;
     color: var(--color-text-muted, #666);
@@ -858,6 +1331,24 @@
     border-radius: 8px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+
+  .donor-detail-panel {
+    background: var(--color-card, #fff);
+    border: 2px solid #22c55e;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .donor-type-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: #f3f4f6;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-left: 0.5rem;
   }
 
   .panel-header {
