@@ -39,59 +39,108 @@ function getInflationMultiplier(year: number): number {
   return baseCpi / yearCpi;
 }
 
-export const load: PageServerLoad = async ({ url }) => {
-  const selectedYear = parseInt(url.searchParams.get('year') || '2025');
-  const selectedCountry = url.searchParams.get('country') || null;
-  const selectedDonor = url.searchParams.get('donor') || null;
+// OECD DAC member countries for donor filtering
+const OECD_DAC_PATTERNS = [
+  'Australia', 'Austria', 'Belgium', 'Canada', 'Czech', 'Denmark', 'Estonia',
+  'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland',
+  'Italy', 'Japan', 'Korea', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands',
+  'New Zealand', 'Norway', 'Poland', 'Portugal', 'Slovak', 'Slovenia', 'Spain',
+  'Sweden', 'Switzerland', 'United Kingdom', 'United States'
+];
 
-  // Get all years with funding data
-  const fundingByYear = await db
-    .select({
+// EU member states + ECHO (European Commission's humanitarian aid arm)
+const EU_ECHO_PATTERNS = [
+  'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech',
+  'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
+  'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
+  'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden',
+  'European Commission', 'European Union', 'ECHO', 'EU '
+];
+
+// Donor filter types
+export type DonorFilter = 'all' | 'oecd' | 'eu_echo' | 'us';
+
+// Helper to check if donor matches a pattern list
+const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
+  return patterns.some(pattern =>
+    donor.startsWith(pattern) ||
+    donor.includes(`, ${pattern}`) ||
+    donor.includes(`(${pattern}`) ||
+    donor.includes(pattern)
+  );
+};
+
+export const load: PageServerLoad = async ({ url }) => {
+  // Parse and validate year parameter
+  const yearParam = url.searchParams.get('year');
+  let selectedYear = yearParam ? parseInt(yearParam, 10) : 2025;
+  // Validate year is a reasonable number (2016-2030 range)
+  if (isNaN(selectedYear) || selectedYear < 2016 || selectedYear > 2030) {
+    selectedYear = 2025;
+  }
+
+  // Validate country parameter (ISO3 code should be exactly 3 uppercase letters)
+  const countryParam = url.searchParams.get('country');
+  const selectedCountry = countryParam && /^[A-Z]{3}$/.test(countryParam) ? countryParam : null;
+
+  // Validate donor parameter (limit length, trim whitespace)
+  const donorParam = url.searchParams.get('donor');
+  const selectedDonor = donorParam && donorParam.trim().length > 0 && donorParam.length <= 500
+    ? donorParam.trim()
+    : null;
+
+  const donorFilter = (url.searchParams.get('donorFilter') || 'all') as DonorFilter;
+
+  // Run independent queries in parallel for better performance
+  const [fundingByYear, fundingTrend, countryFundingByYear] = await Promise.all([
+    // Get all years with funding data
+    db.select({
       year: schema.flowSummaries.year,
       totalUsd: sum(schema.flowSummaries.totalAmountUsd),
       flowCount: sum(schema.flowSummaries.flowCount),
     })
     .from(schema.flowSummaries)
     .groupBy(schema.flowSummaries.year)
-    .orderBy(desc(schema.flowSummaries.year));
+    .orderBy(desc(schema.flowSummaries.year)),
 
-  // Get funding trend data (all years, for line chart)
-  const fundingTrend = await db.execute(sql`
-    SELECT
-      fs.year,
-      SUM(fs.total_amount_usd::numeric) as total_funding,
-      COUNT(DISTINCT fs.recipient_country_id) as countries_funded
-    FROM flow_summaries fs
-    GROUP BY fs.year
-    ORDER BY fs.year ASC
-  `);
-
-  // Get funding by year for top 15 recipient countries (for multi-line chart)
-  const countryFundingByYear = await db.execute(sql`
-    WITH top_countries AS (
+    // Get funding trend data (all years, for line chart)
+    db.execute(sql`
       SELECT
-        c.id,
-        c.name,
-        c.iso3,
-        SUM(fs.total_amount_usd::numeric) as total_funding
+        fs.year,
+        SUM(fs.total_amount_usd::numeric) as total_funding,
+        COUNT(DISTINCT fs.recipient_country_id) as countries_funded
       FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
+      GROUP BY fs.year
+      ORDER BY fs.year ASC
+    `),
+
+    // Get funding by year for top 15 recipient countries (for multi-line chart)
+    db.execute(sql`
+      WITH top_countries AS (
+        SELECT
+          c.id,
+          c.name,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as total_funding
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE fs.year >= 2016
+        GROUP BY c.id, c.name, c.iso3
+        ORDER BY total_funding DESC
+        LIMIT 15
+      )
+      SELECT
+        tc.name,
+        tc.iso3,
+        fs.year,
+        SUM(fs.total_amount_usd::numeric) as funding
+      FROM top_countries tc
+      JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
       WHERE fs.year >= 2016
-      GROUP BY c.id, c.name, c.iso3
-      ORDER BY total_funding DESC
-      LIMIT 15
-    )
-    SELECT
-      tc.name,
-      tc.iso3,
-      fs.year,
-      SUM(fs.total_amount_usd::numeric) as funding
-    FROM top_countries tc
-    JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
-    WHERE fs.year >= 2016
-    GROUP BY tc.name, tc.iso3, fs.year
-    ORDER BY tc.name, fs.year
-  `);
+      GROUP BY tc.name, tc.iso3, fs.year
+      ORDER BY tc.name, fs.year
+    `)
+  ]);
 
   // GHO 2024 People in Need by country (millions) - for countries missing from HAPI
   const GHO_PIN_BY_COUNTRY: Record<string, number> = {
@@ -113,99 +162,134 @@ export const load: PageServerLoad = async ({ url }) => {
     'IRQ': 2_500_000,      // Iraq
   };
 
+  // Build donor filter SQL condition
+  const buildDonorFilterCondition = (filter: DonorFilter): string => {
+    switch (filter) {
+      case 'us':
+        return `(o.name LIKE 'United States%' OR o.name LIKE '%USAID%' OR o.name LIKE '%U.S.%')`;
+      case 'oecd':
+        return `(${OECD_DAC_PATTERNS.map(p => `o.name LIKE '${p}%'`).join(' OR ')})`;
+      case 'eu_echo':
+        return `(${EU_ECHO_PATTERNS.map(p => `o.name LIKE '${p}%'`).join(' OR ')})`;
+      default:
+        return '1=1';
+    }
+  };
+
   // Get top recipient countries for selected year with needs data and YoY change
-  const countriesData = await db.execute(sql`
-    WITH current_funding AS (
+  // When donorFilter is set, filter by specific donor organizations
+  let countriesData;
+  if (donorFilter === 'all') {
+    countriesData = await db.execute(sql`
+      WITH current_funding AS (
+        SELECT
+          c.id,
+          c.name,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as funding_usd,
+          SUM(fs.flow_count) as flow_count
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE fs.year = ${selectedYear}
+        GROUP BY c.id, c.name, c.iso3
+      ),
+      prev_funding AS (
+        SELECT
+          c.id,
+          SUM(fs.total_amount_usd::numeric) as prev_funding_usd
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE fs.year = ${selectedYear - 1}
+        GROUP BY c.id
+      ),
+      needs AS (
+        SELECT
+          c.id as country_id,
+          MAX(CASE WHEN hn.year = 2025 THEN hn.people_in_need ELSE NULL END) as pin_2025,
+          MAX(CASE WHEN hn.year = 2024 THEN hn.people_in_need ELSE NULL END) as pin_2024
+        FROM humanitarian_needs hn
+        JOIN countries c ON c.id = hn.country_id
+        JOIN sectors s ON s.id = hn.sector_id
+        WHERE s.code = 'Intersectoral'
+        GROUP BY c.id
+      )
       SELECT
-        c.id,
-        c.name,
-        c.iso3,
-        SUM(fs.total_amount_usd::numeric) as funding_usd,
-        SUM(fs.flow_count) as flow_count
-      FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
-      WHERE fs.year = ${selectedYear}
-      GROUP BY c.id, c.name, c.iso3
-    ),
-    prev_funding AS (
+        cf.id,
+        cf.name,
+        cf.iso3,
+        cf.funding_usd,
+        cf.flow_count,
+        pf.prev_funding_usd,
+        COALESCE(n.pin_2025, n.pin_2024) as people_in_need,
+        CASE
+          WHEN COALESCE(n.pin_2025, n.pin_2024) > 0
+          THEN cf.funding_usd / COALESCE(n.pin_2025, n.pin_2024)
+          ELSE NULL
+        END as funding_per_person
+      FROM current_funding cf
+      LEFT JOIN prev_funding pf ON pf.id = cf.id
+      LEFT JOIN needs n ON n.country_id = cf.id
+      ORDER BY cf.funding_usd DESC
+    `);
+  } else {
+    // Query with donor filter - filter funding by specific donor groups
+    const filterCondition = buildDonorFilterCondition(donorFilter);
+    countriesData = await db.execute(sql.raw(`
+      WITH current_funding AS (
+        SELECT
+          c.id,
+          c.name,
+          c.iso3,
+          SUM(fs.total_amount_usd::numeric) as funding_usd,
+          SUM(fs.flow_count) as flow_count
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        JOIN organizations o ON o.id = fs.donor_org_id
+        WHERE fs.year = ${selectedYear}
+          AND ${filterCondition}
+        GROUP BY c.id, c.name, c.iso3
+      ),
+      prev_funding AS (
+        SELECT
+          c.id,
+          SUM(fs.total_amount_usd::numeric) as prev_funding_usd
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        JOIN organizations o ON o.id = fs.donor_org_id
+        WHERE fs.year = ${selectedYear - 1}
+          AND ${filterCondition}
+        GROUP BY c.id
+      ),
+      needs AS (
+        SELECT
+          c.id as country_id,
+          MAX(CASE WHEN hn.year = 2025 THEN hn.people_in_need ELSE NULL END) as pin_2025,
+          MAX(CASE WHEN hn.year = 2024 THEN hn.people_in_need ELSE NULL END) as pin_2024
+        FROM humanitarian_needs hn
+        JOIN countries c ON c.id = hn.country_id
+        JOIN sectors s ON s.id = hn.sector_id
+        WHERE s.code = 'Intersectoral'
+        GROUP BY c.id
+      )
       SELECT
-        c.id,
-        SUM(fs.total_amount_usd::numeric) as prev_funding_usd
-      FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
-      WHERE fs.year = ${selectedYear - 1}
-      GROUP BY c.id
-    ),
-    needs AS (
-      SELECT
-        c.id as country_id,
-        MAX(CASE WHEN hn.year = 2025 THEN hn.people_in_need ELSE NULL END) as pin_2025,
-        MAX(CASE WHEN hn.year = 2024 THEN hn.people_in_need ELSE NULL END) as pin_2024
-      FROM humanitarian_needs hn
-      JOIN countries c ON c.id = hn.country_id
-      JOIN sectors s ON s.id = hn.sector_id
-      WHERE s.code = 'Intersectoral'
-      GROUP BY c.id
-    )
-    SELECT
-      cf.id,
-      cf.name,
-      cf.iso3,
-      cf.funding_usd,
-      cf.flow_count,
-      pf.prev_funding_usd,
-      COALESCE(n.pin_2025, n.pin_2024) as people_in_need,
-      CASE
-        WHEN COALESCE(n.pin_2025, n.pin_2024) > 0
-        THEN cf.funding_usd / COALESCE(n.pin_2025, n.pin_2024)
-        ELSE NULL
-      END as funding_per_person
-    FROM current_funding cf
-    LEFT JOIN prev_funding pf ON pf.id = cf.id
-    LEFT JOIN needs n ON n.country_id = cf.id
-    ORDER BY cf.funding_usd DESC
-  `);
-
-  // Get sector breakdown for selected year
-  const sectorData = await db.execute(sql`
-    SELECT
-      COALESCE(s.name, 'Unspecified') as sector,
-      SUM(fs.total_amount_usd::numeric) as funding_usd,
-      SUM(fs.flow_count) as flow_count
-    FROM flow_summaries fs
-    LEFT JOIN sectors s ON s.id = fs.sector_id
-    WHERE fs.year = ${selectedYear}
-    GROUP BY s.name
-    ORDER BY funding_usd DESC
-    LIMIT 15
-  `);
-
-  // Get top donors for selected year
-  const donorData = await db.execute(sql`
-    SELECT
-      COALESCE(o.name, 'Unknown') as donor,
-      COALESCE(o.org_type, 'Unknown') as donor_type,
-      SUM(fs.total_amount_usd::numeric) as funding_usd,
-      COUNT(DISTINCT fs.recipient_country_id) as countries_funded
-    FROM flow_summaries fs
-    LEFT JOIN organizations o ON o.id = fs.donor_org_id
-    WHERE fs.year = ${selectedYear}
-    GROUP BY o.name, o.org_type
-    ORDER BY funding_usd DESC
-    LIMIT 20
-  `);
-
-  // Get funding by donor type
-  const donorTypeData = await db.execute(sql`
-    SELECT
-      COALESCE(o.org_type, 'Unknown') as donor_type,
-      SUM(fs.total_amount_usd::numeric) as funding_usd
-    FROM flow_summaries fs
-    LEFT JOIN organizations o ON o.id = fs.donor_org_id
-    WHERE fs.year = ${selectedYear}
-    GROUP BY o.org_type
-    ORDER BY funding_usd DESC
-  `);
+        cf.id,
+        cf.name,
+        cf.iso3,
+        cf.funding_usd,
+        cf.flow_count,
+        pf.prev_funding_usd,
+        COALESCE(n.pin_2025, n.pin_2024) as people_in_need,
+        CASE
+          WHEN COALESCE(n.pin_2025, n.pin_2024) > 0
+          THEN cf.funding_usd / COALESCE(n.pin_2025, n.pin_2024)
+          ELSE NULL
+        END as funding_per_person
+      FROM current_funding cf
+      LEFT JOIN prev_funding pf ON pf.id = cf.id
+      LEFT JOIN needs n ON n.country_id = cf.id
+      ORDER BY cf.funding_usd DESC
+    `));
+  }
 
   // EU member states for grouping (match start of name)
   const EU_MEMBER_PATTERNS = [
@@ -230,30 +314,74 @@ export const load: PageServerLoad = async ({ url }) => {
     return donor.includes('European') || donor.startsWith('EU ') || donor.includes('(EU)');
   };
 
-  // Get all government donors for current year
-  const topGovernmentDonorsRaw = await db.execute(sql`
-    SELECT
-      COALESCE(o.name, 'Unknown') as donor,
-      SUM(fs.total_amount_usd::numeric) as funding_usd
-    FROM flow_summaries fs
-    LEFT JOIN organizations o ON o.id = fs.donor_org_id
-    WHERE fs.year = ${selectedYear}
-      AND o.org_type = 'Governments'
-    GROUP BY o.name
-    ORDER BY funding_usd DESC
-  `);
+  // Run year-dependent queries in parallel for better performance
+  const [sectorData, donorData, donorTypeData, topGovernmentDonorsRaw, prevYearGovernmentDonors] = await Promise.all([
+    // Get sector breakdown for selected year
+    db.execute(sql`
+      SELECT
+        COALESCE(s.name, 'Unspecified') as sector,
+        SUM(fs.total_amount_usd::numeric) as funding_usd,
+        SUM(fs.flow_count) as flow_count
+      FROM flow_summaries fs
+      LEFT JOIN sectors s ON s.id = fs.sector_id
+      WHERE fs.year = ${selectedYear}
+      GROUP BY s.name
+      ORDER BY funding_usd DESC
+      LIMIT 15
+    `),
 
-  // Get previous year's government donors for YoY comparison
-  const prevYearGovernmentDonors = await db.execute(sql`
-    SELECT
-      COALESCE(o.name, 'Unknown') as donor,
-      SUM(fs.total_amount_usd::numeric) as funding_usd
-    FROM flow_summaries fs
-    LEFT JOIN organizations o ON o.id = fs.donor_org_id
-    WHERE fs.year = ${selectedYear - 1}
-      AND o.org_type = 'Governments'
-    GROUP BY o.name
-  `);
+    // Get top donors for selected year
+    db.execute(sql`
+      SELECT
+        COALESCE(o.name, 'Unknown') as donor,
+        COALESCE(o.org_type, 'Unknown') as donor_type,
+        SUM(fs.total_amount_usd::numeric) as funding_usd,
+        COUNT(DISTINCT fs.recipient_country_id) as countries_funded
+      FROM flow_summaries fs
+      LEFT JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year = ${selectedYear}
+      GROUP BY o.name, o.org_type
+      ORDER BY funding_usd DESC
+      LIMIT 20
+    `),
+
+    // Get funding by donor type
+    db.execute(sql`
+      SELECT
+        COALESCE(o.org_type, 'Unknown') as donor_type,
+        SUM(fs.total_amount_usd::numeric) as funding_usd
+      FROM flow_summaries fs
+      LEFT JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year = ${selectedYear}
+      GROUP BY o.org_type
+      ORDER BY funding_usd DESC
+    `),
+
+    // Get all government donors for current year
+    db.execute(sql`
+      SELECT
+        COALESCE(o.name, 'Unknown') as donor,
+        SUM(fs.total_amount_usd::numeric) as funding_usd
+      FROM flow_summaries fs
+      LEFT JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year = ${selectedYear}
+        AND o.org_type = 'Governments'
+      GROUP BY o.name
+      ORDER BY funding_usd DESC
+    `),
+
+    // Get previous year's government donors for YoY comparison
+    db.execute(sql`
+      SELECT
+        COALESCE(o.name, 'Unknown') as donor,
+        SUM(fs.total_amount_usd::numeric) as funding_usd
+      FROM flow_summaries fs
+      LEFT JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year = ${selectedYear - 1}
+        AND o.org_type = 'Governments'
+      GROUP BY o.name
+    `)
+  ]);
 
   // Process and group donors
   const processGovernmentDonors = () => {
@@ -269,6 +397,10 @@ export const load: PageServerLoad = async ({ url }) => {
     let euInstitutionTotal = 0, euInstitutionPrevTotal = 0;
     const others: { donor: string; funding: number; prevFunding: number }[] = [];
 
+    // Track individual breakdowns for US and EU
+    const usAgencies: { donor: string; funding: number; prevFunding: number }[] = [];
+    const euMemberStates: { donor: string; funding: number; prevFunding: number }[] = [];
+
     topGovernmentDonorsRaw.rows.forEach((r: any) => {
       const donor = r.donor as string;
       const funding = Number(r.funding_usd);
@@ -277,12 +409,14 @@ export const load: PageServerLoad = async ({ url }) => {
       if (isUSGovernment(donor)) {
         usTotal += funding;
         usPrevTotal += prevFunding;
+        usAgencies.push({ donor, funding, prevFunding });
       } else if (isEUInstitution(donor)) {
         euInstitutionTotal += funding;
         euInstitutionPrevTotal += prevFunding;
       } else if (isEUMember(donor)) {
         euMemberTotal += funding;
         euMemberPrevTotal += prevFunding;
+        euMemberStates.push({ donor, funding, prevFunding });
       } else {
         others.push({ donor, funding, prevFunding });
       }
@@ -308,49 +442,58 @@ export const load: PageServerLoad = async ({ url }) => {
     });
 
     // Sort by funding and take top 12
-    return result.sort((a, b) => b.funding - a.funding).slice(0, 12);
+    const topDonors = result.sort((a, b) => b.funding - a.funding).slice(0, 12);
+
+    // Sort breakdowns by funding
+    usAgencies.sort((a, b) => b.funding - a.funding);
+    euMemberStates.sort((a, b) => b.funding - a.funding);
+
+    return { topDonors, usAgencies, euMemberStates };
   };
 
-  const topGovernmentDonors = processGovernmentDonors();
+  const { topDonors: topGovernmentDonors, usAgencies, euMemberStates } = processGovernmentDonors();
 
   // Country detail data if a country is selected
   let countryDetail = null;
   if (selectedCountry) {
-    const countryHistory = await db.execute(sql`
-      SELECT
-        fs.year,
-        SUM(fs.total_amount_usd::numeric) as funding_usd
-      FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
-      WHERE c.iso3 = ${selectedCountry}
-      GROUP BY fs.year
-      ORDER BY fs.year ASC
-    `);
+    // Run country detail queries in parallel
+    const [countryHistory, countryDonors, countrySectors] = await Promise.all([
+      db.execute(sql`
+        SELECT
+          fs.year,
+          SUM(fs.total_amount_usd::numeric) as funding_usd
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        WHERE c.iso3 = ${selectedCountry}
+        GROUP BY fs.year
+        ORDER BY fs.year ASC
+      `),
 
-    const countryDonors = await db.execute(sql`
-      SELECT
-        COALESCE(o.name, 'Unknown') as donor,
-        SUM(fs.total_amount_usd::numeric) as funding_usd
-      FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
-      LEFT JOIN organizations o ON o.id = fs.donor_org_id
-      WHERE c.iso3 = ${selectedCountry} AND fs.year = ${selectedYear}
-      GROUP BY o.name
-      ORDER BY funding_usd DESC
-      LIMIT 10
-    `);
+      db.execute(sql`
+        SELECT
+          COALESCE(o.name, 'Unknown') as donor,
+          SUM(fs.total_amount_usd::numeric) as funding_usd
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        LEFT JOIN organizations o ON o.id = fs.donor_org_id
+        WHERE c.iso3 = ${selectedCountry} AND fs.year = ${selectedYear}
+        GROUP BY o.name
+        ORDER BY funding_usd DESC
+        LIMIT 10
+      `),
 
-    const countrySectors = await db.execute(sql`
-      SELECT
-        COALESCE(s.name, 'Unspecified') as sector,
-        SUM(fs.total_amount_usd::numeric) as funding_usd
-      FROM flow_summaries fs
-      JOIN countries c ON c.id = fs.recipient_country_id
-      LEFT JOIN sectors s ON s.id = fs.sector_id
-      WHERE c.iso3 = ${selectedCountry} AND fs.year = ${selectedYear}
-      GROUP BY s.name
-      ORDER BY funding_usd DESC
-    `);
+      db.execute(sql`
+        SELECT
+          COALESCE(s.name, 'Unspecified') as sector,
+          SUM(fs.total_amount_usd::numeric) as funding_usd
+        FROM flow_summaries fs
+        JOIN countries c ON c.id = fs.recipient_country_id
+        LEFT JOIN sectors s ON s.id = fs.sector_id
+        WHERE c.iso3 = ${selectedCountry} AND fs.year = ${selectedYear}
+        GROUP BY s.name
+        ORDER BY funding_usd DESC
+      `)
+    ]);
 
     const countryInfo = countriesData.rows.find((c: any) => c.iso3 === selectedCountry);
 
@@ -468,6 +611,7 @@ export const load: PageServerLoad = async ({ url }) => {
     selectedYear,
     selectedCountry,
     selectedDonor,
+    donorFilter,
     availableYears: fundingByYear.map(f => f.year).sort((a, b) => b - a),
     countriesList: countriesList.map(c => ({ iso3: c.iso3, name: c.name })),
 
@@ -557,6 +701,20 @@ export const load: PageServerLoad = async ({ url }) => {
       funding: d.funding,
       prevFunding: d.prevFunding,
       category: d.category,
+      yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
+    })),
+
+    // Breakdowns for US and EU
+    usAgenciesBreakdown: usAgencies.map(d => ({
+      donor: d.donor,
+      funding: d.funding,
+      prevFunding: d.prevFunding,
+      yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
+    })),
+    euMemberStatesBreakdown: euMemberStates.map(d => ({
+      donor: d.donor,
+      funding: d.funding,
+      prevFunding: d.prevFunding,
       yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
     })),
 

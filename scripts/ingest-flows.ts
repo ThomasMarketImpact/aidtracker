@@ -261,26 +261,39 @@ async function main() {
     for (const year of years) {
       console.log(`\n📊 Processing year ${year}...`);
 
-      // Clear existing data for this year
-      await db.delete(schema.flowSummaries).where(eq(schema.flowSummaries.year, year));
-
-      // Fetch flows
+      // Fetch flows first (before any destructive operations)
       const flows = await fetchFlowsForYear(year);
       console.log(`    Fetched ${flows.length} flows`);
       totalFlows += flows.length;
 
-      if (flows.length === 0) continue;
+      if (flows.length === 0) {
+        console.log(`    ⚠️ No flows found for ${year}, skipping (preserving existing data)`);
+        continue;
+      }
 
-      // Aggregate
+      // Aggregate the data
       const aggregations = aggregateFlows(flows, year);
       console.log(`    Aggregated to ${aggregations.length} records`);
 
-      // Insert
-      const inserted = await insertAggregations(aggregations);
-      totalAggregations += inserted;
+      // SAFE PATTERN: Delete old data and insert new data
+      // If insert fails after delete, we log the error and the year affected
+      // This minimizes the window where data could be lost
+      try {
+        // Delete existing data for this year
+        await db.delete(schema.flowSummaries).where(eq(schema.flowSummaries.year, year));
 
-      await logSync('flows', year, 'completed', flows.length);
-      console.log(`    ✓ Inserted ${inserted} aggregated flow summaries`);
+        // Insert new aggregated data
+        const inserted = await insertAggregations(aggregations);
+        totalAggregations += inserted;
+
+        await logSync('flows', year, 'completed', flows.length);
+        console.log(`    ✓ Inserted ${inserted} aggregated flow summaries`);
+      } catch (yearError) {
+        // Log specific year that failed for easier recovery
+        console.error(`    ❌ Failed to process year ${year}:`, yearError);
+        await logSync('flows', year, 'failed', undefined, String(yearError));
+        throw new Error(`Year ${year} ingestion failed: ${yearError}. Previous years may have been processed successfully.`);
+      }
     }
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);

@@ -66,6 +66,42 @@
     goto(`?year=${data.selectedYear}`);
   }
 
+  // Modal state for US/EU breakdown
+  let showBreakdownModal = false;
+  let breakdownType: 'US' | 'EU' | null = null;
+
+  function handleDonorChartClick(params: any) {
+    const donorName = params.name;
+    if (donorName === 'United States (All)') {
+      breakdownType = 'US';
+      showBreakdownModal = true;
+    } else if (donorName === 'EU Member States (Combined)') {
+      breakdownType = 'EU';
+      showBreakdownModal = true;
+    }
+  }
+
+  function closeBreakdownModal() {
+    showBreakdownModal = false;
+    breakdownType = null;
+  }
+
+  // Donor filter for Top 15 Recipients chart
+  type DonorFilterType = 'all' | 'oecd' | 'eu_echo' | 'us';
+  const donorFilterLabels: Record<DonorFilterType, string> = {
+    'all': 'All Donors',
+    'oecd': 'OECD DAC',
+    'eu_echo': 'EU & ECHO',
+    'us': 'US Only'
+  };
+
+  function handleDonorFilterChange(filter: DonorFilterType) {
+    const params = new URLSearchParams();
+    params.set('year', data.selectedYear.toString());
+    if (filter !== 'all') params.set('donorFilter', filter);
+    goto(`?${params.toString()}`);
+  }
+
   function handleYearChartClick(params: any) {
     const year = params.name;
     if (year && data.availableYears.includes(Number(year))) {
@@ -79,7 +115,7 @@
       trigger: 'axis',
       formatter: (params: any) => {
         const year = params[0]?.name;
-        const yearData = data.fundingTrend.find(d => d.year == year);
+        const yearData = data.fundingTrend.find(d => d.year === Number(year));
         let html = `<strong>${year}</strong>`;
         if (Number(year) === data.selectedYear) {
           html += ` <span style="color:#3b82f6">(selected)</span>`;
@@ -345,6 +381,130 @@
             padding: [0, 0, 0, 4]
           }
         }
+      }
+    }]
+  };
+
+  // Breakdown chart options for US agencies
+  $: usBreakdownOptions = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: (params: any) => {
+        const agencyName = params[0].name;
+        const agencyData = data.usAgenciesBreakdown.find(d => d.donor === agencyName);
+        let html = `<strong>${agencyName}</strong><br/>`;
+        html += `Funding: ${formatMoney(params[0].value)}<br/>`;
+        if (agencyData?.yoyChange !== null && agencyData?.yoyChange !== undefined) {
+          const sign = agencyData.yoyChange >= 0 ? '+' : '';
+          const color = agencyData.yoyChange >= 0 ? '#22c55e' : '#ef4444';
+          html += `<span style="color:${color}">YoY: ${sign}${agencyData.yoyChange.toFixed(1)}%</span>`;
+        }
+        return html;
+      }
+    },
+    grid: { left: '3%', right: '20%', bottom: '3%', containLabel: true },
+    xAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#666',
+        formatter: (val: number) => formatMoney(val)
+      }
+    },
+    yAxis: {
+      type: 'category',
+      data: [...data.usAgenciesBreakdown].slice(0, 15).reverse().map(d => d.donor),
+      axisLabel: {
+        color: '#666',
+        width: 180,
+        overflow: 'truncate',
+        fontSize: 11
+      }
+    },
+    series: [{
+      type: 'bar',
+      data: [...data.usAgenciesBreakdown].slice(0, 15).reverse().map(d => ({
+        value: d.funding,
+        itemStyle: { color: '#3b82f6' }
+      })),
+      label: {
+        show: true,
+        position: 'right',
+        formatter: (params: any) => {
+          const reversedData = [...data.usAgenciesBreakdown].slice(0, 15).reverse();
+          const agency = reversedData[params.dataIndex];
+          if (!agency) return formatMoney(params.value);
+          let label = formatMoney(params.value);
+          if (agency.yoyChange !== null && agency.yoyChange !== undefined) {
+            const sign = agency.yoyChange >= 0 ? '+' : '';
+            label += ` ${sign}${agency.yoyChange.toFixed(0)}%`;
+          }
+          return label;
+        },
+        fontSize: 10,
+        color: '#666'
+      }
+    }]
+  };
+
+  // Breakdown chart options for EU member states
+  $: euBreakdownOptions = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: (params: any) => {
+        const countryName = params[0].name;
+        const countryData = data.euMemberStatesBreakdown.find(d => d.donor === countryName);
+        let html = `<strong>${countryName}</strong><br/>`;
+        html += `Funding: ${formatMoney(params[0].value)}<br/>`;
+        if (countryData?.yoyChange !== null && countryData?.yoyChange !== undefined) {
+          const sign = countryData.yoyChange >= 0 ? '+' : '';
+          const color = countryData.yoyChange >= 0 ? '#22c55e' : '#ef4444';
+          html += `<span style="color:${color}">YoY: ${sign}${countryData.yoyChange.toFixed(1)}%</span>`;
+        }
+        return html;
+      }
+    },
+    grid: { left: '3%', right: '20%', bottom: '3%', containLabel: true },
+    xAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#666',
+        formatter: (val: number) => formatMoney(val)
+      }
+    },
+    yAxis: {
+      type: 'category',
+      data: [...data.euMemberStatesBreakdown].slice(0, 20).reverse().map(d => d.donor),
+      axisLabel: {
+        color: '#666',
+        width: 180,
+        overflow: 'truncate',
+        fontSize: 11
+      }
+    },
+    series: [{
+      type: 'bar',
+      data: [...data.euMemberStatesBreakdown].slice(0, 20).reverse().map(d => ({
+        value: d.funding,
+        itemStyle: { color: '#eab308' }
+      })),
+      label: {
+        show: true,
+        position: 'right',
+        formatter: (params: any) => {
+          const reversedData = [...data.euMemberStatesBreakdown].slice(0, 20).reverse();
+          const country = reversedData[params.dataIndex];
+          if (!country) return formatMoney(params.value);
+          let label = formatMoney(params.value);
+          if (country.yoyChange !== null && country.yoyChange !== undefined) {
+            const sign = country.yoyChange >= 0 ? '+' : '';
+            label += ` ${sign}${country.yoyChange.toFixed(0)}%`;
+          }
+          return label;
+        },
+        fontSize: 10,
+        color: '#666'
       }
     }]
   };
@@ -1024,8 +1184,19 @@
         </div>
         <div class="chart-card">
           <div class="chart-header">
-            <h3>Top 15 Recipient Countries ({data.selectedYear})</h3>
+            <h3>Top 15 Recipient Countries ({data.selectedYear}){data.donorFilter !== 'all' ? ` - ${donorFilterLabels[data.donorFilter as DonorFilterType]}` : ''}</h3>
             <DownloadButton config={topCountriesExportConfig} />
+          </div>
+          <div class="filter-buttons">
+            {#each Object.entries(donorFilterLabels) as [filter, label]}
+              <button
+                class="filter-btn"
+                class:active={data.donorFilter === filter}
+                on:click={() => handleDonorFilterChange(filter as DonorFilterType)}
+              >
+                {label}
+              </button>
+            {/each}
           </div>
           <p class="chart-hint">Click a country to see detailed breakdown</p>
           <Chart options={topCountriesOptions} height="400px" onChartClick={handleCountryChartClick} />
@@ -1038,8 +1209,8 @@
             <h3>Top Government Donors ({data.selectedYear})</h3>
             <DownloadButton config={topDonorsExportConfig} />
           </div>
-          <p class="chart-hint">🔵 US | 🟡 EU | ⚫ Other. Shows YoY % change.</p>
-          <Chart options={topGovernmentDonorsOptions} height="680px" />
+          <p class="chart-hint">🔵 US | 🟡 EU | ⚫ Other. Click US/EU for breakdown. Shows YoY % change.</p>
+          <Chart options={topGovernmentDonorsOptions} height="680px" onChartClick={handleDonorChartClick} />
         </div>
       </div>
     </div>
@@ -1144,6 +1315,41 @@
             {/each}
           </tbody>
         </table>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Breakdown Modal -->
+  {#if showBreakdownModal}
+    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
+    <div class="modal-overlay" on:click={closeBreakdownModal} role="dialog" aria-modal="true">
+      <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
+      <div class="modal-content" on:click|stopPropagation role="document">
+        <div class="modal-header">
+          <h2>
+            {#if breakdownType === 'US'}
+              🔵 United States - Agency Breakdown ({data.selectedYear})
+            {:else}
+              🟡 EU Member States - Country Breakdown ({data.selectedYear})
+            {/if}
+          </h2>
+          <button class="modal-close" on:click={closeBreakdownModal} aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          {#if breakdownType === 'US'}
+            <p class="modal-subtitle">
+              Total: {formatMoney(data.usAgenciesBreakdown.reduce((sum, d) => sum + d.funding, 0))}
+              from {data.usAgenciesBreakdown.length} agencies
+            </p>
+            <Chart options={usBreakdownOptions} height="{Math.max(300, data.usAgenciesBreakdown.slice(0, 15).length * 35)}px" />
+          {:else if breakdownType === 'EU'}
+            <p class="modal-subtitle">
+              Total: {formatMoney(data.euMemberStatesBreakdown.reduce((sum, d) => sum + d.funding, 0))}
+              from {data.euMemberStatesBreakdown.length} member states
+            </p>
+            <Chart options={euBreakdownOptions} height="{Math.max(400, data.euMemberStatesBreakdown.slice(0, 20).length * 30)}px" />
+          {/if}
+        </div>
       </div>
     </div>
   {/if}
@@ -1319,6 +1525,35 @@
     font-size: 0.75rem;
     color: var(--color-text-muted, #666);
     margin: 0 0 0.5rem 0;
+  }
+
+  .filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--color-border, #ddd);
+    border-radius: 4px;
+    background: var(--color-card, #fff);
+    color: var(--color-text-muted, #666);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--color-primary, #3b82f6);
+    color: var(--color-primary, #3b82f6);
+  }
+
+  .filter-btn.active {
+    background: var(--color-primary, #3b82f6);
+    border-color: var(--color-primary, #3b82f6);
+    color: white;
   }
 
   .chart-card.wide {
@@ -1511,5 +1746,67 @@
     .kpi-row {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* Modal styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    background: var(--color-card, #fff);
+    border-radius: 12px;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-text-muted, #666);
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+  }
+
+  .modal-close:hover {
+    color: var(--color-text, #333);
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-subtitle {
+    margin: 0 0 1rem 0;
+    color: var(--color-text-muted, #666);
+    font-size: 0.875rem;
   }
 </style>
