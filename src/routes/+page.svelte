@@ -2,7 +2,6 @@
   import { goto } from '$app/navigation';
   import Chart from '$lib/components/Chart.svelte';
   import DownloadButton from '$lib/components/DownloadButton.svelte';
-  import Logo from '$lib/components/Logo.svelte';
   import { DATA_SOURCES } from '$lib/utils/excelExport';
   import type { PageData } from './$types';
 
@@ -985,9 +984,6 @@
   <!-- Header & Filters -->
   <header class="dashboard-header">
     <div class="header-left">
-      <a href="https://marketimpact.org" target="_blank" rel="noopener noreferrer" class="logo-link">
-        <Logo className="header-logo" />
-      </a>
       <div class="header-titles">
         <h1>Humanitarian Funding Dashboard</h1>
         <p class="subtitle">FTS Funding Flows vs HAPI Humanitarian Needs</p>
@@ -1405,17 +1401,6 @@
     gap: 1rem;
   }
 
-  .logo-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-  }
-
-  .logo-link :global(.header-logo) {
-    height: 40px;
-    width: auto;
-  }
-
   .header-titles h1 {
     margin: 0 0 0.25rem 0;
     font-size: 1.75rem;
@@ -1796,10 +1781,6 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
-    }
-
-    .logo-link :global(.header-logo) {
-      height: 32px;
     }
 
     .header-titles h1 {
