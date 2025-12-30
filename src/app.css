@@ -274,8 +274,8 @@ select:focus, input:focus {
   color: var(--color-danger);
 }
 
-/* Navigation */
-nav {
+/* Navigation - scoped to dashboard nav only */
+.dashboard-nav {
   background: var(--background);
   border-bottom: 1px solid var(--color-border);
   padding: 1rem 0;
@@ -284,13 +284,13 @@ nav {
   z-index: 100;
 }
 
-nav .container {
+.dashboard-nav .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-nav a {
+.dashboard-nav a {
   color: var(--text);
   text-decoration: none;
   padding: 0.5rem 1rem;
@@ -298,11 +298,11 @@ nav a {
   transition: background 0.2s;
 }
 
-nav a:hover {
+.dashboard-nav a:hover {
   background: var(--surface);
 }
 
-nav a.active {
+.dashboard-nav a.active {
   background: var(--primary);
   color: white;
 }
