@@ -7,6 +7,9 @@
 
   export let data: PageData;
 
+  // UI state
+  let showAboutData = false;
+
   // Format helpers
   function formatMoney(value: number): string {
     if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
@@ -986,7 +989,16 @@
     <div class="header-left">
       <div class="header-titles">
         <h1>Humanitarian Funding Dashboard</h1>
-        <p class="subtitle">FTS Funding Flows vs HAPI Humanitarian Needs</p>
+        <p class="subtitle">
+          <a href="https://fts.unocha.org" target="_blank" rel="noopener noreferrer" class="source-link">FTS Funding Flows</a>
+          vs
+          <a href="https://hapi.humdata.org" target="_blank" rel="noopener noreferrer" class="source-link">HAPI Humanitarian Needs</a>
+          <button class="info-toggle" on:click={() => showAboutData = !showAboutData} aria-label="About the data">
+            <svg class="info-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </p>
       </div>
     </div>
     <div class="filters">
@@ -1009,6 +1021,52 @@
       </div>
     </div>
   </header>
+
+  <!-- About the Data -->
+  {#if showAboutData}
+    <div class="about-data-card">
+      <div class="about-data-header">
+        <h3>About the Data</h3>
+        <button class="close-btn" on:click={() => showAboutData = false} aria-label="Close">
+          <svg viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+      <div class="about-data-content">
+        <div class="data-source">
+          <h4>
+            <a href="https://fts.unocha.org" target="_blank" rel="noopener noreferrer">UN OCHA Financial Tracking Service (FTS)</a>
+          </h4>
+          <p>Tracks global humanitarian funding flows, including contributions from governments, private donors, and organizations to humanitarian crises worldwide.</p>
+          <ul>
+            <li><strong>Data used:</strong> Funding flows by donor, recipient country, and sector</li>
+            <li><strong>Coverage:</strong> 2016-2025</li>
+            <li><strong>Update frequency:</strong> Real-time (data refreshed daily)</li>
+          </ul>
+        </div>
+        <div class="data-source">
+          <h4>
+            <a href="https://hapi.humdata.org" target="_blank" rel="noopener noreferrer">HDX Humanitarian API (HAPI)</a>
+          </h4>
+          <p>Provides standardized humanitarian data including population statistics and people in need figures from Humanitarian Needs Overviews (HNOs).</p>
+          <ul>
+            <li><strong>Data used:</strong> People in need (PIN) estimates by country</li>
+            <li><strong>Coverage:</strong> Countries with active humanitarian response plans</li>
+            <li><strong>Update frequency:</strong> Annual (aligned with HNO releases)</li>
+          </ul>
+        </div>
+        <div class="data-notes">
+          <h4>Notes</h4>
+          <ul>
+            <li>Funding figures are adjusted to 2025 USD using World Bank inflation data for trend analysis</li>
+            <li>$/Person calculations only include countries with reported humanitarian needs</li>
+            <li>Some funding may be reported to regional or global appeals rather than specific countries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  {/if}
 
   <!-- Summary KPIs -->
   <div class="kpi-row">
@@ -1409,6 +1467,125 @@
   .subtitle {
     color: var(--color-text-muted, #666);
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .source-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .source-link:hover {
+    text-decoration: underline;
+  }
+
+  .info-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-text-muted, #666);
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+
+  .info-toggle:hover {
+    color: var(--primary);
+  }
+
+  .info-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  /* About the Data Card */
+  .about-data-card {
+    background: linear-gradient(135deg, #f0fdff 0%, #f8fafc 100%);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-data-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .about-data-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--primary);
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--color-text-muted, #666);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text);
+  }
+
+  .close-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .about-data-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .data-source h4,
+  .data-notes h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+  }
+
+  .data-source h4 a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .data-source h4 a:hover {
+    text-decoration: underline;
+  }
+
+  .data-source p,
+  .data-notes p {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-muted, #666);
+    line-height: 1.5;
+  }
+
+  .data-source ul,
+  .data-notes ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+
+  .data-source li,
+  .data-notes li {
+    margin-bottom: 0.25rem;
+    line-height: 1.5;
   }
 
   .filters {
