@@ -51,9 +51,9 @@ const OECD_DAC_PATTERNS = [
 // EU member states + ECHO (European Commission's humanitarian aid arm)
 const EU_ECHO_PATTERNS = [
   'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech',
-  'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
-  'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
-  'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden',
+  'Denmark', 'Danish', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
+  'Ireland', 'Italy', 'Italian', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
+  'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden', 'Swedish',
   'European Commission', 'European Union', 'ECHO', 'EU '
 ];
 
@@ -67,6 +67,65 @@ const GULF_PATTERNS = [
 
 // Donor filter types
 export type DonorFilter = 'all' | 'oecd' | 'eu_echo' | 'us' | 'gulf';
+
+// Countries with multiple government funding bodies that should be consolidated
+// Key = consolidated display name, value = SQL LIKE patterns to match
+const COUNTRY_CONSOLIDATION_CONFIG: Record<string, { displayName: string; patterns: string[]; color: string }> = {
+  'US': {
+    displayName: 'United States (All Agencies)',
+    patterns: ['United States%', '%USAID%', '%U.S.%'],
+    color: '#3b82f6', // Blue
+  },
+  'Sweden': {
+    displayName: 'Sweden (All Agencies)',
+    patterns: ['Sweden%', 'Swedish%', '%SIDA%'],
+    color: '#fbbf24', // Yellow
+  },
+  'UAE': {
+    displayName: 'UAE (All Agencies)',
+    patterns: ['United Arab Emirates%', 'UAE%'],
+    color: '#10b981', // Green
+  },
+  'Germany': {
+    displayName: 'Germany (All Agencies)',
+    patterns: ['Germany%', 'Deutsche Gesellschaft%', 'KFW%'],
+    color: '#000000', // Black
+  },
+  'Italy': {
+    displayName: 'Italy (All Agencies)',
+    patterns: ['Italy%', 'Italian%'],
+    color: '#22c55e', // Green
+  },
+  'Switzerland': {
+    displayName: 'Switzerland (All Agencies)',
+    patterns: ['Switzerland%', 'Swiss%'],
+    color: '#ef4444', // Red
+  },
+  'Qatar': {
+    displayName: 'Qatar (All Agencies)',
+    patterns: ['Qatar%'],
+    color: '#7c2d12', // Maroon
+  },
+};
+
+// Helper to check if a donor matches any consolidation pattern for a country
+const matchesCountryConsolidation = (donor: string, countryKey: string): boolean => {
+  const config = COUNTRY_CONSOLIDATION_CONFIG[countryKey];
+  if (!config) return false;
+  return config.patterns.some(pattern => {
+    if (pattern.startsWith('%') && pattern.endsWith('%')) {
+      return donor.includes(pattern.slice(1, -1));
+    } else if (pattern.endsWith('%')) {
+      return donor.startsWith(pattern.slice(0, -1));
+    } else if (pattern.startsWith('%')) {
+      return donor.endsWith(pattern.slice(1));
+    }
+    return donor === pattern;
+  });
+};
+
+// Get all consolidation country keys
+const CONSOLIDATION_COUNTRIES = Object.keys(COUNTRY_CONSOLIDATION_CONFIG);
 
 // Helper to check if donor matches a pattern list
 const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
@@ -338,9 +397,9 @@ export const load: PageServerLoad = async ({ url }) => {
   // EU member states for grouping (match start of name)
   const EU_MEMBER_PATTERNS = [
     'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech',
-    'Denmark', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
-    'Ireland', 'Italy', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
-    'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden'
+    'Denmark', 'Danish', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
+    'Ireland', 'Italy', 'Italian', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
+    'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden', 'Swedish'
   ];
 
   // Helper to check if donor is EU member state
@@ -359,7 +418,7 @@ export const load: PageServerLoad = async ({ url }) => {
   };
 
   // Run year-dependent queries in parallel for better performance
-  const [sectorData, donorData, donorTypeData, topGovernmentDonorsRaw, prevYearGovernmentDonors] = await Promise.all([
+  const [sectorData, donorData, consolidatedCountryFunding, donorTypeData, topGovernmentDonorsRaw, prevYearGovernmentDonors] = await Promise.all([
     // Get sector breakdown for selected year
     db.execute(sql`
       SELECT
@@ -387,6 +446,35 @@ export const load: PageServerLoad = async ({ url }) => {
       GROUP BY o.name, o.org_type
       ORDER BY funding_usd DESC
       LIMIT 20
+    `),
+
+    // Get consolidated funding for all countries with multiple agencies
+    db.execute(sql`
+      SELECT
+        CASE
+          WHEN o.name LIKE 'United States%' OR o.name LIKE '%USAID%' OR o.name LIKE '%U.S.%' THEN 'US'
+          WHEN o.name LIKE 'Sweden%' OR o.name LIKE 'Swedish%' OR o.name LIKE '%SIDA%' THEN 'Sweden'
+          WHEN o.name LIKE 'United Arab Emirates%' OR o.name LIKE 'UAE%' THEN 'UAE'
+          WHEN o.name LIKE 'Germany%' OR o.name LIKE 'Deutsche Gesellschaft%' OR o.name LIKE 'KFW%' THEN 'Germany'
+          WHEN o.name LIKE 'Italy%' OR o.name LIKE 'Italian%' THEN 'Italy'
+          WHEN o.name LIKE 'Switzerland%' OR o.name LIKE 'Swiss%' THEN 'Switzerland'
+          WHEN o.name LIKE 'Qatar%' THEN 'Qatar'
+        END as country_key,
+        SUM(fs.total_amount_usd::numeric) as funding_usd,
+        COUNT(DISTINCT fs.recipient_country_id) as countries_funded
+      FROM flow_summaries fs
+      LEFT JOIN organizations o ON o.id = fs.donor_org_id
+      WHERE fs.year = ${selectedYear}
+        AND (
+          o.name LIKE 'United States%' OR o.name LIKE '%USAID%' OR o.name LIKE '%U.S.%'
+          OR o.name LIKE 'Sweden%' OR o.name LIKE 'Swedish%' OR o.name LIKE '%SIDA%'
+          OR o.name LIKE 'United Arab Emirates%' OR o.name LIKE 'UAE%'
+          OR o.name LIKE 'Germany%' OR o.name LIKE 'Deutsche Gesellschaft%' OR o.name LIKE 'KFW%'
+          OR o.name LIKE 'Italy%' OR o.name LIKE 'Italian%'
+          OR o.name LIKE 'Switzerland%' OR o.name LIKE 'Swiss%'
+          OR o.name LIKE 'Qatar%'
+        )
+      GROUP BY country_key
     `),
 
     // Get funding by donor type
@@ -496,6 +584,96 @@ export const load: PageServerLoad = async ({ url }) => {
   };
 
   const { topDonors: topGovernmentDonors, usAgencies, euMemberStates } = processGovernmentDonors();
+
+  // Create consolidated donor data (combining multiple agencies per country)
+  const createConsolidatedDonorData = () => {
+    // Build lookup of consolidated country totals
+    const consolidatedTotals = new Map<string, { funding: number; countries: number }>();
+    consolidatedCountryFunding.rows.forEach((r: any) => {
+      if (r.country_key) {
+        consolidatedTotals.set(r.country_key, {
+          funding: Number(r.funding_usd || 0),
+          countries: Number(r.countries_funded || 0),
+        });
+      }
+    });
+
+    // Filter out donors that belong to any consolidated country
+    const nonConsolidatedDonors = donorData.rows.filter((r: any) => {
+      const donor = r.donor as string;
+      for (const countryKey of CONSOLIDATION_COUNTRIES) {
+        if (matchesCountryConsolidation(donor, countryKey)) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    // Create the consolidated list
+    const consolidated: { donor: string; donorType: string; funding: number; countriesFunded: number; isConsolidated?: boolean; countryKey?: string }[] = [];
+
+    // Add consolidated entries for each country with funding
+    for (const [countryKey, config] of Object.entries(COUNTRY_CONSOLIDATION_CONFIG)) {
+      const totals = consolidatedTotals.get(countryKey);
+      if (totals && totals.funding > 0) {
+        consolidated.push({
+          donor: config.displayName,
+          donorType: 'Governments',
+          funding: totals.funding,
+          countriesFunded: totals.countries,
+          isConsolidated: true,
+          countryKey,
+        });
+      }
+    }
+
+    // Add non-consolidated donors
+    nonConsolidatedDonors.forEach((r: any) => {
+      consolidated.push({
+        donor: r.donor,
+        donorType: r.donor_type,
+        funding: Number(r.funding_usd),
+        countriesFunded: Number(r.countries_funded),
+        isConsolidated: false,
+      });
+    });
+
+    // Sort by funding and take top 15
+    return consolidated.sort((a, b) => b.funding - a.funding).slice(0, 15);
+  };
+
+  const consolidatedDonorData = createConsolidatedDonorData();
+
+  // Get breakdown data for each consolidated country (for modal display)
+  const countryAgenciesBreakdown: Record<string, { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[]> = {};
+
+  // Process government donors to extract breakdowns by country
+  const prevYearMapForBreakdown = new Map<string, number>();
+  prevYearGovernmentDonors.rows.forEach((r: any) => {
+    prevYearMapForBreakdown.set(r.donor, Number(r.funding_usd));
+  });
+
+  for (const countryKey of CONSOLIDATION_COUNTRIES) {
+    const agencies: { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[] = [];
+
+    topGovernmentDonorsRaw.rows.forEach((r: any) => {
+      const donor = r.donor as string;
+      if (matchesCountryConsolidation(donor, countryKey)) {
+        const funding = Number(r.funding_usd);
+        const prevFunding = prevYearMapForBreakdown.get(donor) || 0;
+        agencies.push({
+          donor,
+          funding,
+          prevFunding,
+          yoyChange: prevFunding > 0 ? ((funding - prevFunding) / prevFunding) * 100 : null,
+        });
+      }
+    });
+
+    // Sort by funding
+    agencies.sort((a, b) => b.funding - a.funding);
+    countryAgenciesBreakdown[countryKey] = agencies;
+  }
 
   // Country detail data if a country is selected
   let countryDetail = null;
@@ -735,6 +913,9 @@ export const load: PageServerLoad = async ({ url }) => {
       countriesFunded: Number(r.countries_funded),
     })),
 
+    // Consolidated donor data with US agencies combined
+    consolidatedDonorData,
+
     donorTypeData: donorTypeData.rows.map((r: any) => ({
       type: r.donor_type,
       funding: Number(r.funding_usd),
@@ -748,7 +929,7 @@ export const load: PageServerLoad = async ({ url }) => {
       yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
     })),
 
-    // Breakdowns for US and EU
+    // Breakdowns for US and EU (for government donors chart)
     usAgenciesBreakdown: usAgencies.map(d => ({
       donor: d.donor,
       funding: d.funding,
@@ -761,6 +942,12 @@ export const load: PageServerLoad = async ({ url }) => {
       prevFunding: d.prevFunding,
       yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
     })),
+
+    // All country agency breakdowns (for Top 15 Donors table)
+    countryAgenciesBreakdown,
+
+    // Country consolidation config for frontend display
+    countryConsolidationConfig: COUNTRY_CONSOLIDATION_CONFIG,
 
     countryDetail,
     donorDetail,
