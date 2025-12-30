@@ -7,9 +7,6 @@
 
   export let data: PageData;
 
-  // UI state
-  let showAboutData = false;
-
   // Format helpers
   function formatMoney(value: number): string {
     if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
@@ -86,17 +83,27 @@
     'oecd': 'OECD Members'
   };
 
-  // Modal state for US/EU breakdown
+  // Modal state for country agency breakdown
   let showBreakdownModal = false;
-  let breakdownType: 'US' | 'EU' | null = null;
+  let breakdownType: 'US' | 'EU' | null = null; // For the government donors chart
+  let breakdownCountryKey: string | null = null; // For the Top 15 Donors table
+
+  // Handler for clicking on consolidated country entry in the donor table
+  function showCountryBreakdown(countryKey: string) {
+    breakdownCountryKey = countryKey;
+    showBreakdownModal = true;
+    breakdownType = null; // Clear the chart modal type
+  }
 
   function handleDonorChartClick(params: any) {
     const donorName = params.name;
     if (donorName === 'United States (All)') {
       breakdownType = 'US';
+      breakdownCountryKey = null;
       showBreakdownModal = true;
     } else if (donorName === 'EU Member States (Combined)') {
       breakdownType = 'EU';
+      breakdownCountryKey = null;
       showBreakdownModal = true;
     }
   }
@@ -104,7 +111,17 @@
   function closeBreakdownModal() {
     showBreakdownModal = false;
     breakdownType = null;
+    breakdownCountryKey = null;
   }
+
+  // Get breakdown data for a country
+  $: currentBreakdownData = breakdownCountryKey
+    ? data.countryAgenciesBreakdown[breakdownCountryKey] || []
+    : [];
+
+  $: currentBreakdownConfig = breakdownCountryKey
+    ? data.countryConsolidationConfig[breakdownCountryKey]
+    : null;
 
   function handleYearChartClick(params: any) {
     const year = params.name;
@@ -850,7 +867,7 @@
 
   $: donorTableExportConfig = {
     title: `Top 15 Donors - ${data.selectedYear}`,
-    data: data.donorData.slice(0, 15).map(d => ({
+    data: data.consolidatedDonorData.map(d => ({
       donor: d.donor,
       type: d.donorType,
       funding: d.funding,
@@ -984,7 +1001,7 @@
 </svelte:head>
 
 <div class="dashboard">
-  <!-- Header & Filters -->
+  <!-- Header -->
   <header class="dashboard-header">
     <div class="header-left">
       <div class="header-titles">
@@ -993,13 +1010,39 @@
           <a href="https://fts.unocha.org" target="_blank" rel="noopener noreferrer" class="source-link">FTS Funding Flows</a>
           vs
           <a href="https://hapi.humdata.org" target="_blank" rel="noopener noreferrer" class="source-link">HAPI Humanitarian Needs</a>
-          <button class="info-toggle" on:click={() => showAboutData = !showAboutData} aria-label="About the data">
-            <svg class="info-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-            </svg>
-          </button>
         </p>
       </div>
+    </div>
+  </header>
+
+  <!-- Sub Navigation -->
+  <nav class="sub-nav">
+    <div class="sub-nav-links">
+      <a href="/" class="sub-nav-link active">
+        <svg class="sub-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+        </svg>
+        Dashboard
+      </a>
+      <a href="/countries" class="sub-nav-link">
+        <svg class="sub-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+        </svg>
+        Countries
+      </a>
+      <a href="/donors" class="sub-nav-link">
+        <svg class="sub-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+          <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" />
+        </svg>
+        Donors
+      </a>
+      <a href="/about" class="sub-nav-link">
+        <svg class="sub-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        </svg>
+        About the Data
+      </a>
     </div>
     <div class="filters">
       <div class="filter-group">
@@ -1020,53 +1063,7 @@
         </select>
       </div>
     </div>
-  </header>
-
-  <!-- About the Data -->
-  {#if showAboutData}
-    <div class="about-data-card">
-      <div class="about-data-header">
-        <h3>About the Data</h3>
-        <button class="close-btn" on:click={() => showAboutData = false} aria-label="Close">
-          <svg viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      </div>
-      <div class="about-data-content">
-        <div class="data-source">
-          <h4>
-            <a href="https://fts.unocha.org" target="_blank" rel="noopener noreferrer">UN OCHA Financial Tracking Service (FTS)</a>
-          </h4>
-          <p>Tracks global humanitarian funding flows, including contributions from governments, private donors, and organizations to humanitarian crises worldwide.</p>
-          <ul>
-            <li><strong>Data used:</strong> Funding flows by donor, recipient country, and sector</li>
-            <li><strong>Coverage:</strong> 2016-2025</li>
-            <li><strong>Update frequency:</strong> Real-time (data refreshed daily)</li>
-          </ul>
-        </div>
-        <div class="data-source">
-          <h4>
-            <a href="https://hapi.humdata.org" target="_blank" rel="noopener noreferrer">HDX Humanitarian API (HAPI)</a>
-          </h4>
-          <p>Provides standardized humanitarian data including population statistics and people in need figures from Humanitarian Needs Overviews (HNOs).</p>
-          <ul>
-            <li><strong>Data used:</strong> People in need (PIN) estimates by country</li>
-            <li><strong>Coverage:</strong> Countries with active humanitarian response plans</li>
-            <li><strong>Update frequency:</strong> Annual (aligned with HNO releases)</li>
-          </ul>
-        </div>
-        <div class="data-notes">
-          <h4>Notes</h4>
-          <ul>
-            <li>Funding figures are adjusted to 2025 USD using World Bank inflation data for trend analysis</li>
-            <li>$/Person calculations only include countries with reported humanitarian needs</li>
-            <li>Some funding may be reported to regional or global appeals rather than specific countries</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  {/if}
+  </nav>
 
   <!-- Summary KPIs -->
   <div class="kpi-row">
@@ -1362,7 +1359,7 @@
         <h3>Top 15 Donors ({data.selectedYear})</h3>
         <DownloadButton config={donorTableExportConfig} />
       </div>
-      <p class="chart-hint">Click "View Flows" to see funding breakdown by recipient country</p>
+      <p class="chart-hint">US agencies are combined. Click "View Breakdown" to see individual agencies, or "View Flows" for country breakdown.</p>
       <div class="table-container">
         <table>
           <thead>
@@ -1375,16 +1372,27 @@
             </tr>
           </thead>
           <tbody>
-            {#each data.donorData.slice(0, 15) as donor}
-              <tr>
-                <td><strong>{donor.donor}</strong></td>
+            {#each data.consolidatedDonorData as donor}
+              <tr class:consolidated-row={donor.isConsolidated}>
+                <td>
+                  <strong>{donor.donor}</strong>
+                  {#if donor.isConsolidated}
+                    <span class="consolidated-badge">Combined</span>
+                  {/if}
+                </td>
                 <td><span class="badge badge-neutral">{donor.donorType}</span></td>
                 <td class="right">{formatMoney(donor.funding)}</td>
                 <td class="right">{donor.countriesFunded}</td>
                 <td>
-                  <button class="drill-btn" on:click={() => selectDonor(donor.donor)}>
-                    View Flows
-                  </button>
+                  {#if donor.isConsolidated && donor.countryKey}
+                    <button class="drill-btn breakdown-btn" on:click={() => showCountryBreakdown(donor.countryKey)}>
+                      View Breakdown
+                    </button>
+                  {:else}
+                    <button class="drill-btn" on:click={() => selectDonor(donor.donor)}>
+                      View Flows
+                    </button>
+                  {/if}
                 </td>
               </tr>
             {/each}
@@ -1402,7 +1410,9 @@
       <div class="modal-content" on:click|stopPropagation role="document">
         <div class="modal-header">
           <h2>
-            {#if breakdownType === 'US'}
+            {#if breakdownCountryKey && currentBreakdownConfig}
+              {currentBreakdownConfig.displayName} - Agency Breakdown ({data.selectedYear})
+            {:else if breakdownType === 'US'}
               🔵 United States - Agency Breakdown ({data.selectedYear})
             {:else}
               🟡 EU Member States - Country Breakdown ({data.selectedYear})
@@ -1411,7 +1421,39 @@
           <button class="modal-close" on:click={closeBreakdownModal} aria-label="Close modal">&times;</button>
         </div>
         <div class="modal-body">
-          {#if breakdownType === 'US'}
+          {#if breakdownCountryKey && currentBreakdownData.length > 0}
+            <p class="modal-subtitle">
+              Total: {formatMoney(currentBreakdownData.reduce((sum, d) => sum + d.funding, 0))}
+              from {currentBreakdownData.length} {currentBreakdownData.length === 1 ? 'agency' : 'agencies'}
+            </p>
+            <div class="breakdown-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Agency</th>
+                    <th class="right">Funding</th>
+                    <th class="right">YoY Change</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each currentBreakdownData as agency}
+                    {@const yoyColor = agency.yoyChange !== null ? (agency.yoyChange >= 0 ? '#22c55e' : '#ef4444') : '#666'}
+                    <tr>
+                      <td>{agency.donor}</td>
+                      <td class="right">{formatMoney(agency.funding)}</td>
+                      <td class="right" style="color: {yoyColor}">
+                        {#if agency.yoyChange !== null}
+                          {agency.yoyChange >= 0 ? '+' : ''}{agency.yoyChange.toFixed(0)}%
+                        {:else}
+                          N/A
+                        {/if}
+                      </td>
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          {:else if breakdownType === 'US'}
             <p class="modal-subtitle">
               Total: {formatMoney(data.usAgenciesBreakdown.reduce((sum, d) => sum + d.funding, 0))}
               from {data.usAgenciesBreakdown.length} agencies
@@ -1483,109 +1525,52 @@
     text-decoration: underline;
   }
 
-  .info-toggle {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--color-text-muted, #666);
-    display: inline-flex;
-    align-items: center;
-    transition: color 0.2s;
-  }
-
-  .info-toggle:hover {
-    color: var(--primary);
-  }
-
-  .info-icon {
-    width: 1.125rem;
-    height: 1.125rem;
-  }
-
-  /* About the Data Card */
-  .about-data-card {
-    background: linear-gradient(135deg, #f0fdff 0%, #f8fafc 100%);
-    border: 1px solid var(--color-border, #e2e8f0);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .about-data-header {
+  /* Sub Navigation */
+  .sub-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface, #f8fafc);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
   }
 
-  .about-data-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: var(--primary);
+  .sub-nav-links {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
   }
 
-  .close-btn {
-    background: none;
-    border: none;
-    padding: 0.25rem;
-    cursor: pointer;
+  .sub-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     color: var(--color-text-muted, #666);
-    border-radius: 4px;
+    text-decoration: none;
+    border-radius: 6px;
     transition: all 0.2s;
   }
 
-  .close-btn:hover {
-    background: rgba(0, 0, 0, 0.05);
-    color: var(--text);
-  }
-
-  .close-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .about-data-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .data-source h4,
-  .data-notes h4 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1rem;
-  }
-
-  .data-source h4 a {
+  .sub-nav-link:hover {
+    background: rgba(0, 95, 115, 0.08);
     color: var(--primary);
-    text-decoration: none;
   }
 
-  .data-source h4 a:hover {
-    text-decoration: underline;
+  .sub-nav-link.active {
+    background: var(--primary);
+    color: white;
   }
 
-  .data-source p,
-  .data-notes p {
-    margin: 0 0 0.75rem 0;
-    font-size: 0.875rem;
-    color: var(--color-text-muted, #666);
-    line-height: 1.5;
-  }
-
-  .data-source ul,
-  .data-notes ul {
-    margin: 0;
-    padding-left: 1.25rem;
-    font-size: 0.875rem;
-    color: var(--text);
-  }
-
-  .data-source li,
-  .data-notes li {
-    margin-bottom: 0.25rem;
-    line-height: 1.5;
+  .sub-nav-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
   }
 
   .filters {
@@ -2037,5 +2022,53 @@
     margin: 0 0 1rem 0;
     color: var(--color-text-muted, #666);
     font-size: 0.875rem;
+  }
+
+  /* Consolidated donor row styles */
+  .consolidated-row {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%);
+  }
+
+  .consolidated-row:hover {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.04) 100%);
+  }
+
+  .consolidated-badge {
+    display: inline-block;
+    padding: 0.125rem 0.375rem;
+    background: #3b82f6;
+    color: white;
+    border-radius: 3px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .breakdown-btn {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+  }
+
+  .breakdown-btn:hover {
+    background: #3b82f6;
+  }
+
+  /* Breakdown table in modal */
+  .breakdown-table {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .breakdown-table table {
+    width: 100%;
+  }
+
+  .breakdown-table th {
+    position: sticky;
+    top: 0;
+    background: var(--color-card, #fff);
+    z-index: 1;
   }
 </style>
