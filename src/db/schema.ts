@@ -149,6 +149,37 @@ export const fundingRequirements = pgTable('funding_requirements', {
 }));
 
 // ═══════════════════════════════════════════════════════════
+// REFUGEE POPULATION DATA (from UNHCR)
+// ═══════════════════════════════════════════════════════════
+
+export const refugeePopulation = pgTable('refugee_population', {
+  id: serial('id').primaryKey(),
+  countryId: integer('country_id').references(() => countries.id).notNull(),
+  year: integer('year').notNull(),
+
+  // Population figures (country of asylum)
+  refugees: integer('refugees'),              // Refugees in this country
+  asylumSeekers: integer('asylum_seekers'),   // Asylum seekers in this country
+  idps: integer('idps'),                      // Internally displaced persons
+  stateless: integer('stateless'),            // Stateless persons
+  returnedRefugees: integer('returned_refugees'), // Refugees who returned
+  returnedIdps: integer('returned_idps'),     // IDPs who returned
+  otherOfConcern: integer('other_of_concern'), // Other persons of concern
+
+  // Computed totals
+  totalRefugeesAndAsylum: integer('total_refugees_and_asylum'), // refugees + asylum_seekers
+
+  // Source info
+  source: varchar('source', { length: 50 }).default('unhcr'),
+
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => ({
+  countryYearIdx: uniqueIndex('refugee_population_country_year_idx').on(table.countryId, table.year),
+  yearIdx: index('refugee_population_year_idx').on(table.year),
+}));
+
+// ═══════════════════════════════════════════════════════════
 // DATA SYNC TRACKING
 // ═══════════════════════════════════════════════════════════
 
