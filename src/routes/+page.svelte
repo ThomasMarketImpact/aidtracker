@@ -22,9 +22,9 @@
 
   function getFundingLevel(perPerson: number | null): { label: string; class: string } {
     if (!perPerson) return { label: 'N/A', class: 'badge-neutral' };
-    if (perPerson >= 150) return { label: 'High', class: 'badge-success' };
-    if (perPerson >= 80) return { label: 'Medium', class: 'badge-warning' };
-    return { label: 'Low', class: 'badge-danger' };
+    if (perPerson >= 150) return { label: 'Well Funded', class: 'badge-funded-high' };
+    if (perPerson >= 80) return { label: 'Moderate', class: 'badge-funded-medium' };
+    return { label: 'Underfunded', class: 'badge-funded-low' };
   }
 
   // Navigation handlers
@@ -276,14 +276,7 @@
       type: 'bar',
       data: data.countriesData.slice(0, 15).map(c => c.funding).reverse(),
       itemStyle: {
-        color: (params: any) => {
-          const country = data.countriesData[14 - params.dataIndex];
-          const perPerson = country?.fundingPerPerson;
-          if (!perPerson) return '#94a3b8';
-          if (perPerson >= 150) return '#22c55e';
-          if (perPerson >= 80) return '#eab308';
-          return '#ef4444';
-        }
+        color: '#3b82f6'
       },
       label: {
         show: true,
@@ -857,12 +850,12 @@
       { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' },
       { key: 'peopleInNeed', header: 'People in Need', format: 'number' },
       { key: 'fundingPerPerson', header: '$/Person', format: 'currency' },
-      { key: 'status', header: 'Funding Status' }
+      { key: 'status', header: 'Funding Level' }
     ],
     sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI, DATA_SOURCES.GHO],
     filename: `funding-vs-needs-${data.selectedYear}`,
     year: data.selectedYear,
-    additionalInfo: 'Status: High (>=$150/person), Medium ($80-149/person), Low (<$80/person)'
+    additionalInfo: 'Funding Level: Well Funded (>=$150/person), Moderate ($80-149/person), Underfunded (<$80/person)'
   };
 
   $: donorTableExportConfig = {
@@ -1303,7 +1296,7 @@
         <h3>Funding vs Needs Analysis ({data.selectedYear})</h3>
         <DownloadButton config={fundingNeedsTableExportConfig} />
       </div>
-      <p class="chart-hint">Countries color-coded by funding adequacy per person in need. YoY = Year-over-Year change.</p>
+      <p class="chart-hint">Funding level per person in need: Well Funded (&ge;$150), Moderate ($80-149), Underfunded (&lt;$80). YoY = Year-over-Year change.</p>
       <div class="table-container">
         <table>
           <thead>
@@ -1313,7 +1306,7 @@
               <th class="right">YoY</th>
               <th class="right">People in Need</th>
               <th class="right">$/Person</th>
-              <th>Status</th>
+              <th>Funding Level</th>
               <th></th>
             </tr>
           </thead>
@@ -1881,6 +1874,22 @@
   .badge-neutral {
     background: #f3f4f6;
     color: #4b5563;
+  }
+
+  /* Neutral funding level badges - blue tones instead of traffic lights */
+  .badge-funded-high {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .badge-funded-medium {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+
+  .badge-funded-low {
+    background: #fef3c7;
+    color: #92400e;
   }
 
   .drill-btn {
