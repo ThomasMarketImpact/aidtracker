@@ -34,7 +34,7 @@ export const load: PageServerLoad = async ({ url }) => {
     .groupBy(schema.countries.iso3, schema.countries.name, schema.countries.id)
     .orderBy(desc(sql`total_funding`));
 
-  // Get people in need data from HAPI
+  // Get people in need data from HAPI (humanitarian needs assessments)
   const pinData = await db
     .select({
       countryId: schema.humanitarianNeeds.countryId,
@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({ url }) => {
     .from(schema.humanitarianNeeds)
     .where(sql`${schema.humanitarianNeeds.year} = ${selectedYear}`);
 
-  // Get refugee data from UNHCR (for fallback when HAPI data is missing)
+  // Get refugee data from UNHCR (refugees hosted in each country)
   const refugeeData = await db
     .select({
       countryId: schema.refugeePopulation.countryId,
@@ -73,7 +73,7 @@ export const load: PageServerLoad = async ({ url }) => {
     }
   }
 
-  // Build refugee map from UNHCR data (for fallback)
+  // Build refugee map from UNHCR data (separate metric - refugees hosted)
   const refugeeMap = new Map<string, number>();
   for (const r of refugeeData) {
     const iso3 = idToIso3Map.get(r.countryId);
@@ -85,19 +85,12 @@ export const load: PageServerLoad = async ({ url }) => {
     }
   }
 
-  // Combine data - use HAPI PIN data if available, otherwise use UNHCR refugee data
+  // Combine data - PIN and refugees are separate metrics
   const countries = countriesData
     .filter(c => c.iso3 && c.name)
     .map(c => {
-      const hapiPin = pinMap.get(c.iso3!);
-      const unhcrRefugees = refugeeMap.get(c.iso3!);
-
-      // Use HAPI data if available, otherwise use UNHCR refugee count
-      const peopleInNeed = hapiPin || 0;
-      const refugeeCount = unhcrRefugees || 0;
-
-      // For funding per person, use HAPI PIN if available, otherwise use refugee count
-      const denominatorForFunding = hapiPin || unhcrRefugees || 0;
+      const peopleInNeed = pinMap.get(c.iso3!) || 0;
+      const refugeesHosted = refugeeMap.get(c.iso3!) || 0;
 
       return {
         iso3: c.iso3!,
@@ -105,11 +98,10 @@ export const load: PageServerLoad = async ({ url }) => {
         totalFunding: Number(c.totalFunding) || 0,
         flowCount: Number(c.flowCount) || 0,
         donorCount: Number(c.donorCount) || 0,
-        peopleInNeed,
-        refugeeCount,
-        // Indicate the data source
-        pinSource: hapiPin ? 'hapi' : (unhcrRefugees ? 'unhcr' : null),
-        fundingPerPerson: denominatorForFunding > 0 ? Number(c.totalFunding) / denominatorForFunding : null,
+        peopleInNeed,        // From HAPI humanitarian needs assessments
+        refugeesHosted,      // From UNHCR - refugees hosted in this country
+        // Only calculate $/person based on PIN (humanitarian needs), not refugees hosted
+        fundingPerPerson: peopleInNeed > 0 ? Number(c.totalFunding) / peopleInNeed : null,
       };
     });
 

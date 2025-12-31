@@ -114,7 +114,8 @@
         <tr>
           <th>Country</th>
           <th class="right">Total Funding</th>
-          <th class="right">People in Need / Refugees</th>
+          <th class="right">People in Need</th>
+          <th class="right">Refugees Hosted</th>
           <th class="right">$/Person</th>
           <th>Status</th>
           <th class="right">Donors</th>
@@ -124,7 +125,6 @@
       <tbody>
         {#each filteredCountries as country}
           {@const level = getFundingLevel(country.fundingPerPerson)}
-          {@const displayPop = country.peopleInNeed > 0 ? country.peopleInNeed : country.refugeeCount}
           <tr>
             <td>
               <strong>{country.name}</strong>
@@ -132,13 +132,15 @@
             </td>
             <td class="right">{formatMoney(country.totalFunding)}</td>
             <td class="right">
-              {#if displayPop > 0}
-                <span class="pop-value">{formatNumber(displayPop)}</span>
-                {#if country.pinSource === 'hapi'}
-                  <span class="source-badge source-hapi" title="People in Need from HAPI/HNO">PIN</span>
-                {:else if country.pinSource === 'unhcr'}
-                  <span class="source-badge source-unhcr" title="Refugees + Asylum Seekers from UNHCR">REF</span>
-                {/if}
+              {#if country.peopleInNeed > 0}
+                {formatNumber(country.peopleInNeed)}
+              {:else}
+                <span class="no-data">-</span>
+              {/if}
+            </td>
+            <td class="right">
+              {#if country.refugeesHosted > 0}
+                {formatNumber(country.refugeesHosted)}
               {:else}
                 <span class="no-data">-</span>
               {/if}
@@ -381,31 +383,6 @@
     text-decoration: underline;
   }
 
-  .pop-value {
-    margin-right: 0.375rem;
-  }
-
-  .source-badge {
-    display: inline-flex;
-    padding: 0.125rem 0.375rem;
-    border-radius: 4px;
-    font-size: 0.625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    vertical-align: middle;
-  }
-
-  .source-hapi {
-    background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
-  }
-
-  .source-unhcr {
-    background: rgba(14, 165, 233, 0.1);
-    color: #0ea5e9;
-  }
-
   .no-data {
     color: var(--color-text-muted, #666);
   }
@@ -416,7 +393,7 @@
     }
 
     table {
-      min-width: 700px;
+      min-width: 800px;
     }
   }
 </style>
