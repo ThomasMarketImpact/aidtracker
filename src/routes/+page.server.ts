@@ -156,7 +156,12 @@ export const load: PageServerLoad = async ({ url }) => {
     ? donorParam.trim()
     : null;
 
-  const donorFilter = (url.searchParams.get('donorFilter') || 'all') as DonorFilter;
+  // Validate donor filter - must be one of the allowed values to prevent SQL injection
+  const VALID_DONOR_FILTERS: DonorFilter[] = ['all', 'oecd', 'eu_echo', 'us', 'gulf'];
+  const donorFilterParam = url.searchParams.get('donorFilter');
+  const donorFilter: DonorFilter = donorFilterParam && VALID_DONOR_FILTERS.includes(donorFilterParam as DonorFilter)
+    ? donorFilterParam as DonorFilter
+    : 'all';
 
   // Run independent queries in parallel for better performance
   const [fundingByYear, fundingTrend] = await Promise.all([
@@ -203,6 +208,10 @@ export const load: PageServerLoad = async ({ url }) => {
   };
 
   // Build donor filter SQL condition
+  // SECURITY: This is safe because:
+  // 1. `filter` is validated against VALID_DONOR_FILTERS whitelist before reaching here
+  // 2. All pattern arrays (OECD_DAC_PATTERNS, etc.) are hardcoded constants, not user input
+  // 3. The switch only produces SQL from these fixed, trusted values
   const buildDonorFilterCondition = (filter: DonorFilter): string => {
     switch (filter) {
       case 'us':
