@@ -84,15 +84,69 @@
       <div class="details">
         <div class="detail-item">
           <span class="detail-label">Coverage</span>
-          <span class="detail-value">Countries with humanitarian response plans</span>
+          <span class="detail-value">~25 countries with formal HRPs</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">Update Frequency</span>
-          <span class="detail-value">Varies by dataset (monthly to annually)</span>
+          <span class="detail-value">Annually (with HNO releases)</span>
         </div>
         <div class="detail-item">
           <span class="detail-label">Data Points</span>
-          <span class="detail-value">People in need, population, operational presence</span>
+          <span class="detail-value">People in Need (PIN) from humanitarian needs assessments</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>UNHCR Refugee Statistics</h2>
+      <p class="source-link">
+        <a href="https://www.unhcr.org/refugee-statistics/" target="_blank" rel="noopener noreferrer">unhcr.org/refugee-statistics</a>
+      </p>
+      <p>
+        The UN Refugee Agency (UNHCR) maintains global statistics on refugees, asylum seekers,
+        internally displaced persons (IDPs), stateless people, and other populations of concern.
+        This data shows how many displaced people each country hosts.
+      </p>
+      <div class="details">
+        <div class="detail-item">
+          <span class="detail-label">Coverage</span>
+          <span class="detail-value">Global (180+ countries)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Update Frequency</span>
+          <span class="detail-value">Annually (mid-year estimates available)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Data Points</span>
+          <span class="detail-value">Refugees hosted, asylum seekers, IDPs, stateless</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h2>IPC Food Security Analysis</h2>
+      <p class="source-link">
+        <a href="https://www.ipcinfo.org" target="_blank" rel="noopener noreferrer">ipcinfo.org</a>
+      </p>
+      <p>
+        The Integrated Food Security Phase Classification (IPC) is a global standard for measuring
+        acute food insecurity. Phase 3+ (Crisis, Emergency, Famine) populations are used as a
+        <strong>supplementary source</strong> for countries where HAPI PIN data is unavailable.
+        Note: Major crisis countries (Afghanistan, Yemen, DRC, Sudan, etc.) should have HAPI PIN
+        data from their formal HRPs &mdash; IPC is only used for countries outside the HRP system.
+      </p>
+      <div class="details">
+        <div class="detail-item">
+          <span class="detail-label">Coverage</span>
+          <span class="detail-value">30+ countries (food crisis zones)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Update Frequency</span>
+          <span class="detail-value">Multiple times per year</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Data Points</span>
+          <span class="detail-value">Phase 3+ populations (Crisis and above)</span>
         </div>
       </div>
     </section>
@@ -100,14 +154,25 @@
     <section class="info-card full-width">
       <h2>Methodology</h2>
       <p>
-        This dashboard combines funding data from FTS with humanitarian needs data from HAPI to
-        provide insights into the relationship between funding and humanitarian needs.
+        This dashboard combines funding data from FTS with humanitarian needs data from HAPI and
+        refugee statistics from UNHCR to provide insights into humanitarian funding patterns.
       </p>
       <ul class="methodology-list">
         <li>
-          <strong>Funding per person in need</strong> is calculated by dividing total funding
-          received by a country by the number of people in need as reported in Humanitarian
-          Needs Overviews (HNOs).
+          <strong>People in Need (PIN)</strong> comes from HAPI and represents populations affected
+          by humanitarian crises who require assistance. This is derived from Humanitarian Needs
+          Overviews (HNOs) conducted for countries with formal Humanitarian Response Plans.
+        </li>
+        <li>
+          <strong>Refugees Hosted</strong> comes from UNHCR and represents refugees and asylum
+          seekers residing in each country. This is a separate metric from PIN &mdash; a country
+          can host many refugees while having few people in need (e.g., Germany), or have many
+          people in need while hosting few refugees (e.g., Syria).
+        </li>
+        <li>
+          <strong>Funding per person in need</strong> is calculated only when PIN data is available,
+          by dividing total funding by the number of people in need. This metric is not calculated
+          using refugee counts, as refugees hosted and humanitarian need are distinct concepts.
         </li>
         <li>
           <strong>Funding status</strong> classifications (High, Medium, Low) are based on
@@ -117,10 +182,6 @@
           <strong>Donor aggregations</strong> combine all reported contributions from a single
           source organization across all recipient countries and organizations.
         </li>
-        <li>
-          <strong>Year filtering</strong> shows funding flows reported for the selected calendar
-          year, with humanitarian needs data matched to the same reference year where available.
-        </li>
       </ul>
     </section>
 
@@ -128,20 +189,28 @@
       <h2>Data Limitations</h2>
       <ul class="methodology-list">
         <li>
-          Funding data relies on voluntary reporting by donors and may not capture all
-          humanitarian assistance.
+          <strong>PIN coverage is limited:</strong> Only ~25 countries have formal Humanitarian
+          Response Plans with PIN data. Many countries receiving significant humanitarian funding
+          (such as Palestine with $3.5B in 2024) do not have PIN figures in HAPI. This is not
+          an error &mdash; it reflects the scope of the HNO/HRP process.
         </li>
         <li>
-          People in need figures are estimates from humanitarian needs assessments and may
-          not be available for all countries or years.
+          <strong>Funding data is self-reported:</strong> FTS relies on voluntary reporting by
+          donors and may not capture all humanitarian assistance, particularly bilateral aid
+          or private donations.
         </li>
         <li>
-          Double-counting may occur when funding is reported at multiple stages of the
-          humanitarian funding chain.
+          <strong>Double-counting may occur:</strong> Funding reported at multiple stages of the
+          humanitarian funding chain (e.g., from government to pooled fund to implementing partner)
+          can result in the same money being counted more than once.
         </li>
         <li>
-          Currency conversion to USD uses rates at the time of reporting, which may affect
-          year-over-year comparisons.
+          <strong>Refugee data timing:</strong> UNHCR statistics are typically released mid-year
+          for the previous year, so current-year data may show zeros or be incomplete.
+        </li>
+        <li>
+          <strong>Currency effects:</strong> All figures are in USD using exchange rates at the
+          time of reporting, which may affect year-over-year comparisons for non-USD donors.
         </li>
       </ul>
     </section>

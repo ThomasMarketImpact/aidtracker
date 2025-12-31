@@ -14,6 +14,7 @@
     "ingest": "npx tsx scripts/ingest-data.ts",
     "ingest:flows": "npx tsx scripts/ingest-flows.ts",
     "ingest:needs": "npx tsx scripts/ingest-needs.ts",
+    "ingest:daily": "npx tsx scripts/ingest-daily.ts",
     "test:db": "npx tsx scripts/test-db.ts"
   },
   "keywords": [

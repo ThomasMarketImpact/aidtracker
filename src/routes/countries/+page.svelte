@@ -133,7 +133,12 @@
             <td class="right">{formatMoney(country.totalFunding)}</td>
             <td class="right">
               {#if country.peopleInNeed > 0}
-                {formatNumber(country.peopleInNeed)}
+                <span class="pin-value">{formatNumber(country.peopleInNeed)}</span>
+                {#if country.pinSource === 'hapi'}
+                  <span class="source-badge source-hapi" title="People in Need from HAPI/HNO ({data.selectedYear})">PIN</span>
+                {:else if country.pinSource === 'ipc'}
+                  <span class="source-badge source-ipc" title="IPC Phase 3+ Food Insecurity ({country.pinYear})">IPC</span>
+                {/if}
               {:else}
                 <span class="no-data">-</span>
               {/if}
@@ -385,6 +390,32 @@
 
   .no-data {
     color: var(--color-text-muted, #666);
+  }
+
+  .pin-value {
+    margin-right: 0.375rem;
+  }
+
+  .source-badge {
+    display: inline-flex;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    vertical-align: middle;
+    cursor: help;
+  }
+
+  .source-hapi {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+  }
+
+  .source-ipc {
+    background: rgba(234, 88, 12, 0.1);
+    color: #ea580c;
   }
 
   @media (max-width: 768px) {

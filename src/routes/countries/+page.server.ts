@@ -35,13 +35,41 @@ export const load: PageServerLoad = async ({ url }) => {
     .orderBy(desc(sql`total_funding`));
 
   // Get people in need data from HAPI (humanitarian needs assessments)
+  // HAPI has multiple rows per country (by sector), so get the MAX PIN per country
   const pinData = await db
     .select({
       countryId: schema.humanitarianNeeds.countryId,
-      peopleInNeed: schema.humanitarianNeeds.peopleInNeed,
+      peopleInNeed: sql<number>`MAX(${schema.humanitarianNeeds.peopleInNeed})`.as('people_in_need'),
     })
     .from(schema.humanitarianNeeds)
-    .where(sql`${schema.humanitarianNeeds.year} = ${selectedYear}`);
+    .where(sql`${schema.humanitarianNeeds.year} = ${selectedYear}`)
+    .groupBy(schema.humanitarianNeeds.countryId);
+
+  // Get IPC food insecurity data (Phase 3+ as fallback for PIN)
+  // Try selected year first, then fall back to most recent year available
+  let ipcData = await db
+    .select({
+      countryId: schema.foodInsecurity.countryId,
+      phase3Plus: schema.foodInsecurity.phase3Plus,
+      year: schema.foodInsecurity.year,
+    })
+    .from(schema.foodInsecurity)
+    .where(sql`${schema.foodInsecurity.year} = ${selectedYear}`);
+
+  // If no IPC data for selected year, get most recent data per country
+  if (ipcData.length === 0) {
+    ipcData = await db
+      .select({
+        countryId: schema.foodInsecurity.countryId,
+        phase3Plus: schema.foodInsecurity.phase3Plus,
+        year: schema.foodInsecurity.year,
+      })
+      .from(schema.foodInsecurity)
+      .where(sql`${schema.foodInsecurity.year} = (
+        SELECT MAX(year) FROM food_insecurity fi2
+        WHERE fi2.country_id = ${schema.foodInsecurity.countryId}
+      )`);
+  }
 
   // Get refugee data from UNHCR (refugees hosted in each country)
   const refugeeData = await db
@@ -73,6 +101,15 @@ export const load: PageServerLoad = async ({ url }) => {
     }
   }
 
+  // Build IPC map (Phase 3+ = food insecurity crisis level)
+  const ipcMap = new Map<string, { phase3Plus: number; year: number }>();
+  for (const i of ipcData) {
+    const iso3 = idToIso3Map.get(i.countryId);
+    if (iso3 && i.phase3Plus) {
+      ipcMap.set(iso3, { phase3Plus: i.phase3Plus, year: i.year });
+    }
+  }
+
   // Build refugee map from UNHCR data (separate metric - refugees hosted)
   const refugeeMap = new Map<string, number>();
   for (const r of refugeeData) {
@@ -85,12 +122,18 @@ export const load: PageServerLoad = async ({ url }) => {
     }
   }
 
-  // Combine data - PIN and refugees are separate metrics
+  // Combine data - use HAPI PIN first, fall back to IPC Phase 3+
   const countries = countriesData
     .filter(c => c.iso3 && c.name)
     .map(c => {
-      const peopleInNeed = pinMap.get(c.iso3!) || 0;
+      const hapiPin = pinMap.get(c.iso3!);
+      const ipcData = ipcMap.get(c.iso3!);
       const refugeesHosted = refugeeMap.get(c.iso3!) || 0;
+
+      // Use HAPI PIN if available, otherwise use IPC Phase 3+
+      const peopleInNeed = hapiPin || ipcData?.phase3Plus || 0;
+      const pinSource = hapiPin ? 'hapi' : (ipcData ? 'ipc' : null);
+      const pinYear = hapiPin ? selectedYear : (ipcData?.year || null);
 
       return {
         iso3: c.iso3!,
@@ -98,9 +141,11 @@ export const load: PageServerLoad = async ({ url }) => {
         totalFunding: Number(c.totalFunding) || 0,
         flowCount: Number(c.flowCount) || 0,
         donorCount: Number(c.donorCount) || 0,
-        peopleInNeed,        // From HAPI humanitarian needs assessments
+        peopleInNeed,        // From HAPI or IPC Phase 3+
+        pinSource,           // 'hapi' or 'ipc' or null
+        pinYear,             // Year of PIN data (may differ from selected year for IPC)
         refugeesHosted,      // From UNHCR - refugees hosted in this country
-        // Only calculate $/person based on PIN (humanitarian needs), not refugees hosted
+        // Calculate $/person based on PIN (from either source)
         fundingPerPerson: peopleInNeed > 0 ? Number(c.totalFunding) / peopleInNeed : null,
       };
     });
