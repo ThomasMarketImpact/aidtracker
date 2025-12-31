@@ -2,6 +2,29 @@ import { db, schema } from '$lib/server/db';
 import { sql, desc, eq, sum, and } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
+// Safe number parsing helper - returns 0 for NaN/null/undefined/Infinity
+const safeNumber = (value: unknown): number => {
+  if (value === null || value === undefined) return 0;
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+};
+
+// Safe percentage change calculation - guards against division by zero and NaN
+const safeYoyChange = (current: number, previous: number): number | null => {
+  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous <= 0) {
+    return null;
+  }
+  return ((current - previous) / previous) * 100;
+};
+
+// Safe division helper - returns null for invalid divisions
+const safeDivide = (numerator: number, denominator: number): number | null => {
+  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) {
+    return null;
+  }
+  return numerator / denominator;
+};
+
 // US CPI annual averages (BLS CPI-U) - used to convert to 2025 USD
 // Source: Bureau of Labor Statistics, with 2024-2025 estimated
 const CPI_DATA: Record<number, number> = {
@@ -138,12 +161,16 @@ const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
 };
 
 export const load: PageServerLoad = async ({ url }) => {
-  // Parse and validate year parameter
+  // Parse and validate year parameter with comprehensive validation
   const yearParam = url.searchParams.get('year');
-  let selectedYear = yearParam ? parseInt(yearParam, 10) : 2025;
-  // Validate year is a reasonable number (2016-2030 range)
-  if (isNaN(selectedYear) || selectedYear < 2016 || selectedYear > 2030) {
-    selectedYear = 2025;
+  let selectedYear = 2025; // Default value
+  if (yearParam) {
+    const parsed = parseInt(yearParam, 10);
+    // Validate: must be a finite integer in valid range (2016-2030)
+    if (Number.isFinite(parsed) && Number.isInteger(parsed) && parsed >= 2016 && parsed <= 2030) {
+      selectedYear = parsed;
+    }
+    // Invalid values (NaN, Infinity, out of range, non-integer) fall through to default
   }
 
   // Validate country parameter (ISO3 code should be exactly 3 uppercase letters)
@@ -526,10 +553,13 @@ export const load: PageServerLoad = async ({ url }) => {
 
   // Process and group donors
   const processGovernmentDonors = () => {
-    // Build previous year lookup
+    // Build previous year lookup with safe Number conversion
     const prevYearMap = new Map<string, number>();
     prevYearGovernmentDonors.rows.forEach((r: any) => {
-      prevYearMap.set(r.donor, Number(r.funding_usd));
+      const funding = Number(r.funding_usd) || 0;
+      if (Number.isFinite(funding)) {
+        prevYearMap.set(r.donor, funding);
+      }
     });
 
     // Aggregate totals
@@ -544,7 +574,9 @@ export const load: PageServerLoad = async ({ url }) => {
 
     topGovernmentDonorsRaw.rows.forEach((r: any) => {
       const donor = r.donor as string;
-      const funding = Number(r.funding_usd);
+      if (!donor) return; // Skip rows with null/undefined donors
+      const funding = Number(r.funding_usd) || 0;
+      if (!Number.isFinite(funding)) return; // Skip invalid funding values
       const prevFunding = prevYearMap.get(donor) || 0;
 
       if (isUSGovernment(donor)) {
@@ -596,20 +628,22 @@ export const load: PageServerLoad = async ({ url }) => {
 
   // Create consolidated donor data (combining multiple agencies per country)
   const createConsolidatedDonorData = () => {
-    // Build lookup of consolidated country totals
+    // Build lookup of consolidated country totals with safe Number conversion
     const consolidatedTotals = new Map<string, { funding: number; countries: number }>();
     consolidatedCountryFunding.rows.forEach((r: any) => {
       if (r.country_key) {
-        consolidatedTotals.set(r.country_key, {
-          funding: Number(r.funding_usd || 0),
-          countries: Number(r.countries_funded || 0),
-        });
+        const funding = Number(r.funding_usd) || 0;
+        const countries = Number(r.countries_funded) || 0;
+        if (Number.isFinite(funding) && Number.isFinite(countries)) {
+          consolidatedTotals.set(r.country_key, { funding, countries });
+        }
       }
     });
 
     // Filter out donors that belong to any consolidated country
     const nonConsolidatedDonors = donorData.rows.filter((r: any) => {
       const donor = r.donor as string;
+      if (!donor) return false; // Skip null/undefined donors
       for (const countryKey of CONSOLIDATION_COUNTRIES) {
         if (matchesCountryConsolidation(donor, countryKey)) {
           return false;
@@ -624,7 +658,7 @@ export const load: PageServerLoad = async ({ url }) => {
     // Add consolidated entries for each country with funding
     for (const [countryKey, config] of Object.entries(COUNTRY_CONSOLIDATION_CONFIG)) {
       const totals = consolidatedTotals.get(countryKey);
-      if (totals && totals.funding > 0) {
+      if (totals && totals.funding > 0 && Number.isFinite(totals.funding)) {
         consolidated.push({
           donor: config.displayName,
           donorType: 'Governments',
@@ -636,13 +670,16 @@ export const load: PageServerLoad = async ({ url }) => {
       }
     }
 
-    // Add non-consolidated donors
+    // Add non-consolidated donors with safe Number conversion
     nonConsolidatedDonors.forEach((r: any) => {
+      const funding = Number(r.funding_usd) || 0;
+      const countriesFunded = Number(r.countries_funded) || 0;
+      if (!Number.isFinite(funding)) return; // Skip invalid values
       consolidated.push({
         donor: r.donor,
-        donorType: r.donor_type,
-        funding: Number(r.funding_usd),
-        countriesFunded: Number(r.countries_funded),
+        donorType: r.donor_type || 'Unknown',
+        funding,
+        countriesFunded,
         isConsolidated: false,
       });
     });
@@ -656,10 +693,13 @@ export const load: PageServerLoad = async ({ url }) => {
   // Get breakdown data for each consolidated country (for modal display)
   const countryAgenciesBreakdown: Record<string, { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[]> = {};
 
-  // Process government donors to extract breakdowns by country
+  // Process government donors to extract breakdowns by country with safe Number conversion
   const prevYearMapForBreakdown = new Map<string, number>();
   prevYearGovernmentDonors.rows.forEach((r: any) => {
-    prevYearMapForBreakdown.set(r.donor, Number(r.funding_usd));
+    const funding = Number(r.funding_usd) || 0;
+    if (r.donor && Number.isFinite(funding)) {
+      prevYearMapForBreakdown.set(r.donor, funding);
+    }
   });
 
   for (const countryKey of CONSOLIDATION_COUNTRIES) {
@@ -668,13 +708,17 @@ export const load: PageServerLoad = async ({ url }) => {
     topGovernmentDonorsRaw.rows.forEach((r: any) => {
       const donor = r.donor as string;
       if (matchesCountryConsolidation(donor, countryKey)) {
-        const funding = Number(r.funding_usd);
+        const funding = Number(r.funding_usd) || 0;
         const prevFunding = prevYearMapForBreakdown.get(donor) || 0;
+        // Safe division: only calculate if prevFunding is a valid positive number
+        const yoyChange = (prevFunding > 0 && Number.isFinite(prevFunding) && Number.isFinite(funding))
+          ? ((funding - prevFunding) / prevFunding) * 100
+          : null;
         agencies.push({
           donor,
           funding,
           prevFunding,
-          yoyChange: prevFunding > 0 ? ((funding - prevFunding) / prevFunding) * 100 : null,
+          yoyChange,
         });
       }
     });
@@ -866,13 +910,17 @@ export const load: PageServerLoad = async ({ url }) => {
       const countries = new Map<string, { name: string; iso3: string; data: Map<number, number> }>();
 
       countryFundingByYear.rows.forEach((r: any) => {
+        if (!r.name) return; // Skip rows with null/undefined names
         if (!countries.has(r.name)) {
           countries.set(r.name, { name: r.name, iso3: r.iso3, data: new Map() });
         }
         // Apply inflation adjustment to convert to 2025 USD
-        const nominalFunding = Number(r.funding);
+        const nominalFunding = Number(r.funding) || 0;
         const adjustedFunding = nominalFunding * getInflationMultiplier(r.year);
-        countries.get(r.name)!.data.set(r.year, adjustedFunding);
+        const country = countries.get(r.name);
+        if (country) {
+          country.data.set(r.year, adjustedFunding);
+        }
       });
 
       return {
@@ -886,14 +934,24 @@ export const load: PageServerLoad = async ({ url }) => {
     })(),
 
     countriesData: countriesData.rows.map((r: any) => {
-      const funding = Number(r.funding_usd);
-      const prevFunding = r.prev_funding_usd ? Number(r.prev_funding_usd) : null;
+      const funding = Number(r.funding_usd) || 0;
+      const prevFundingRaw = r.prev_funding_usd ? Number(r.prev_funding_usd) : null;
+      // Ensure prevFunding is a valid finite number or null
+      const prevFunding = (prevFundingRaw !== null && Number.isFinite(prevFundingRaw)) ? prevFundingRaw : null;
       // Use HAPI data first, then fallback to GHO country data
-      const peopleInNeed = r.people_in_need
+      const peopleInNeedRaw = r.people_in_need
         ? Number(r.people_in_need)
         : (GHO_PIN_BY_COUNTRY[r.iso3] || null);
-      const fundingPerPerson = peopleInNeed ? funding / peopleInNeed : null;
-      const yoyChange = prevFunding && prevFunding > 0
+      // Ensure peopleInNeed is a valid positive finite number or null
+      const peopleInNeed = (peopleInNeedRaw !== null && peopleInNeedRaw > 0 && Number.isFinite(peopleInNeedRaw))
+        ? peopleInNeedRaw
+        : null;
+      // Safe division for funding per person
+      const fundingPerPerson = (peopleInNeed && Number.isFinite(funding))
+        ? funding / peopleInNeed
+        : null;
+      // Safe division for YoY change
+      const yoyChange = (prevFunding && prevFunding > 0 && Number.isFinite(funding))
         ? ((funding - prevFunding) / prevFunding) * 100
         : null;
 
@@ -935,7 +993,10 @@ export const load: PageServerLoad = async ({ url }) => {
       funding: d.funding,
       prevFunding: d.prevFunding,
       category: d.category,
-      yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
+      // Safe division: check for valid positive numbers to avoid NaN/Infinity
+      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
+        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
+        : null,
     })),
 
     // Breakdowns for US and EU (for government donors chart)
@@ -943,13 +1004,17 @@ export const load: PageServerLoad = async ({ url }) => {
       donor: d.donor,
       funding: d.funding,
       prevFunding: d.prevFunding,
-      yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
+      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
+        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
+        : null,
     })),
     euMemberStatesBreakdown: euMemberStates.map(d => ({
       donor: d.donor,
       funding: d.funding,
       prevFunding: d.prevFunding,
-      yoyChange: d.prevFunding > 0 ? ((d.funding - d.prevFunding) / d.prevFunding) * 100 : null,
+      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
+        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
+        : null,
     })),
 
     // All country agency breakdowns (for Top 15 Donors table)
