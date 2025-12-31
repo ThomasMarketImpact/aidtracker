@@ -1,5 +1,5 @@
 import { db, schema } from '$lib/server/db';
-import { sql, desc, eq, sum, and } from 'drizzle-orm';
+import { sql, desc, eq, sum } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 // Safe number parsing helper - returns 0 for NaN/null/undefined/Infinity
