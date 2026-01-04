@@ -1,15 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { formatMoney } from '$lib/utils/format';
   import type { PageData } from './$types';
 
   export let data: PageData;
-
-  function formatMoney(value: number): string {
-    if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
-    if (value >= 1e6) return `$${(value / 1e6).toFixed(0)}M`;
-    if (value >= 1e3) return `$${(value / 1e3).toFixed(0)}K`;
-    return `$${value.toLocaleString()}`;
-  }
 
   function handleYearChange(event: Event) {
     const select = event.target as HTMLSelectElement;

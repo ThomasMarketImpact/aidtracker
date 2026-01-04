@@ -19,164 +19,30 @@ import type {
   DonorFlowRow,
   DonorSectorRow,
 } from '$lib/types/database';
-
-// Safe number parsing helper - returns 0 for NaN/null/undefined/Infinity
-const safeNumber = (value: unknown): number => {
-  if (value === null || value === undefined) return 0;
-  const num = Number(value);
-  return Number.isFinite(num) ? num : 0;
-};
-
-// Safe percentage change calculation - guards against division by zero and NaN
-const safeYoyChange = (current: number, previous: number): number | null => {
-  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous <= 0) {
-    return null;
-  }
-  return ((current - previous) / previous) * 100;
-};
-
-// Safe division helper - returns null for invalid divisions
-const safeDivide = (numerator: number, denominator: number): number | null => {
-  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) {
-    return null;
-  }
-  return numerator / denominator;
-};
-
-// US CPI annual averages (BLS CPI-U) - used to convert to 2025 USD
-// Source: Bureau of Labor Statistics, with 2024-2025 estimated
-const CPI_DATA: Record<number, number> = {
-  2016: 240.0,
-  2017: 245.1,
-  2018: 251.1,
-  2019: 255.7,
-  2020: 258.8,
-  2021: 271.0,
-  2022: 292.7,
-  2023: 304.7,
-  2024: 314.5,  // Estimated
-  2025: 320.8,  // Estimated (~2% inflation)
-};
-
-// Global People in Need by year - from OCHA Global Humanitarian Overview reports
-// Source: https://humanitarianaction.info / GHO annual reports
-const GHO_PEOPLE_IN_NEED: Record<number, number> = {
-  2016: 130_900_000,   // GHO 2016
-  2017: 141_100_000,   // GHO 2017
-  2018: 135_700_000,   // GHO 2018
-  2019: 131_700_000,   // GHO 2019
-  2020: 167_600_000,   // GHO 2020 (COVID-19 impact)
-  2021: 235_000_000,   // GHO 2021
-  2022: 274_000_000,   // GHO 2022
-  2023: 339_000_000,   // GHO 2023
-  2024: 300_000_000,   // GHO 2024
-  2025: 305_000_000,   // GHO 2025
-};
-
-// Calculate multiplier to convert past year's USD to 2025 USD
-function getInflationMultiplier(year: number): number {
-  const baseCpi = CPI_DATA[2025] || 320.8;
-  const yearCpi = CPI_DATA[year] || baseCpi;
-  return baseCpi / yearCpi;
-}
-
-// OECD DAC member countries for donor filtering
-const OECD_DAC_PATTERNS = [
-  'Australia', 'Austria', 'Belgium', 'Canada', 'Czech', 'Denmark', 'Estonia',
-  'Finland', 'France', 'Germany', 'Greece', 'Hungary', 'Iceland', 'Ireland',
-  'Italy', 'Japan', 'Korea', 'Latvia', 'Lithuania', 'Luxembourg', 'Netherlands',
-  'New Zealand', 'Norway', 'Poland', 'Portugal', 'Slovak', 'Slovenia', 'Spain',
-  'Sweden', 'Switzerland', 'United Kingdom', 'United States'
-];
-
-// EU member states + ECHO (European Commission's humanitarian aid arm)
-const EU_ECHO_PATTERNS = [
-  'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech',
-  'Denmark', 'Danish', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
-  'Ireland', 'Italy', 'Italian', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
-  'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden', 'Swedish',
-  'European Commission', 'European Union', 'ECHO', 'EU '
-];
-
-// Gulf Cooperation Council States + Sovereign Wealth Funds
-const GULF_PATTERNS = [
-  'United Arab Emirates', 'UAE', 'Saudi Arabia', 'Kuwait',
-  'Qatar', 'Bahrain', 'Oman', 'Abu Dhabi', 'Dubai',
-  'Abu Dhabi Fund', 'Kuwait Fund', 'Saudi Fund', 'Qatar Fund',
-  'Islamic Development Bank', 'OPEC Fund'
-];
-
-// Donor filter types
-export type DonorFilter = 'all' | 'oecd' | 'eu_echo' | 'us' | 'gulf';
-
-// Countries with multiple government funding bodies that should be consolidated
-// Key = consolidated display name, value = SQL LIKE patterns to match
-const COUNTRY_CONSOLIDATION_CONFIG: Record<string, { displayName: string; patterns: string[]; color: string }> = {
-  'US': {
-    displayName: 'United States (All Agencies)',
-    patterns: ['United States%', '%USAID%', '%U.S.%'],
-    color: '#3b82f6', // Blue
-  },
-  'Sweden': {
-    displayName: 'Sweden (All Agencies)',
-    patterns: ['Sweden%', 'Swedish%', '%SIDA%'],
-    color: '#fbbf24', // Yellow
-  },
-  'UAE': {
-    displayName: 'UAE (All Agencies)',
-    patterns: ['United Arab Emirates%', 'UAE%'],
-    color: '#10b981', // Green
-  },
-  'Germany': {
-    displayName: 'Germany (All Agencies)',
-    patterns: ['Germany%', 'Deutsche Gesellschaft%', 'KFW%'],
-    color: '#000000', // Black
-  },
-  'Italy': {
-    displayName: 'Italy (All Agencies)',
-    patterns: ['Italy%', 'Italian%'],
-    color: '#22c55e', // Green
-  },
-  'Switzerland': {
-    displayName: 'Switzerland (All Agencies)',
-    patterns: ['Switzerland%', 'Swiss%'],
-    color: '#ef4444', // Red
-  },
-  'Qatar': {
-    displayName: 'Qatar (All Agencies)',
-    patterns: ['Qatar%'],
-    color: '#7c2d12', // Maroon
-  },
-};
-
-// Helper to check if a donor matches any consolidation pattern for a country
-const matchesCountryConsolidation = (donor: string, countryKey: string): boolean => {
-  const config = COUNTRY_CONSOLIDATION_CONFIG[countryKey];
-  if (!config) return false;
-  return config.patterns.some(pattern => {
-    if (pattern.startsWith('%') && pattern.endsWith('%')) {
-      return donor.includes(pattern.slice(1, -1));
-    } else if (pattern.endsWith('%')) {
-      return donor.startsWith(pattern.slice(0, -1));
-    } else if (pattern.startsWith('%')) {
-      return donor.endsWith(pattern.slice(1));
-    }
-    return donor === pattern;
-  });
-};
-
-// Get all consolidation country keys
-const CONSOLIDATION_COUNTRIES = Object.keys(COUNTRY_CONSOLIDATION_CONFIG);
-
-// Helper to check if donor matches a pattern list
-const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
-  return patterns.some(pattern =>
-    donor.startsWith(pattern) ||
-    donor.includes(`, ${pattern}`) ||
-    donor.includes(`(${pattern}`) ||
-    donor.includes(pattern)
-  );
-};
+import { safeNumber, safeYoyChange, safeDivide } from '$lib/utils/numbers';
+import {
+  GHO_PEOPLE_IN_NEED,
+  GHO_PIN_BY_COUNTRY,
+  getInflationMultiplier,
+} from '$lib/constants/economic';
+import {
+  OECD_DAC_PATTERNS,
+  EU_ECHO_PATTERNS,
+  GULF_PATTERNS,
+  COUNTRY_CONSOLIDATION_CONFIG,
+  CONSOLIDATION_COUNTRIES,
+  matchesCountryConsolidation,
+  isUSGovernment,
+  isEUInstitution,
+  isEUMember,
+  VALID_DONOR_FILTERS,
+  type DonorFilter,
+} from '$lib/constants/donors';
+import {
+  processGovernmentDonors,
+  createConsolidatedDonorData,
+  getCountryAgenciesBreakdown,
+} from '$lib/server/transformers';
 
 export const load: PageServerLoad = async ({ url }) => {
   // Parse and validate year parameter with comprehensive validation
@@ -202,7 +68,6 @@ export const load: PageServerLoad = async ({ url }) => {
     : null;
 
   // Validate donor filter - must be one of the allowed values to prevent SQL injection
-  const VALID_DONOR_FILTERS: DonorFilter[] = ['all', 'oecd', 'eu_echo', 'us', 'gulf'];
   const donorFilterParam = url.searchParams.get('donorFilter');
   const donorFilter: DonorFilter = donorFilterParam && VALID_DONOR_FILTERS.includes(donorFilterParam as DonorFilter)
     ? donorFilterParam as DonorFilter
@@ -232,26 +97,6 @@ export const load: PageServerLoad = async ({ url }) => {
       ORDER BY fs.year ASC
     `)
   ]);
-
-  // GHO 2024 People in Need by country (millions) - for countries missing from HAPI
-  const GHO_PIN_BY_COUNTRY: Record<string, number> = {
-    'PSE': 3_000_000,      // Occupied Palestinian Territory
-    'LBN': 3_000_000,      // Lebanon
-    'HTI': 5_500_000,      // Haiti
-    'MMR': 18_600_000,     // Myanmar
-    'PAK': 10_000_000,     // Pakistan
-    'BGD': 2_000_000,      // Bangladesh (Rohingya crisis)
-    'MOZ': 3_000_000,      // Mozambique
-    'BFA': 6_300_000,      // Burkina Faso
-    'MLI': 8_800_000,      // Mali
-    'NER': 4_300_000,      // Niger
-    'CMR': 4_700_000,      // Cameroon
-    'CAF': 3_400_000,      // Central African Republic
-    'VEN': 7_700_000,      // Venezuela
-    'COL': 8_300_000,      // Colombia
-    'ZWE': 7_700_000,      // Zimbabwe
-    'IRQ': 2_500_000,      // Iraq
-  };
 
   // Build donor filter SQL condition
   // SECURITY: This is safe because:
@@ -449,29 +294,6 @@ export const load: PageServerLoad = async ({ url }) => {
     `));
   }
 
-  // EU member states for grouping (match start of name)
-  const EU_MEMBER_PATTERNS = [
-    'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Cyprus', 'Czech',
-    'Denmark', 'Danish', 'Estonia', 'Finland', 'France', 'Germany', 'Greece', 'Hungary',
-    'Ireland', 'Italy', 'Italian', 'Latvia', 'Lithuania', 'Luxembourg', 'Malta', 'Netherlands',
-    'Poland', 'Portugal', 'Romania', 'Slovak', 'Slovenia', 'Spain', 'Sweden', 'Swedish'
-  ];
-
-  // Helper to check if donor is EU member state
-  const isEUMember = (donor: string): boolean => {
-    return EU_MEMBER_PATTERNS.some(pattern => donor.startsWith(pattern) || donor.includes(`, ${pattern}`) || donor.includes(`(${pattern}`));
-  };
-
-  // Helper to check if donor is US
-  const isUSGovernment = (donor: string): boolean => {
-    return donor.startsWith('United States') || donor.includes('U.S.') || donor.includes('USA') || donor.includes('USAID');
-  };
-
-  // Helper to check if EU institution
-  const isEUInstitution = (donor: string): boolean => {
-    return donor.includes('European') || donor.startsWith('EU ') || donor.includes('(EU)');
-  };
-
   // Run year-dependent queries in parallel for better performance
   const [sectorData, donorData, consolidatedCountryFunding, donorTypeData, topGovernmentDonorsRaw, prevYearGovernmentDonors] = await Promise.all([
     // Get sector breakdown for selected year
@@ -570,180 +392,23 @@ export const load: PageServerLoad = async ({ url }) => {
     `)
   ]);
 
-  // Process and group donors
-  const processGovernmentDonors = () => {
-    // Build previous year lookup with safe Number conversion
-    const prevYearMap = new Map<string, number>();
-    (prevYearGovernmentDonors.rows as unknown as DonorFundingRow[]).forEach((r) => {
-      const funding = safeNumber(r.funding_usd);
-      if (Number.isFinite(funding)) {
-        prevYearMap.set(r.donor, funding);
-      }
-    });
-
-    // Aggregate totals
-    let usTotal = 0, usPrevTotal = 0;
-    let euMemberTotal = 0, euMemberPrevTotal = 0;
-    let euInstitutionTotal = 0, euInstitutionPrevTotal = 0;
-    const others: { donor: string; funding: number; prevFunding: number }[] = [];
-
-    // Track individual breakdowns for US and EU
-    const usAgencies: { donor: string; funding: number; prevFunding: number }[] = [];
-    const euMemberStates: { donor: string; funding: number; prevFunding: number }[] = [];
-
-    (topGovernmentDonorsRaw.rows as unknown as DonorFundingRow[]).forEach((r) => {
-      const donor = r.donor;
-      if (!donor) return; // Skip rows with null/undefined donors
-      const funding = safeNumber(r.funding_usd);
-      if (!Number.isFinite(funding)) return; // Skip invalid funding values
-      const prevFunding = prevYearMap.get(donor) || 0;
-
-      if (isUSGovernment(donor)) {
-        usTotal += funding;
-        usPrevTotal += prevFunding;
-        usAgencies.push({ donor, funding, prevFunding });
-      } else if (isEUInstitution(donor)) {
-        euInstitutionTotal += funding;
-        euInstitutionPrevTotal += prevFunding;
-      } else if (isEUMember(donor)) {
-        euMemberTotal += funding;
-        euMemberPrevTotal += prevFunding;
-        euMemberStates.push({ donor, funding, prevFunding });
-      } else {
-        others.push({ donor, funding, prevFunding });
-      }
-    });
-
-    // Build final result
-    const result: { donor: string; funding: number; prevFunding: number; category: string }[] = [];
-
-    if (usTotal > 0) {
-      result.push({ donor: 'United States (All)', funding: usTotal, prevFunding: usPrevTotal, category: 'US' });
-    }
-
-    if (euInstitutionTotal > 0) {
-      result.push({ donor: 'European Union (Institutions)', funding: euInstitutionTotal, prevFunding: euInstitutionPrevTotal, category: 'EU' });
-    }
-
-    if (euMemberTotal > 0) {
-      result.push({ donor: 'EU Member States (Combined)', funding: euMemberTotal, prevFunding: euMemberPrevTotal, category: 'EU' });
-    }
-
-    others.forEach(o => {
-      result.push({ ...o, category: 'Other' });
-    });
-
-    // Sort by funding and take top 12
-    const topDonors = result.sort((a, b) => b.funding - a.funding).slice(0, 12);
-
-    // Sort breakdowns by funding
-    usAgencies.sort((a, b) => b.funding - a.funding);
-    euMemberStates.sort((a, b) => b.funding - a.funding);
-
-    return { topDonors, usAgencies, euMemberStates };
-  };
-
-  const { topDonors: topGovernmentDonors, usAgencies, euMemberStates } = processGovernmentDonors();
+  // Process and group government donors using imported transformer
+  const { topDonors: topGovernmentDonors, usAgencies, euMemberStates } = processGovernmentDonors(
+    topGovernmentDonorsRaw.rows,
+    prevYearGovernmentDonors.rows
+  );
 
   // Create consolidated donor data (combining multiple agencies per country)
-  const createConsolidatedDonorData = () => {
-    // Build lookup of consolidated country totals with safe Number conversion
-    const consolidatedTotals = new Map<string, { funding: number; countries: number }>();
-    (consolidatedCountryFunding.rows as unknown as ConsolidatedCountryFundingRow[]).forEach((r) => {
-      if (r.country_key) {
-        const funding = safeNumber(r.funding_usd);
-        const countries = safeNumber(r.countries_funded);
-        if (Number.isFinite(funding) && Number.isFinite(countries)) {
-          consolidatedTotals.set(r.country_key, { funding, countries });
-        }
-      }
-    });
-
-    // Filter out donors that belong to any consolidated country
-    const nonConsolidatedDonors = (donorData.rows as unknown as DonorRow[]).filter((r) => {
-      const donor = r.donor;
-      if (!donor) return false; // Skip null/undefined donors
-      for (const countryKey of CONSOLIDATION_COUNTRIES) {
-        if (matchesCountryConsolidation(donor, countryKey)) {
-          return false;
-        }
-      }
-      return true;
-    });
-
-    // Create the consolidated list
-    const consolidated: { donor: string; donorType: string; funding: number; countriesFunded: number; isConsolidated?: boolean; countryKey?: string }[] = [];
-
-    // Add consolidated entries for each country with funding
-    for (const [countryKey, config] of Object.entries(COUNTRY_CONSOLIDATION_CONFIG)) {
-      const totals = consolidatedTotals.get(countryKey);
-      if (totals && totals.funding > 0 && Number.isFinite(totals.funding)) {
-        consolidated.push({
-          donor: config.displayName,
-          donorType: 'Governments',
-          funding: totals.funding,
-          countriesFunded: totals.countries,
-          isConsolidated: true,
-          countryKey,
-        });
-      }
-    }
-
-    // Add non-consolidated donors with safe Number conversion
-    nonConsolidatedDonors.forEach((r) => {
-      const funding = safeNumber(r.funding_usd);
-      const countriesFunded = safeNumber(r.countries_funded);
-      if (!Number.isFinite(funding)) return; // Skip invalid values
-      consolidated.push({
-        donor: r.donor,
-        donorType: r.donor_type || 'Unknown',
-        funding,
-        countriesFunded,
-        isConsolidated: false,
-      });
-    });
-
-    // Sort by funding and take top 15
-    return consolidated.sort((a, b) => b.funding - a.funding).slice(0, 15);
-  };
-
-  const consolidatedDonorData = createConsolidatedDonorData();
+  const consolidatedDonorData = createConsolidatedDonorData(
+    donorData.rows,
+    consolidatedCountryFunding.rows
+  );
 
   // Get breakdown data for each consolidated country (for modal display)
-  const countryAgenciesBreakdown: Record<string, { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[]> = {};
-
-  // Process government donors to extract breakdowns by country with safe Number conversion
-  const prevYearMapForBreakdown = new Map<string, number>();
-  (prevYearGovernmentDonors.rows as unknown as DonorFundingRow[]).forEach((r) => {
-    const funding = safeNumber(r.funding_usd);
-    if (r.donor && Number.isFinite(funding)) {
-      prevYearMapForBreakdown.set(r.donor, funding);
-    }
-  });
-
-  for (const countryKey of CONSOLIDATION_COUNTRIES) {
-    const agencies: { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[] = [];
-
-    (topGovernmentDonorsRaw.rows as unknown as DonorFundingRow[]).forEach((r) => {
-      const donor = r.donor;
-      if (matchesCountryConsolidation(donor, countryKey)) {
-        const funding = safeNumber(r.funding_usd);
-        const prevFunding = prevYearMapForBreakdown.get(donor) || 0;
-        // Use the safeYoyChange helper for consistent calculation
-        const yoyChange = safeYoyChange(funding, prevFunding);
-        agencies.push({
-          donor,
-          funding,
-          prevFunding,
-          yoyChange,
-        });
-      }
-    });
-
-    // Sort by funding
-    agencies.sort((a, b) => b.funding - a.funding);
-    countryAgenciesBreakdown[countryKey] = agencies;
-  }
+  const countryAgenciesBreakdown = getCountryAgenciesBreakdown(
+    topGovernmentDonorsRaw.rows,
+    prevYearGovernmentDonors.rows
+  );
 
   // Country detail data if a country is selected
   let countryDetail = null;

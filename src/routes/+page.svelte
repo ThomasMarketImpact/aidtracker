@@ -2,30 +2,12 @@
   import { goto } from '$app/navigation';
   import Chart from '$lib/components/Chart.svelte';
   import DownloadButton from '$lib/components/DownloadButton.svelte';
-  import { DATA_SOURCES } from '$lib/utils/excelExport';
+  import BreakdownModal from '$lib/components/BreakdownModal.svelte';
+  import { DATA_SOURCES, type ExportColumn, type ExportConfig } from '$lib/utils/excelExport';
+  import { formatMoney, formatNumber, getFundingLevel } from '$lib/utils/format';
   import type { PageData } from './$types';
 
   export let data: PageData;
-
-  // Format helpers
-  function formatMoney(value: number): string {
-    if (value >= 1e9) return `$${(value / 1e9).toFixed(1)}B`;
-    if (value >= 1e6) return `$${(value / 1e6).toFixed(0)}M`;
-    return `$${value.toLocaleString()}`;
-  }
-
-  function formatNumber(value: number): string {
-    if (value >= 1e6) return `${(value / 1e6).toFixed(1)}M`;
-    if (value >= 1e3) return `${(value / 1e3).toFixed(0)}K`;
-    return value.toLocaleString();
-  }
-
-  function getFundingLevel(perPerson: number | null): { label: string; class: string } {
-    if (!perPerson) return { label: 'N/A', class: 'badge-neutral' };
-    if (perPerson >= 150) return { label: 'Well Funded', class: 'badge-funded-high' };
-    if (perPerson >= 80) return { label: 'Moderate', class: 'badge-funded-medium' };
-    return { label: 'Underfunded', class: 'badge-funded-low' };
-  }
 
   // Navigation handlers
   function handleYearChange(event: Event) {
@@ -133,7 +115,7 @@
   // Chart configurations
   $: fundingTrendOptions = {
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis' as const,
       formatter: (params: any) => {
         const year = params[0]?.name;
         const yearData = data.fundingTrend.find(d => d.year === Number(year));
@@ -162,7 +144,7 @@
     },
     grid: { left: '3%', right: '8%', bottom: '12%', containLabel: true },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.fundingTrend.map(d => d.year),
       axisLabel: {
         color: '#666',
@@ -172,7 +154,7 @@
         rich: {
           selected: {
             color: '#3b82f6',
-            fontWeight: 'bold',
+            fontWeight: 'bold' as const,
             backgroundColor: '#eff6ff',
             padding: [2, 4],
             borderRadius: 2
@@ -183,9 +165,9 @@
     },
     yAxis: [
       {
-        type: 'value',
+        type: 'value' as const,
         name: 'Funding (USD)',
-        position: 'left',
+        position: 'left' as const,
         axisLabel: {
           color: '#666',
           formatter: (val: number) => formatMoney(val)
@@ -193,9 +175,9 @@
         axisLine: { show: true, lineStyle: { color: '#3b82f6' } }
       },
       {
-        type: 'value',
+        type: 'value' as const,
         name: 'People in Need',
-        position: 'right',
+        position: 'right' as const,
         axisLabel: {
           color: '#666',
           formatter: (val: number) => formatNumber(val)
@@ -208,43 +190,43 @@
       {
         name: 'Nominal USD',
         data: data.fundingTrend.map(d => d.funding),
-        type: 'line',
+        type: 'line' as const,
         yAxisIndex: 0,
         smooth: true,
-        lineStyle: { width: 2, type: 'dashed' },
+        lineStyle: { width: 2, type: 'dashed' as const },
         itemStyle: { color: '#94a3b8' },
-        emphasis: { focus: 'series' }
+        emphasis: { focus: 'series' as const }
       },
       {
         name: '2025 USD (Inflation Adjusted)',
         data: data.fundingTrend.map(d => d.fundingReal2025),
-        type: 'line',
+        type: 'line' as const,
         yAxisIndex: 0,
         smooth: true,
         areaStyle: { opacity: 0.3 },
         lineStyle: { width: 3 },
         itemStyle: { color: '#3b82f6' },
-        emphasis: { focus: 'series' }
+        emphasis: { focus: 'series' as const }
       },
       {
         name: 'People in Need',
         data: data.fundingTrend.map(d => d.peopleInNeed),
-        type: 'line',
+        type: 'line' as const,
         yAxisIndex: 1,
         smooth: true,
         lineStyle: { width: 3 },
         itemStyle: { color: '#ef4444' },
         symbol: 'circle',
         symbolSize: 8,
-        emphasis: { focus: 'series' }
+        emphasis: { focus: 'series' as const }
       }
     ]
   };
 
   $: topCountriesOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         const p = params[0];
         const country = data.countriesData.find(c => c.name === p.name);
@@ -261,26 +243,26 @@
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => formatMoney(val)
       }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.countriesData.slice(0, 15).map(c => c.name).reverse(),
-      axisLabel: { color: '#666', width: 100, overflow: 'truncate' }
+      axisLabel: { color: '#666', width: 100, overflow: 'truncate' as const }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: data.countriesData.slice(0, 15).map(c => c.funding).reverse(),
       itemStyle: {
         color: '#3b82f6'
       },
       label: {
         show: true,
-        position: 'right',
+        position: 'right' as const,
         formatter: (params: any) => formatMoney(params.value),
         fontSize: 10,
         color: '#666'
@@ -290,25 +272,25 @@
 
   $: sectorPieOptions = {
     tooltip: {
-      trigger: 'item',
+      trigger: 'item' as const,
       formatter: (params: any) => `${params.name}: ${formatMoney(params.value)} (${params.percent}%)`
     },
     legend: {
-      type: 'scroll',
+      type: 'scroll' as const,
       orient: 'vertical',
       right: 10,
       top: 20,
       bottom: 20
     },
     series: [{
-      type: 'pie',
+      type: 'pie' as const,
       radius: ['40%', '70%'],
       center: ['35%', '50%'],
       avoidLabelOverlap: false,
       itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
       label: { show: false },
       emphasis: {
-        label: { show: true, fontSize: 14, fontWeight: 'bold' }
+        label: { show: true, fontSize: 14, fontWeight: 'bold' as const }
       },
       data: data.sectorData.slice(0, 10).map((s, i) => ({
         value: s.funding,
@@ -331,8 +313,8 @@
 
   $: topGovernmentDonorsOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         const donorName = params[0].name;
         const donorData = topGovernmentDonorsData.find(d => d.donor === donorName);
@@ -348,24 +330,24 @@
     },
     grid: { left: '3%', right: '22%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => formatMoney(val)
       }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: [...topGovernmentDonorsData].reverse().map(d => d.donor),
       axisLabel: {
         color: '#666',
         width: 180,
-        overflow: 'truncate',
+        overflow: 'truncate' as const,
         fontSize: 11
       }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: [...topGovernmentDonorsData].reverse().map(d => ({
         value: d.funding,
         itemStyle: {
@@ -374,7 +356,7 @@
       })),
       label: {
         show: true,
-        position: 'right',
+        position: 'right' as const,
         formatter: (params: any) => {
           const reversedData = [...topGovernmentDonorsData].reverse();
           const donor = reversedData[params.dataIndex];
@@ -532,7 +514,7 @@
 
   $: countryFundingTrendOptions = {
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis' as const,
       formatter: (params: any) => {
         const year = params[0].name;
         const yearIndex = data.countryFundingByYear.years.indexOf(Number(year));
@@ -558,19 +540,19 @@
       }
     },
     legend: {
-      type: 'scroll',
+      type: 'scroll' as const,
       bottom: 0,
       data: data.countryFundingByYear.countries.map(c => c.name)
     },
     grid: { left: '3%', right: '4%', bottom: '15%', top: '10%', containLabel: true },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       boundaryGap: false,
       data: data.countryFundingByYear.years,
       axisLabel: { color: '#666' }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => formatMoney(val)
@@ -578,57 +560,57 @@
     },
     series: data.countryFundingByYear.countries.map((country, i) => ({
       name: country.name,
-      type: 'line',
+      type: 'line' as const,
       data: country.funding,
       smooth: true,
       symbol: 'circle',
       symbolSize: 4,
       lineStyle: { width: 2 },
       itemStyle: { color: countryColors[i % countryColors.length] },
-      emphasis: { focus: 'series' }
+      emphasis: { focus: 'series' as const }
     }))
   };
 
   // Country detail chart options
   $: countryHistoryOptions = data.countryDetail ? {
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis' as const,
       formatter: (params: any) => `${params[0].name}: ${formatMoney(params[0].value)}`
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.countryDetail.fundingHistory.map(d => d.year),
       axisLabel: { color: '#666' }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
     },
     series: [{
       data: data.countryDetail.fundingHistory.map(d => d.funding),
-      type: 'bar',
+      type: 'bar' as const,
       itemStyle: { color: '#3b82f6' }
     }]
   } : {};
 
   $: countryDonorsOptions = data.countryDetail ? {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' }
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const }
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.countryDetail.topDonors.slice(0, 8).map(d => d.donor).reverse(),
-      axisLabel: { color: '#666', width: 120, overflow: 'truncate' }
+      axisLabel: { color: '#666', width: 120, overflow: 'truncate' as const }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: data.countryDetail.topDonors.slice(0, 8).map(d => d.funding).reverse(),
       itemStyle: { color: '#22c55e' }
     }]
@@ -636,11 +618,11 @@
 
   $: countrySectorsOptions = data.countryDetail ? {
     tooltip: {
-      trigger: 'item',
+      trigger: 'item' as const,
       formatter: (params: any) => `${params.name}: ${formatMoney(params.value)}`
     },
     series: [{
-      type: 'pie',
+      type: 'pie' as const,
       radius: ['30%', '70%'],
       data: data.countryDetail.sectors.slice(0, 8).map((s, i) => ({
         value: s.funding,
@@ -656,7 +638,7 @@
   // Donor detail chart options
   $: donorHistoryOptions = data.donorDetail ? {
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis' as const,
       formatter: (params: any) => {
         const d = data.donorDetail?.fundingHistory.find(h => h.year == params[0].name);
         return `${params[0].name}<br/>Funding: ${formatMoney(params[0].value)}<br/>Countries: ${d?.countries || 0}`;
@@ -664,25 +646,25 @@
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.donorDetail.fundingHistory.map(d => d.year),
       axisLabel: { color: '#666' }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
     },
     series: [{
       data: data.donorDetail.fundingHistory.map(d => d.funding),
-      type: 'bar',
+      type: 'bar' as const,
       itemStyle: { color: '#3b82f6' }
     }]
   } : {};
 
   $: donorFlowsChartOptions = data.donorDetail ? {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         const flow = data.donorDetail?.flows.find(f => f.country === params[0].name);
         return `<strong>${params[0].name}</strong><br/>Funding: ${formatMoney(params[0].value)}<br/>Flows: ${flow?.flowCount || 0}`;
@@ -690,21 +672,21 @@
     },
     grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: { color: '#666', formatter: (val: number) => formatMoney(val) }
     },
     yAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.donorDetail.flows.slice(0, 15).map(f => f.country).reverse(),
-      axisLabel: { color: '#666', width: 120, overflow: 'truncate' }
+      axisLabel: { color: '#666', width: 120, overflow: 'truncate' as const }
     },
     series: [{
-      type: 'bar',
+      type: 'bar' as const,
       data: data.donorDetail.flows.slice(0, 15).map(f => f.funding).reverse(),
       itemStyle: { color: '#22c55e' },
       label: {
         show: true,
-        position: 'right',
+        position: 'right' as const,
         formatter: (params: any) => formatMoney(params.value),
         fontSize: 10,
         color: '#666'
@@ -714,11 +696,11 @@
 
   $: donorSectorsOptions = data.donorDetail ? {
     tooltip: {
-      trigger: 'item',
+      trigger: 'item' as const,
       formatter: (params: any) => `${params.name}: ${formatMoney(params.value)} (${params.percent}%)`
     },
     series: [{
-      type: 'pie',
+      type: 'pie' as const,
       radius: ['30%', '70%'],
       data: data.donorDetail.sectors.slice(0, 8).map((s, i) => ({
         value: s.funding,
@@ -753,11 +735,11 @@
     })),
     columns: [
       { key: 'year', header: 'Year' },
-      { key: 'nominalUSD', header: 'Nominal USD', format: 'currency' },
-      { key: 'real2025USD', header: '2025 USD (Inflation Adjusted)', format: 'currency' },
-      { key: 'inflationMultiplier', header: 'Inflation Multiplier', format: 'number' },
-      { key: 'countries', header: 'Countries Funded', format: 'number' },
-      { key: 'peopleInNeed', header: 'People in Need', format: 'number' }
+      { key: 'nominalUSD', header: 'Nominal USD', format: 'currency' as const },
+      { key: 'real2025USD', header: '2025 USD (Inflation Adjusted)', format: 'currency' as const },
+      { key: 'inflationMultiplier', header: 'Inflation Multiplier', format: 'number' as const },
+      { key: 'countries', header: 'Countries Funded', format: 'number' as const },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' as const }
     ],
     sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI, DATA_SOURCES.GHO],
     filename: 'funding-trend-over-time',
@@ -778,11 +760,11 @@
     columns: [
       { key: 'country', header: 'Country' },
       { key: 'iso3', header: 'ISO3' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'flowCount', header: 'Flow Count', format: 'number' },
-      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' },
-      { key: 'peopleInNeed', header: 'People in Need', format: 'number' },
-      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' }
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'flowCount', header: 'Flow Count', format: 'number' as const },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' as const },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' as const },
+      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' as const }
     ],
     sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI],
     filename: `top-15-recipient-countries-${data.selectedYear}`,
@@ -801,9 +783,9 @@
     columns: [
       { key: 'donor', header: 'Donor' },
       { key: 'category', header: 'Category' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'prevFunding', header: 'Previous Year (USD)', format: 'currency' },
-      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' }
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'prevFunding', header: 'Previous Year (USD)', format: 'currency' as const },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' as const }
     ],
     sources: [DATA_SOURCES.FTS],
     filename: `top-government-donors-${data.selectedYear}`,
@@ -825,7 +807,7 @@
       { key: 'country', header: 'Country' },
       { key: 'iso3', header: 'ISO3' },
       { key: 'year', header: 'Year' },
-      { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' }
+      { key: 'funding', header: 'Funding (2025 USD)', format: 'currency' as const }
     ],
     sources: [DATA_SOURCES.FTS],
     filename: `top-15-recipients-funding-trend${data.donorFilter !== 'all' ? `-${data.donorFilter}` : ''}`,
@@ -846,10 +828,10 @@
     columns: [
       { key: 'country', header: 'Country' },
       { key: 'iso3', header: 'ISO3' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' },
-      { key: 'peopleInNeed', header: 'People in Need', format: 'number' },
-      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' },
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'yoyChange', header: 'YoY Change (%)', format: 'number' as const },
+      { key: 'peopleInNeed', header: 'People in Need', format: 'number' as const },
+      { key: 'fundingPerPerson', header: '$/Person', format: 'currency' as const },
       { key: 'status', header: 'Funding Level' }
     ],
     sources: [DATA_SOURCES.FTS, DATA_SOURCES.HAPI, DATA_SOURCES.GHO],
@@ -869,8 +851,8 @@
     columns: [
       { key: 'donor', header: 'Donor' },
       { key: 'type', header: 'Type' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'countriesFunded', header: 'Countries Funded', format: 'number' }
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'countriesFunded', header: 'Countries Funded', format: 'number' as const }
     ],
     sources: [DATA_SOURCES.FTS],
     filename: `top-15-donors-${data.selectedYear}`,
@@ -885,7 +867,7 @@
     })),
     columns: [
       { key: 'sector', header: 'Sector' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const }
     ],
     sources: [DATA_SOURCES.FTS],
     filename: `sector-breakdown-${data.selectedYear}`,
@@ -901,11 +883,11 @@
     })),
     columns: [
       { key: 'year', header: 'Year' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.countryDetail.iso3}-funding-history`
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 
   $: countryDonorsExportConfig = data.countryDetail ? {
     title: `${data.countryDetail.name} - Top Donors (${data.selectedYear})`,
@@ -915,12 +897,12 @@
     })),
     columns: [
       { key: 'donor', header: 'Donor' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.countryDetail.iso3}-top-donors-${data.selectedYear}`,
     year: data.selectedYear
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 
   $: countrySectorsExportConfig = data.countryDetail ? {
     title: `${data.countryDetail.name} - Sector Breakdown (${data.selectedYear})`,
@@ -930,12 +912,12 @@
     })),
     columns: [
       { key: 'sector', header: 'Sector' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.countryDetail.iso3}-sector-breakdown-${data.selectedYear}`,
     year: data.selectedYear
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 
   // Donor detail export configs
   $: donorHistoryExportConfig = data.donorDetail ? {
@@ -947,12 +929,12 @@
     })),
     columns: [
       { key: 'year', header: 'Year' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'countries', header: 'Countries Funded', format: 'number' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'countries', header: 'Countries Funded', format: 'number' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-funding-history`
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 
   $: donorFlowsExportConfig = data.donorDetail ? {
     title: `${data.donorDetail.name} - Funding Flows to Countries (${data.selectedYear})`,
@@ -965,13 +947,13 @@
     columns: [
       { key: 'country', header: 'Recipient Country' },
       { key: 'iso3', header: 'ISO3' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' },
-      { key: 'flowCount', header: 'Flow Count', format: 'number' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const },
+      { key: 'flowCount', header: 'Flow Count', format: 'number' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-flows-${data.selectedYear}`,
     year: data.selectedYear
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 
   $: donorSectorsExportConfig = data.donorDetail ? {
     title: `${data.donorDetail.name} - Sector Breakdown (${data.selectedYear})`,
@@ -981,12 +963,12 @@
     })),
     columns: [
       { key: 'sector', header: 'Sector' },
-      { key: 'funding', header: 'Funding (USD)', format: 'currency' }
-    ],
+      { key: 'funding', header: 'Funding (USD)', format: 'currency' as const }
+    ] satisfies ExportColumn[],
     sources: [DATA_SOURCES.FTS],
     filename: `${data.donorDetail.name.replace(/[^a-zA-Z0-9]/g, '-')}-sectors-${data.selectedYear}`,
     year: data.selectedYear
-  } : { title: '', data: [], columns: [], sources: [], filename: '' };
+  } : { title: '', data: [] as Record<string, unknown>[], columns: [] as ExportColumn[], sources: [] as string[], filename: '' };
 </script>
 
 <svelte:head>
@@ -1271,7 +1253,7 @@
       <div class="chart-header">
         <h3>Top 15 Recipients - Funding Trend (2016-2025, Inflation Adjusted to 2025 USD)</h3>
         <div class="chart-controls">
-          <select class="donor-filter-select" value={data.donorFilter} on:change={handleDonorFilterChange}>
+          <select class="donor-filter-select" value={data.donorFilter} on:change={(e) => handleDonorFilterChange(e.currentTarget.value)}>
             <option value="all">All Donors</option>
             <option value="us">US Government</option>
             <option value="eu_echo">EU + Member States</option>
@@ -1378,7 +1360,7 @@
                 <td class="right">{donor.countriesFunded}</td>
                 <td>
                   {#if donor.isConsolidated && donor.countryKey}
-                    <button class="drill-btn breakdown-btn" on:click={() => showCountryBreakdown(donor.countryKey)}>
+                    <button class="drill-btn breakdown-btn" on:click={() => showCountryBreakdown(donor.countryKey!)}>
                       View Breakdown
                     </button>
                   {:else}
