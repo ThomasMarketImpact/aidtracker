@@ -14,7 +14,15 @@ const db = drizzle(sql, { schema });
 
 const FTS_BASE = 'https://api.hpc.tools';
 const HAPI_BASE = 'https://hapi.humdata.org/api/v2';
-const HAPI_APP_ID = process.env.HAPI_APP_ID || 'ZnRzLW5lZWRzLWRhc2hib2FyZDpmdHMtcHJvamVjdEBleGFtcGxlLmNvbQ==';
+
+// Validate required environment variables
+if (!process.env.HAPI_APP_ID) {
+  console.error('❌ Error: HAPI_APP_ID environment variable is required');
+  console.error('   Set it in your .env file or environment');
+  console.error('   Get your app identifier from: https://hapi.humdata.org/');
+  process.exit(1);
+}
+const HAPI_APP_ID = process.env.HAPI_APP_ID;
 
 // ═══════════════════════════════════════════════════════════
 // UTILITY FUNCTIONS
