@@ -3,6 +3,7 @@
   import { onDestroy } from 'svelte';
   import '../app.css';
   import Logo from '$lib/components/Logo.svelte';
+  import LoadingOverlay from '$lib/components/LoadingOverlay.svelte';
 
   // Current page is always "Data" for this subdomain
   const isDataPage = true;
@@ -81,6 +82,8 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
+
+<LoadingOverlay />
 
 <a href="#main-content" class="skip-link">Skip to content</a>
 

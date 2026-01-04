@@ -3,11 +3,16 @@
   import Chart from '$lib/components/Chart.svelte';
   import DownloadButton from '$lib/components/DownloadButton.svelte';
   import BreakdownModal from '$lib/components/BreakdownModal.svelte';
+  import YoYComparison from '$lib/components/YoYComparison.svelte';
+  import GlobalSearch from '$lib/components/GlobalSearch.svelte';
   import { DATA_SOURCES, type ExportColumn, type ExportConfig } from '$lib/utils/excelExport';
   import { formatMoney, formatNumber, getFundingLevel } from '$lib/utils/format';
   import type { PageData } from './$types';
 
   export let data: PageData;
+
+  // Comparison mode state
+  let showComparisonMode = data.compareYear !== null;
 
   // Navigation handlers
   function handleYearChange(event: Event) {
@@ -15,6 +20,10 @@
     const params = new URLSearchParams();
     params.set('year', select.value);
     if (data.selectedCountry) params.set('country', data.selectedCountry);
+    // Preserve compareYear, but clear if same as new selected year
+    if (data.compareYear && data.compareYear !== parseInt(select.value, 10)) {
+      params.set('compareYear', data.compareYear.toString());
+    }
     goto(`?${params.toString()}`);
   }
 
@@ -53,8 +62,35 @@
     params.set('year', data.selectedYear.toString());
     if (data.selectedCountry) params.set('country', data.selectedCountry);
     if (filter !== 'all') params.set('donorFilter', filter);
+    if (data.compareYear) params.set('compareYear', data.compareYear.toString());
     goto(`?${params.toString()}`);
   }
+
+  // Comparison mode handlers
+  function toggleComparisonMode() {
+    showComparisonMode = !showComparisonMode;
+    if (!showComparisonMode && data.compareYear) {
+      // Remove compareYear from URL when toggling off
+      const params = new URLSearchParams();
+      params.set('year', data.selectedYear.toString());
+      if (data.selectedCountry) params.set('country', data.selectedCountry);
+      if (data.donorFilter !== 'all') params.set('donorFilter', data.donorFilter);
+      goto(`?${params.toString()}`);
+    }
+  }
+
+  function handleCompareYearChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    const params = new URLSearchParams();
+    params.set('year', data.selectedYear.toString());
+    if (data.selectedCountry) params.set('country', data.selectedCountry);
+    if (data.donorFilter !== 'all') params.set('donorFilter', data.donorFilter);
+    if (select.value) params.set('compareYear', select.value);
+    goto(`?${params.toString()}`);
+  }
+
+  // Get available years for comparison (excluding selected year)
+  $: compareYearOptions = data.availableYears.filter(y => y !== data.selectedYear);
 
   // Donor filter labels for display
   const donorFilterLabels: Record<string, string> = {
@@ -1019,6 +1055,14 @@
         About the Data
       </a>
     </div>
+    <div class="search-container">
+      <GlobalSearch
+        countries={data.countriesList}
+        donors={data.donorData}
+        sectors={data.sectorData}
+        currentYear={data.selectedYear}
+      />
+    </div>
     <div class="filters">
       <div class="filter-group">
         <label for="year-select">Year</label>
@@ -1036,6 +1080,32 @@
             <option value={country.iso3}>{country.name}</option>
           {/each}
         </select>
+      </div>
+      <div class="filter-group compare-group">
+        <button
+          class="compare-toggle"
+          class:active={showComparisonMode}
+          on:click={toggleComparisonMode}
+          aria-pressed={showComparisonMode}
+        >
+          <svg viewBox="0 0 20 20" fill="currentColor" class="compare-icon">
+            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2V5h1v1h-1zM12 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3zm2 2v-1h1v1h-1z" clip-rule="evenodd" />
+          </svg>
+          Compare Years
+        </button>
+        {#if showComparisonMode}
+          <select
+            id="compare-year-select"
+            value={data.compareYear || ''}
+            on:change={handleCompareYearChange}
+            class="compare-select"
+          >
+            <option value="">Select year...</option>
+            {#each compareYearOptions as year}
+              <option value={year}>{year}</option>
+            {/each}
+          </select>
+        {/if}
       </div>
     </div>
   </nav>
@@ -1063,6 +1133,30 @@
       <span class="kpi-label">Countries with Funding</span>
     </div>
   </div>
+
+  <!-- Year-over-Year Comparison Panel -->
+  {#if data.compareYear && data.comparisonData}
+    <YoYComparison
+      currentYear={data.selectedYear}
+      compareYear={data.compareYear}
+      currentData={{
+        totalFunding: data.summary.totalFunding,
+        peopleInNeed: data.summary.totalPeopleInNeed,
+        countriesWithFunding: data.summary.countriesWithFunding,
+        avgPerPerson: data.summary.totalPeopleInNeed > 0
+          ? data.summary.totalFunding / data.summary.totalPeopleInNeed
+          : 0
+      }}
+      compareData={{
+        totalFunding: data.comparisonData.totalFunding,
+        peopleInNeed: data.comparisonData.totalPeopleInNeed,
+        countriesWithFunding: data.comparisonData.countriesWithFunding,
+        avgPerPerson: data.comparisonData.totalPeopleInNeed > 0
+          ? data.comparisonData.totalFunding / data.comparisonData.totalPeopleInNeed
+          : 0
+      }}
+    />
+  {/if}
 
   {#if data.countryDetail}
     <!-- Country Detail View -->
@@ -1548,6 +1642,18 @@
     flex-shrink: 0;
   }
 
+  .search-container {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 1rem;
+  }
+
+  @media (max-width: 900px) {
+    .search-container {
+      display: none;
+    }
+  }
+
   .filters {
     display: flex;
     gap: 1rem;
@@ -1572,6 +1678,52 @@
     border: 1px solid var(--color-border, #ddd);
     border-radius: 4px;
     min-width: 150px;
+  }
+
+  .compare-group {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .compare-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .compare-toggle:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  .compare-toggle.active {
+    color: var(--primary, #005f73);
+    background: #f0fdff;
+    border-color: var(--primary, #005f73);
+  }
+
+  .compare-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .compare-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--primary, #005f73);
+    border-radius: 0.375rem;
+    background: white;
+    min-width: 100px;
   }
 
   .kpi-row {

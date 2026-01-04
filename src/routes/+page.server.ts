@@ -2,6 +2,7 @@ import { db, schema } from '$lib/server/db';
 import { sql, desc, eq, sum } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { getCachedOrFetch, CACHE_KEYS, REFERENCE_DATA_TTL } from '$lib/server/cache';
 import type {
   FundingTrendRow,
   CountryFundingByYearRow,
@@ -72,6 +73,17 @@ export const load: PageServerLoad = async ({ url }) => {
   const donorFilter: DonorFilter = donorFilterParam && VALID_DONOR_FILTERS.includes(donorFilterParam as DonorFilter)
     ? donorFilterParam as DonorFilter
     : 'all';
+
+  // Parse and validate compare year parameter for YoY comparison
+  const compareYearParam = url.searchParams.get('compareYear');
+  let compareYear: number | null = null;
+  if (compareYearParam) {
+    const parsed = parseInt(compareYearParam, 10);
+    // Validate: must be a finite integer in valid range and different from selected year
+    if (Number.isFinite(parsed) && Number.isInteger(parsed) && parsed >= 2016 && parsed <= 2030 && parsed !== selectedYear) {
+      compareYear = parsed;
+    }
+  }
 
   try {
   // Run independent queries in parallel for better performance
@@ -558,20 +570,43 @@ export const load: PageServerLoad = async ({ url }) => {
   // Calculate summary stats
   const totalFunding = fundingByYear.find(f => f.year === selectedYear)?.totalUsd || '0';
 
-  // Get list of countries with HRP for filter dropdown
-  const countriesList = await db
-    .select({ iso3: schema.countries.iso3, name: schema.countries.name })
-    .from(schema.countries)
-    .where(eq(schema.countries.hasHrp, true))
-    .orderBy(schema.countries.name);
+  // Get comparison year data if compareYear is set
+  let comparisonData = null;
+  if (compareYear) {
+    const compareTotalFunding = fundingByYear.find(f => f.year === compareYear)?.totalUsd || '0';
+    const compareFundingTrendRow = (fundingTrend.rows as unknown as FundingTrendRow[]).find(r => r.year === compareYear);
+
+    comparisonData = {
+      year: compareYear,
+      totalFunding: safeNumber(compareTotalFunding),
+      totalPeopleInNeed: GHO_PEOPLE_IN_NEED[compareYear] || 0,
+      countriesWithFunding: safeNumber(compareFundingTrendRow?.countries_funded) || 0,
+    };
+  }
+
+  // Get list of countries with HRP for filter dropdown (cached for 1 hour)
+  const countriesList = await getCachedOrFetch(
+    CACHE_KEYS.COUNTRIES_LIST,
+    async () => {
+      const result = await db
+        .select({ iso3: schema.countries.iso3, name: schema.countries.name })
+        .from(schema.countries)
+        .where(eq(schema.countries.hasHrp, true))
+        .orderBy(schema.countries.name);
+      return result.map(c => ({ iso3: c.iso3, name: c.name }));
+    },
+    REFERENCE_DATA_TTL
+  );
 
   return {
     selectedYear,
     selectedCountry,
     selectedDonor,
     donorFilter,
+    compareYear,
+    comparisonData,
     availableYears: fundingByYear.map(f => f.year).sort((a, b) => b - a),
-    countriesList: countriesList.map(c => ({ iso3: c.iso3, name: c.name })),
+    countriesList,
 
     // Chart data - merge funding with GHO people in need data
     fundingTrend: (fundingTrend.rows as unknown as FundingTrendRow[]).map((r) => {
