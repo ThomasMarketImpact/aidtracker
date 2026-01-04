@@ -1,6 +1,24 @@
 import { db, schema } from '$lib/server/db';
 import { sql, desc, eq, sum } from 'drizzle-orm';
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import type {
+  FundingTrendRow,
+  CountryFundingByYearRow,
+  CountryFundingRow,
+  DonorRow,
+  DonorFundingRow,
+  ConsolidatedCountryFundingRow,
+  DonorTypeRow,
+  SectorRow,
+  CountryHistoryRow,
+  CountryDonorRow,
+  CountrySectorRow,
+  DonorInfoRow,
+  DonorHistoryRow,
+  DonorFlowRow,
+  DonorSectorRow,
+} from '$lib/types/database';
 
 // Safe number parsing helper - returns 0 for NaN/null/undefined/Infinity
 const safeNumber = (value: unknown): number => {
@@ -190,6 +208,7 @@ export const load: PageServerLoad = async ({ url }) => {
     ? donorFilterParam as DonorFilter
     : 'all';
 
+  try {
   // Run independent queries in parallel for better performance
   const [fundingByYear, fundingTrend] = await Promise.all([
     // Get all years with funding data
@@ -555,8 +574,8 @@ export const load: PageServerLoad = async ({ url }) => {
   const processGovernmentDonors = () => {
     // Build previous year lookup with safe Number conversion
     const prevYearMap = new Map<string, number>();
-    prevYearGovernmentDonors.rows.forEach((r: any) => {
-      const funding = Number(r.funding_usd) || 0;
+    (prevYearGovernmentDonors.rows as unknown as DonorFundingRow[]).forEach((r) => {
+      const funding = safeNumber(r.funding_usd);
       if (Number.isFinite(funding)) {
         prevYearMap.set(r.donor, funding);
       }
@@ -572,10 +591,10 @@ export const load: PageServerLoad = async ({ url }) => {
     const usAgencies: { donor: string; funding: number; prevFunding: number }[] = [];
     const euMemberStates: { donor: string; funding: number; prevFunding: number }[] = [];
 
-    topGovernmentDonorsRaw.rows.forEach((r: any) => {
-      const donor = r.donor as string;
+    (topGovernmentDonorsRaw.rows as unknown as DonorFundingRow[]).forEach((r) => {
+      const donor = r.donor;
       if (!donor) return; // Skip rows with null/undefined donors
-      const funding = Number(r.funding_usd) || 0;
+      const funding = safeNumber(r.funding_usd);
       if (!Number.isFinite(funding)) return; // Skip invalid funding values
       const prevFunding = prevYearMap.get(donor) || 0;
 
@@ -630,10 +649,10 @@ export const load: PageServerLoad = async ({ url }) => {
   const createConsolidatedDonorData = () => {
     // Build lookup of consolidated country totals with safe Number conversion
     const consolidatedTotals = new Map<string, { funding: number; countries: number }>();
-    consolidatedCountryFunding.rows.forEach((r: any) => {
+    (consolidatedCountryFunding.rows as unknown as ConsolidatedCountryFundingRow[]).forEach((r) => {
       if (r.country_key) {
-        const funding = Number(r.funding_usd) || 0;
-        const countries = Number(r.countries_funded) || 0;
+        const funding = safeNumber(r.funding_usd);
+        const countries = safeNumber(r.countries_funded);
         if (Number.isFinite(funding) && Number.isFinite(countries)) {
           consolidatedTotals.set(r.country_key, { funding, countries });
         }
@@ -641,8 +660,8 @@ export const load: PageServerLoad = async ({ url }) => {
     });
 
     // Filter out donors that belong to any consolidated country
-    const nonConsolidatedDonors = donorData.rows.filter((r: any) => {
-      const donor = r.donor as string;
+    const nonConsolidatedDonors = (donorData.rows as unknown as DonorRow[]).filter((r) => {
+      const donor = r.donor;
       if (!donor) return false; // Skip null/undefined donors
       for (const countryKey of CONSOLIDATION_COUNTRIES) {
         if (matchesCountryConsolidation(donor, countryKey)) {
@@ -671,9 +690,9 @@ export const load: PageServerLoad = async ({ url }) => {
     }
 
     // Add non-consolidated donors with safe Number conversion
-    nonConsolidatedDonors.forEach((r: any) => {
-      const funding = Number(r.funding_usd) || 0;
-      const countriesFunded = Number(r.countries_funded) || 0;
+    nonConsolidatedDonors.forEach((r) => {
+      const funding = safeNumber(r.funding_usd);
+      const countriesFunded = safeNumber(r.countries_funded);
       if (!Number.isFinite(funding)) return; // Skip invalid values
       consolidated.push({
         donor: r.donor,
@@ -695,8 +714,8 @@ export const load: PageServerLoad = async ({ url }) => {
 
   // Process government donors to extract breakdowns by country with safe Number conversion
   const prevYearMapForBreakdown = new Map<string, number>();
-  prevYearGovernmentDonors.rows.forEach((r: any) => {
-    const funding = Number(r.funding_usd) || 0;
+  (prevYearGovernmentDonors.rows as unknown as DonorFundingRow[]).forEach((r) => {
+    const funding = safeNumber(r.funding_usd);
     if (r.donor && Number.isFinite(funding)) {
       prevYearMapForBreakdown.set(r.donor, funding);
     }
@@ -705,15 +724,13 @@ export const load: PageServerLoad = async ({ url }) => {
   for (const countryKey of CONSOLIDATION_COUNTRIES) {
     const agencies: { donor: string; funding: number; prevFunding: number; yoyChange: number | null }[] = [];
 
-    topGovernmentDonorsRaw.rows.forEach((r: any) => {
-      const donor = r.donor as string;
+    (topGovernmentDonorsRaw.rows as unknown as DonorFundingRow[]).forEach((r) => {
+      const donor = r.donor;
       if (matchesCountryConsolidation(donor, countryKey)) {
-        const funding = Number(r.funding_usd) || 0;
+        const funding = safeNumber(r.funding_usd);
         const prevFunding = prevYearMapForBreakdown.get(donor) || 0;
-        // Safe division: only calculate if prevFunding is a valid positive number
-        const yoyChange = (prevFunding > 0 && Number.isFinite(prevFunding) && Number.isFinite(funding))
-          ? ((funding - prevFunding) / prevFunding) * 100
-          : null;
+        // Use the safeYoyChange helper for consistent calculation
+        const yoyChange = safeYoyChange(funding, prevFunding);
         agencies.push({
           donor,
           funding,
@@ -770,24 +787,24 @@ export const load: PageServerLoad = async ({ url }) => {
       `)
     ]);
 
-    const countryInfo = countriesData.rows.find((c: any) => c.iso3 === selectedCountry);
+    const countryInfo = (countriesData.rows as unknown as CountryFundingRow[]).find((c) => c.iso3 === selectedCountry);
 
     countryDetail = {
       iso3: selectedCountry,
       name: countryInfo?.name || selectedCountry,
-      currentFunding: Number(countryInfo?.funding_usd || 0),
-      peopleInNeed: Number(countryInfo?.people_in_need || 0),
-      fundingHistory: countryHistory.rows.map((r: any) => ({
+      currentFunding: safeNumber(countryInfo?.funding_usd),
+      peopleInNeed: safeNumber(countryInfo?.people_in_need),
+      fundingHistory: (countryHistory.rows as unknown as CountryHistoryRow[]).map((r) => ({
         year: r.year,
-        funding: Number(r.funding_usd),
+        funding: safeNumber(r.funding_usd),
       })),
-      topDonors: countryDonors.rows.map((r: any) => ({
+      topDonors: (countryDonors.rows as unknown as CountryDonorRow[]).map((r) => ({
         donor: r.donor,
-        funding: Number(r.funding_usd),
+        funding: safeNumber(r.funding_usd),
       })),
-      sectors: countrySectors.rows.map((r: any) => ({
+      sectors: (countrySectors.rows as unknown as CountrySectorRow[]).map((r) => ({
         sector: r.sector,
-        funding: Number(r.funding_usd),
+        funding: safeNumber(r.funding_usd),
       })),
     };
   }
@@ -804,7 +821,7 @@ export const load: PageServerLoad = async ({ url }) => {
     `);
 
     if (donorInfo.rows.length > 0) {
-      const donor = donorInfo.rows[0] as any;
+      const donor = donorInfo.rows[0] as unknown as DonorInfoRow;
 
       // Get funding history by year
       const donorHistory = await db.execute(sql`
@@ -845,28 +862,29 @@ export const load: PageServerLoad = async ({ url }) => {
       `);
 
       // Calculate total for this year
-      const totalThisYear = donorFlows.rows.reduce((sum: number, r: any) => sum + Number(r.funding_usd), 0);
+      const typedDonorFlows = donorFlows.rows as unknown as DonorFlowRow[];
+      const totalThisYear = typedDonorFlows.reduce((sum, r) => sum + safeNumber(r.funding_usd), 0);
 
       donorDetail = {
         id: donor.id,
         name: donor.name,
         type: donor.org_type,
         currentFunding: totalThisYear,
-        countriesFunded: donorFlows.rows.length,
-        fundingHistory: donorHistory.rows.map((r: any) => ({
+        countriesFunded: typedDonorFlows.length,
+        fundingHistory: (donorHistory.rows as unknown as DonorHistoryRow[]).map((r) => ({
           year: r.year,
-          funding: Number(r.funding_usd),
-          countries: Number(r.countries_funded),
+          funding: safeNumber(r.funding_usd),
+          countries: safeNumber(r.countries_funded),
         })),
-        flows: donorFlows.rows.map((r: any) => ({
+        flows: typedDonorFlows.map((r) => ({
           country: r.country,
           iso3: r.iso3,
-          funding: Number(r.funding_usd),
-          flowCount: Number(r.flow_count),
+          funding: safeNumber(r.funding_usd),
+          flowCount: safeNumber(r.flow_count),
         })),
-        sectors: donorSectors.rows.map((r: any) => ({
+        sectors: (donorSectors.rows as unknown as DonorSectorRow[]).map((r) => ({
           sector: r.sector,
-          funding: Number(r.funding_usd),
+          funding: safeNumber(r.funding_usd),
         })),
       };
     }
@@ -891,15 +909,15 @@ export const load: PageServerLoad = async ({ url }) => {
     countriesList: countriesList.map(c => ({ iso3: c.iso3, name: c.name })),
 
     // Chart data - merge funding with GHO people in need data
-    fundingTrend: fundingTrend.rows.map((r: any) => {
-      const nominalFunding = Number(r.total_funding);
+    fundingTrend: (fundingTrend.rows as unknown as FundingTrendRow[]).map((r) => {
+      const nominalFunding = safeNumber(r.total_funding);
       const multiplier = getInflationMultiplier(r.year);
       return {
         year: r.year,
         funding: nominalFunding,
         fundingReal2025: nominalFunding * multiplier,  // Adjusted to 2025 USD
         inflationMultiplier: multiplier,
-        countries: Number(r.countries_funded),
+        countries: safeNumber(r.countries_funded),
         peopleInNeed: GHO_PEOPLE_IN_NEED[r.year] || null,  // From GHO reports
       };
     }),
@@ -909,13 +927,13 @@ export const load: PageServerLoad = async ({ url }) => {
       const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
       const countries = new Map<string, { name: string; iso3: string; data: Map<number, number> }>();
 
-      countryFundingByYear.rows.forEach((r: any) => {
+      (countryFundingByYear.rows as unknown as CountryFundingByYearRow[]).forEach((r) => {
         if (!r.name) return; // Skip rows with null/undefined names
         if (!countries.has(r.name)) {
           countries.set(r.name, { name: r.name, iso3: r.iso3, data: new Map() });
         }
         // Apply inflation adjustment to convert to 2025 USD
-        const nominalFunding = Number(r.funding) || 0;
+        const nominalFunding = safeNumber(r.funding);
         const adjustedFunding = nominalFunding * getInflationMultiplier(r.year);
         const country = countries.get(r.name);
         if (country) {
@@ -933,34 +951,27 @@ export const load: PageServerLoad = async ({ url }) => {
       };
     })(),
 
-    countriesData: countriesData.rows.map((r: any) => {
-      const funding = Number(r.funding_usd) || 0;
-      const prevFundingRaw = r.prev_funding_usd ? Number(r.prev_funding_usd) : null;
-      // Ensure prevFunding is a valid finite number or null
-      const prevFunding = (prevFundingRaw !== null && Number.isFinite(prevFundingRaw)) ? prevFundingRaw : null;
+    countriesData: (countriesData.rows as unknown as CountryFundingRow[]).map((r) => {
+      const funding = safeNumber(r.funding_usd);
+      const prevFunding = safeNumber(r.prev_funding_usd) || null;
       // Use HAPI data first, then fallback to GHO country data
       const peopleInNeedRaw = r.people_in_need
-        ? Number(r.people_in_need)
+        ? safeNumber(r.people_in_need)
         : (GHO_PIN_BY_COUNTRY[r.iso3] || null);
       // Ensure peopleInNeed is a valid positive finite number or null
       const peopleInNeed = (peopleInNeedRaw !== null && peopleInNeedRaw > 0 && Number.isFinite(peopleInNeedRaw))
         ? peopleInNeedRaw
         : null;
-      // Safe division for funding per person
-      const fundingPerPerson = (peopleInNeed && Number.isFinite(funding))
-        ? funding / peopleInNeed
-        : null;
-      // Safe division for YoY change
-      const yoyChange = (prevFunding && prevFunding > 0 && Number.isFinite(funding))
-        ? ((funding - prevFunding) / prevFunding) * 100
-        : null;
+      // Use safe helpers for calculations
+      const fundingPerPerson = safeDivide(funding, peopleInNeed || 0);
+      const yoyChange = safeYoyChange(funding, prevFunding || 0);
 
       return {
         id: r.id,
         name: r.name,
         iso3: r.iso3,
         funding,
-        flowCount: Number(r.flow_count),
+        flowCount: safeNumber(r.flow_count),
         prevFunding,
         yoyChange,
         peopleInNeed,
@@ -968,24 +979,24 @@ export const load: PageServerLoad = async ({ url }) => {
       };
     }),
 
-    sectorData: sectorData.rows.map((r: any) => ({
+    sectorData: (sectorData.rows as unknown as SectorRow[]).map((r) => ({
       sector: r.sector,
-      funding: Number(r.funding_usd),
+      funding: safeNumber(r.funding_usd),
     })),
 
-    donorData: donorData.rows.map((r: any) => ({
+    donorData: (donorData.rows as unknown as DonorRow[]).map((r) => ({
       donor: r.donor,
       donorType: r.donor_type,
-      funding: Number(r.funding_usd),
-      countriesFunded: Number(r.countries_funded),
+      funding: safeNumber(r.funding_usd),
+      countriesFunded: safeNumber(r.countries_funded),
     })),
 
     // Consolidated donor data with US agencies combined
     consolidatedDonorData,
 
-    donorTypeData: donorTypeData.rows.map((r: any) => ({
+    donorTypeData: (donorTypeData.rows as unknown as DonorTypeRow[]).map((r) => ({
       type: r.donor_type,
-      funding: Number(r.funding_usd),
+      funding: safeNumber(r.funding_usd),
     })),
 
     topGovernmentDonors: topGovernmentDonors.map(d => ({
@@ -993,10 +1004,7 @@ export const load: PageServerLoad = async ({ url }) => {
       funding: d.funding,
       prevFunding: d.prevFunding,
       category: d.category,
-      // Safe division: check for valid positive numbers to avoid NaN/Infinity
-      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
-        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
-        : null,
+      yoyChange: safeYoyChange(d.funding, d.prevFunding),
     })),
 
     // Breakdowns for US and EU (for government donors chart)
@@ -1004,17 +1012,13 @@ export const load: PageServerLoad = async ({ url }) => {
       donor: d.donor,
       funding: d.funding,
       prevFunding: d.prevFunding,
-      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
-        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
-        : null,
+      yoyChange: safeYoyChange(d.funding, d.prevFunding),
     })),
     euMemberStatesBreakdown: euMemberStates.map(d => ({
       donor: d.donor,
       funding: d.funding,
       prevFunding: d.prevFunding,
-      yoyChange: (d.prevFunding > 0 && Number.isFinite(d.prevFunding) && Number.isFinite(d.funding))
-        ? ((d.funding - d.prevFunding) / d.prevFunding) * 100
-        : null,
+      yoyChange: safeYoyChange(d.funding, d.prevFunding),
     })),
 
     // All country agency breakdowns (for Top 15 Donors table)
@@ -1027,10 +1031,16 @@ export const load: PageServerLoad = async ({ url }) => {
     donorDetail,
 
     summary: {
-      totalFunding: Number(totalFunding),
+      totalFunding: safeNumber(totalFunding),
       totalPeopleInNeed: GHO_PEOPLE_IN_NEED[selectedYear] || 0,  // Use GHO data for all years
       countriesWithFunding: countriesData.rows.length,
-      countriesWithNeeds: countriesData.rows.filter((r: any) => r.people_in_need).length,
+      countriesWithNeeds: (countriesData.rows as unknown as CountryFundingRow[]).filter((r) => r.people_in_need).length,
     },
   };
+  } catch (err) {
+    console.error('Failed to load funding data:', err);
+    throw error(500, {
+      message: 'Failed to load funding data. Please try again later.',
+    });
+  }
 };
