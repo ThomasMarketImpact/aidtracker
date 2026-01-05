@@ -41,3 +41,10 @@ export function formatYoyChange(change: number | null): { text: string; color: s
   const color = change >= 0 ? '#22c55e' : '#ef4444';
   return { text: `${sign}${change.toFixed(0)}%`, color };
 }
+
+/**
+ * Format a percentage value
+ */
+export function formatPercent(value: number): string {
+  return `${value.toFixed(1)}%`;
+}

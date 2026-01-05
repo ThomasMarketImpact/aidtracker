@@ -155,7 +155,7 @@
             <td><span class="badge {level.class}">{level.label}</span></td>
             <td class="right">{country.donorCount}</td>
             <td>
-              <a href="/?year={data.selectedYear}&country={country.iso3}" class="view-link">
+              <a href="/countries/{country.iso3}?year={data.selectedYear}" class="view-link">
                 View Details
               </a>
             </td>
