@@ -8,15 +8,21 @@ AidTracker helps analyze the gap between humanitarian funding and actual needs b
 
 - **[Financial Tracking Service (FTS)](https://fts.unocha.org/)** - UN OCHA's authoritative humanitarian funding database
 - **[Humanitarian API (HAPI)](https://hapi.humdata.org/)** - Programmatic access to humanitarian needs data
+- **[ReliefWeb API](https://apidoc.reliefweb.int/)** - Crisis reports and disaster tracking
 - **Global Humanitarian Overview (GHO)** - Annual people-in-need statistics
+- **IPC/CH** - Food insecurity phase classifications
+- **UNHCR** - Refugee and IDP population data
 
 ## Features
 
 - **Funding Trends** - Track humanitarian funding from 2016-2025 with inflation adjustment to 2025 USD
 - **Country Analysis** - Compare funding across countries with per-person-in-need metrics
-- **Sector Breakdown** - Visualize funding distribution across humanitarian clusters (Health, WASH, Protection, etc.)
-- **Donor Analysis** - Identify top government donors with year-over-year changes
+- **Sector Analysis** - Deep dive into humanitarian clusters with trend analysis and geographic distribution
+- **Crisis Overview** - JIAF severity levels, IPC food insecurity data, refugee populations, and funding gaps
+- **Donor Analysis** - Identify top government donors with year-over-year changes and concentration metrics
+- **ReliefWeb Integration** - Live crisis updates and active disaster tracking
 - **Interactive Charts** - Click-to-filter visualizations powered by ECharts
+- **Global Search** - Quick access to countries, donors, and sectors
 
 ## Tech Stack
 
@@ -111,6 +117,10 @@ npm run preview
 - **flowSummaries** - Aggregated funding flows by year, donor, recipient, sector
 - **humanitarianNeeds** - People in need by country, year, sector
 - **fundingRequirements** - Appeal requirements vs actual funding
+- **jiafSeverity** / **jiafSeveritySummary** - JIAF severity levels (1-5 scale)
+- **foodInsecurity** - IPC food insecurity phases
+- **refugeePopulation** - UNHCR refugee and IDP data
+- **childWelfareIndicators** - UNICEF child welfare metrics
 
 ## Documentation
 

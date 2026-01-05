@@ -227,25 +227,3 @@ export async function searchReports(
   }
 }
 
-/**
- * Get headline figures for a crisis
- */
-export async function getHeadlineFigures(countryIso3: string): Promise<any[]> {
-  try {
-    const params = new URLSearchParams({
-      appname: APP_NAME,
-      limit: '20',
-      'filter[field]': 'country.iso3',
-      'filter[value]': countryIso3,
-      'fields[include][]': 'figure,name,source,date,url',
-      'sort[]': 'date:desc',
-    });
-
-    // Note: ReliefWeb doesn't have a dedicated figures endpoint in v1
-    // This would need to parse from reports or use a different approach
-    return [];
-  } catch (error) {
-    console.error('Failed to fetch headline figures:', error);
-    return [];
-  }
-}

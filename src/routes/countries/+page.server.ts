@@ -9,8 +9,9 @@ export const load: PageServerLoad = async ({ url }) => {
     selectedYear = 2025;
   }
 
-  // Get available years
-  const yearsResult = await db
+  try {
+    // Get available years
+    const yearsResult = await db
     .select({ year: schema.flowSummaries.year })
     .from(schema.flowSummaries)
     .groupBy(schema.flowSummaries.year)
@@ -160,4 +161,14 @@ export const load: PageServerLoad = async ({ url }) => {
     totalFunding,
     totalCountries,
   };
+  } catch (error) {
+    console.error('Failed to load countries data:', error);
+    return {
+      selectedYear,
+      availableYears: [],
+      countries: [],
+      totalFunding: 0,
+      totalCountries: 0,
+    };
+  }
 };
