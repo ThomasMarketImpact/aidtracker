@@ -20,7 +20,7 @@
   // Chart options for sector trends
   $: trendChartOptions = {
     tooltip: {
-      trigger: 'axis',
+      trigger: 'axis' as const,
       formatter: (params: any) => {
         let result = `<strong>${params[0].axisValue}</strong><br/>`;
         params.forEach((p: any) => {
@@ -33,7 +33,7 @@
     legend: {
       data: data.trends.sectors.map(s => s.name),
       bottom: 0,
-      type: 'scroll',
+      type: 'scroll' as const,
       textStyle: { fontSize: 11 }
     },
     grid: {
@@ -44,13 +44,13 @@
       containLabel: true
     },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.trends.years,
       axisLine: { lineStyle: { color: '#ddd' } },
       axisLabel: { color: '#666' }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLine: { show: false },
       axisLabel: {
         color: '#666',
@@ -60,7 +60,7 @@
     },
     series: data.trends.sectors.map((s, i) => ({
       name: s.name,
-      type: 'line',
+      type: 'line' as const,
       data: s.data,
       smooth: true,
       symbol: 'circle',
@@ -72,18 +72,23 @@
   // Pie chart for sector distribution
   $: pieChartOptions = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{b}: ${c|number} ({d}%)'
+      trigger: 'item' as const,
+      formatter: (params: any) => {
+        const value = params.value >= 1e9
+          ? `$${(params.value / 1e9).toFixed(1)}B`
+          : `$${(params.value / 1e6).toFixed(0)}M`;
+        return `${params.name}: ${value} (${params.percent.toFixed(1)}%)`;
+      }
     },
     legend: {
-      orient: 'vertical',
+      orient: 'vertical' as const,
       right: '5%',
       top: 'center',
-      type: 'scroll',
+      type: 'scroll' as const,
       textStyle: { fontSize: 11 }
     },
     series: [{
-      type: 'pie',
+      type: 'pie' as const,
       radius: ['40%', '70%'],
       center: ['35%', '50%'],
       avoidLabelOverlap: true,
@@ -97,7 +102,7 @@
         label: {
           show: true,
           fontSize: 14,
-          fontWeight: 'bold'
+          fontWeight: 'bold' as const
         }
       },
       data: data.sectors.slice(0, 10).map(s => ({
@@ -120,25 +125,6 @@
     return `${prefix}${yoy.toFixed(1)}%`;
   }
 
-  // Sector color mapping
-  const sectorColors: Record<string, string> = {
-    'Health': '#ef4444',
-    'Food Security': '#f97316',
-    'Nutrition': '#eab308',
-    'Water Sanitation Hygiene': '#22c55e',
-    'Education': '#3b82f6',
-    'Protection': '#8b5cf6',
-    'Shelter/NFI': '#ec4899',
-    'Camp Coordination / Management': '#14b8a6',
-    'Early Recovery': '#6366f1',
-    'Logistics': '#78716c',
-    'Emergency Telecommunications': '#0ea5e9',
-    'Coordination': '#a855f7'
-  };
-
-  function getSectorColor(name: string): string {
-    return sectorColors[name] || '#6b7280';
-  }
 </script>
 
 <svelte:head>

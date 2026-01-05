@@ -1,5 +1,5 @@
 import { db, schema } from '$lib/server/db';
-import { sql, desc, eq } from 'drizzle-orm';
+import { sql, desc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getLatestReports, getActiveDisasters } from '$lib/server/apis/reliefweb';
 import { getCachedOrFetch } from '$lib/server/cache';
@@ -20,8 +20,9 @@ export const load: PageServerLoad = async ({ url }) => {
     selectedYear = 2025;
   }
 
-  // Get available years
-  const yearsResult = await db
+  try {
+    // Get available years
+    const yearsResult = await db
     .select({ year: schema.flowSummaries.year })
     .from(schema.flowSummaries)
     .groupBy(schema.flowSummaries.year)
@@ -238,4 +239,27 @@ export const load: PageServerLoad = async ({ url }) => {
     reliefWebReports: reliefWebReports || [],
     activeDisasters: activeDisasters || []
   };
+  } catch (error) {
+    console.error('Failed to load crisis data:', error);
+    return {
+      selectedYear,
+      availableYears: [],
+      summary: {
+        totalPeopleInNeed: 0,
+        totalFoodInsecure: 0,
+        totalRefugees: 0,
+        totalFundingGap: 0,
+        countriesWithSeverity4Plus: 0,
+        countriesWithFamine: 0
+      },
+      severityLevels: SEVERITY_LEVELS,
+      severityDistribution: [],
+      jiafCountries: [],
+      ipcCountries: [],
+      refugeeCountries: [],
+      fundingGaps: [],
+      reliefWebReports: [],
+      activeDisasters: []
+    };
+  }
 };

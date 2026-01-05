@@ -83,11 +83,9 @@ export function calculateGiniCoefficient(values: number[]): number {
   if (total === 0) return 0;
 
   // Calculate Gini using the formula: G = (2 * sum(i * x_i)) / (n * sum(x_i)) - (n+1)/n
-  let cumulativeSum = 0;
   let weightedSum = 0;
 
   for (let i = 0; i < n; i++) {
-    cumulativeSum += sorted[i];
     weightedSum += (i + 1) * sorted[i];
   }
 

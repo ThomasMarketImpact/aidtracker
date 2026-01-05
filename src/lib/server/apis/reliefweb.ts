@@ -90,27 +90,42 @@ export async function getLatestReports(
 
 /**
  * Fetch active disasters
+ * Uses POST method to support complex filter conditions
  */
 export async function getActiveDisasters(
   countryIso3?: string,
   limit: number = 20
 ): Promise<ReliefWebDisaster[]> {
   try {
-    const params = new URLSearchParams({
-      appname: APP_NAME,
-      limit: limit.toString(),
-      'filter[field]': 'status',
-      'filter[value]': 'ongoing',
-      'fields[include][]': 'name,glide,status,date.event,type.name,country.name,country.iso3,url_alias',
-      'sort[]': 'date.event:desc',
-    });
+    // Build filter conditions - ReliefWeb API requires POST for multiple filters
+    const filterConditions: any[] = [
+      { field: 'status', value: 'ongoing' }
+    ];
 
     if (countryIso3) {
-      params.append('filter[field]', 'country.iso3');
-      params.append('filter[value]', countryIso3);
+      filterConditions.push({ field: 'country.iso3', value: countryIso3 });
     }
 
-    const response = await fetch(`${BASE_URL}/disasters?${params.toString()}`);
+    const requestBody = {
+      appname: APP_NAME,
+      limit: limit,
+      filter: {
+        operator: 'AND',
+        conditions: filterConditions
+      },
+      fields: {
+        include: ['name', 'glide', 'status', 'date.event', 'type.name', 'country.name', 'country.iso3', 'url_alias']
+      },
+      sort: ['date.event:desc']
+    };
+
+    const response = await fetch(`${BASE_URL}/disasters`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
 
     if (!response.ok) {
       console.error('ReliefWeb disasters API error:', response.status);

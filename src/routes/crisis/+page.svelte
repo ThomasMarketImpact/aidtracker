@@ -17,8 +17,8 @@
   // Severity distribution chart
   $: severityChartOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' }
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const }
     },
     legend: {
       data: ['Population'],
@@ -32,13 +32,13 @@
       containLabel: true
     },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.severityDistribution.map(s => s.label),
       axisLine: { lineStyle: { color: '#ddd' } },
       axisLabel: { color: '#666' }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => val >= 1e6 ? `${(val / 1e6).toFixed(0)}M` : val.toLocaleString()
@@ -47,7 +47,7 @@
     },
     series: [{
       name: 'Population',
-      type: 'bar',
+      type: 'bar' as const,
       data: data.severityDistribution.map(s => ({
         value: s.population,
         itemStyle: { color: s.color }
@@ -59,8 +59,8 @@
   // IPC phases chart
   $: ipcChartOptions = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' },
+      trigger: 'axis' as const,
+      axisPointer: { type: 'shadow' as const },
       formatter: (params: any) => {
         let result = `<strong>${params[0].name}</strong><br/>`;
         params.forEach((p: any) => {
@@ -81,13 +81,13 @@
       containLabel: true
     },
     xAxis: {
-      type: 'category',
+      type: 'category' as const,
       data: data.ipcCountries.slice(0, 10).map(c => c.countryName.length > 12 ? c.countryName.slice(0, 10) + '...' : c.countryName),
       axisLine: { lineStyle: { color: '#ddd' } },
       axisLabel: { color: '#666', rotate: 45 }
     },
     yAxis: {
-      type: 'value',
+      type: 'value' as const,
       axisLabel: {
         color: '#666',
         formatter: (val: number) => val >= 1e6 ? `${(val / 1e6).toFixed(0)}M` : val.toLocaleString()
@@ -97,21 +97,21 @@
     series: [
       {
         name: 'Phase 3 (Crisis)',
-        type: 'bar',
+        type: 'bar' as const,
         stack: 'total',
         data: data.ipcCountries.slice(0, 10).map(c => c.phase3),
         itemStyle: { color: '#f97316' }
       },
       {
         name: 'Phase 4 (Emergency)',
-        type: 'bar',
+        type: 'bar' as const,
         stack: 'total',
         data: data.ipcCountries.slice(0, 10).map(c => c.phase4),
         itemStyle: { color: '#ef4444' }
       },
       {
         name: 'Phase 5 (Famine)',
-        type: 'bar',
+        type: 'bar' as const,
         stack: 'total',
         data: data.ipcCountries.slice(0, 10).map(c => c.phase5),
         itemStyle: { color: '#7f1d1d' }

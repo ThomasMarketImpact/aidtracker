@@ -1,5 +1,5 @@
 import { db, schema } from '$lib/server/db';
-import { sql, desc, eq } from 'drizzle-orm';
+import { sql, desc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -9,8 +9,9 @@ export const load: PageServerLoad = async ({ url }) => {
     selectedYear = 2025;
   }
 
-  // Get available years
-  const yearsResult = await db
+  try {
+    // Get available years
+    const yearsResult = await db
     .select({ year: schema.flowSummaries.year })
     .from(schema.flowSummaries)
     .groupBy(schema.flowSummaries.year)
@@ -189,4 +190,19 @@ export const load: PageServerLoad = async ({ url }) => {
       sectors: sectorTrendsData
     }
   };
+  } catch (error) {
+    console.error('Failed to load sectors data:', error);
+    return {
+      selectedYear,
+      availableYears: [],
+      sectors: [],
+      globalClusters: [],
+      totalFunding: 0,
+      totalSectors: 0,
+      trends: {
+        years: [],
+        sectors: []
+      }
+    };
+  }
 };
