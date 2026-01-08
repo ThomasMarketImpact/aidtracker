@@ -1,5 +1,5 @@
 import { db, schema } from '$lib/server/db';
-import { sql, desc, eq, sum } from 'drizzle-orm';
+import { sql, desc, eq, sum, lte } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type {
@@ -211,23 +211,26 @@ export const load: PageServerLoad = async ({ url }) => {
   try {
   // Run independent queries in parallel for better performance
   const [fundingByYear, fundingTrend] = await Promise.all([
-    // Get all years with funding data
+    // Get all years with funding data (up to 2025 - 2026 data is incomplete)
     db.select({
       year: schema.flowSummaries.year,
       totalUsd: sum(schema.flowSummaries.totalAmountUsd),
       flowCount: sum(schema.flowSummaries.flowCount),
     })
     .from(schema.flowSummaries)
+    .where(lte(schema.flowSummaries.year, 2025))
     .groupBy(schema.flowSummaries.year)
     .orderBy(desc(schema.flowSummaries.year)),
 
-    // Get funding trend data (all years, for line chart)
+    // Get funding trend data (all years up to 2025, for line chart)
+    // Note: 2026 data excluded as funding figures are incomplete/misleading
     db.execute(sql`
       SELECT
         fs.year,
         SUM(fs.total_amount_usd::numeric) as total_funding,
         COUNT(DISTINCT fs.recipient_country_id) as countries_funded
       FROM flow_summaries fs
+      WHERE fs.year <= 2025
       GROUP BY fs.year
       ORDER BY fs.year ASC
     `)
@@ -275,6 +278,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
   // Get funding by year for top 15 recipient countries (for multi-line chart)
   // Filtered by donor group if a filter is selected
+  // Note: 2026 data excluded as funding figures are incomplete
   let countryFundingByYear;
   if (donorFilter === 'all') {
     countryFundingByYear = await db.execute(sql`
@@ -286,7 +290,7 @@ export const load: PageServerLoad = async ({ url }) => {
           SUM(fs.total_amount_usd::numeric) as total_funding
         FROM flow_summaries fs
         JOIN countries c ON c.id = fs.recipient_country_id
-        WHERE fs.year >= 2016
+        WHERE fs.year >= 2016 AND fs.year <= 2025
         GROUP BY c.id, c.name, c.iso3
         ORDER BY total_funding DESC
         LIMIT 15
@@ -298,7 +302,7 @@ export const load: PageServerLoad = async ({ url }) => {
         SUM(fs.total_amount_usd::numeric) as funding
       FROM top_countries tc
       JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
-      WHERE fs.year >= 2016
+      WHERE fs.year >= 2016 AND fs.year <= 2025
       GROUP BY tc.name, tc.iso3, fs.year
       ORDER BY tc.name, fs.year
     `);
@@ -315,7 +319,7 @@ export const load: PageServerLoad = async ({ url }) => {
         FROM flow_summaries fs
         JOIN countries c ON c.id = fs.recipient_country_id
         JOIN organizations o ON o.id = fs.donor_org_id
-        WHERE fs.year >= 2016 AND ${filterCondition}
+        WHERE fs.year >= 2016 AND fs.year <= 2025 AND ${filterCondition}
         GROUP BY c.id, c.name, c.iso3
         ORDER BY total_funding DESC
         LIMIT 15
@@ -328,7 +332,7 @@ export const load: PageServerLoad = async ({ url }) => {
       FROM top_countries tc
       JOIN flow_summaries fs ON fs.recipient_country_id = tc.id
       JOIN organizations o ON o.id = fs.donor_org_id
-      WHERE fs.year >= 2016 AND ${filterCondition}
+      WHERE fs.year >= 2016 AND fs.year <= 2025 AND ${filterCondition}
       GROUP BY tc.name, tc.iso3, fs.year
       ORDER BY tc.name, fs.year
     `));
@@ -756,7 +760,7 @@ export const load: PageServerLoad = async ({ url }) => {
           SUM(fs.total_amount_usd::numeric) as funding_usd
         FROM flow_summaries fs
         JOIN countries c ON c.id = fs.recipient_country_id
-        WHERE c.iso3 = ${selectedCountry}
+        WHERE c.iso3 = ${selectedCountry} AND fs.year <= 2025
         GROUP BY fs.year
         ORDER BY fs.year ASC
       `),
@@ -823,14 +827,14 @@ export const load: PageServerLoad = async ({ url }) => {
     if (donorInfo.rows.length > 0) {
       const donor = donorInfo.rows[0] as unknown as DonorInfoRow;
 
-      // Get funding history by year
+      // Get funding history by year (up to 2025 - 2026 data is incomplete)
       const donorHistory = await db.execute(sql`
         SELECT
           fs.year,
           SUM(fs.total_amount_usd::numeric) as funding_usd,
           COUNT(DISTINCT fs.recipient_country_id) as countries_funded
         FROM flow_summaries fs
-        WHERE fs.donor_org_id = ${donor.id}
+        WHERE fs.donor_org_id = ${donor.id} AND fs.year <= 2025
         GROUP BY fs.year
         ORDER BY fs.year ASC
       `);
