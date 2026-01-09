@@ -1,13 +1,10 @@
 import { db, schema } from '$lib/server/db';
 import { sql, desc, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+import { parseYear } from '$lib/utils/validation';
 
 export const load: PageServerLoad = async ({ url }) => {
-  const yearParam = url.searchParams.get('year');
-  let selectedYear = yearParam ? parseInt(yearParam, 10) : 2025;
-  if (isNaN(selectedYear) || selectedYear < 2016 || selectedYear > 2030) {
-    selectedYear = 2025;
-  }
+  const selectedYear = parseYear(url.searchParams.get('year'));
 
   // Get available years
   const yearsResult = await db

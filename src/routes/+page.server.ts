@@ -19,29 +19,15 @@ import type {
   DonorFlowRow,
   DonorSectorRow,
 } from '$lib/types/database';
-
-// Safe number parsing helper - returns 0 for NaN/null/undefined/Infinity
-const safeNumber = (value: unknown): number => {
-  if (value === null || value === undefined) return 0;
-  const num = Number(value);
-  return Number.isFinite(num) ? num : 0;
-};
-
-// Safe percentage change calculation - guards against division by zero and NaN
-const safeYoyChange = (current: number, previous: number): number | null => {
-  if (!Number.isFinite(current) || !Number.isFinite(previous) || previous <= 0) {
-    return null;
-  }
-  return ((current - previous) / previous) * 100;
-};
-
-// Safe division helper - returns null for invalid divisions
-const safeDivide = (numerator: number, denominator: number): number | null => {
-  if (!Number.isFinite(numerator) || !Number.isFinite(denominator) || denominator <= 0) {
-    return null;
-  }
-  return numerator / denominator;
-};
+import {
+  parseYear,
+  safeNumber,
+  safeYoyChange,
+  safeDivide,
+  validateIso3,
+  validateDonorName,
+  MAX_YEAR,
+} from '$lib/utils/validation';
 
 // US CPI annual averages (BLS CPI-U) - used to convert to 2025 USD
 // Source: Bureau of Labor Statistics, with 2024-2025 estimated
@@ -179,27 +165,10 @@ const matchesDonorPattern = (donor: string, patterns: string[]): boolean => {
 };
 
 export const load: PageServerLoad = async ({ url }) => {
-  // Parse and validate year parameter with comprehensive validation
-  const yearParam = url.searchParams.get('year');
-  let selectedYear = 2025; // Default value
-  if (yearParam) {
-    const parsed = parseInt(yearParam, 10);
-    // Validate: must be a finite integer in valid range (2016-2030)
-    if (Number.isFinite(parsed) && Number.isInteger(parsed) && parsed >= 2016 && parsed <= 2030) {
-      selectedYear = parsed;
-    }
-    // Invalid values (NaN, Infinity, out of range, non-integer) fall through to default
-  }
-
-  // Validate country parameter (ISO3 code should be exactly 3 uppercase letters)
-  const countryParam = url.searchParams.get('country');
-  const selectedCountry = countryParam && /^[A-Z]{3}$/.test(countryParam) ? countryParam : null;
-
-  // Validate donor parameter (limit length, trim whitespace)
-  const donorParam = url.searchParams.get('donor');
-  const selectedDonor = donorParam && donorParam.trim().length > 0 && donorParam.length <= 500
-    ? donorParam.trim()
-    : null;
+  // Parse and validate parameters using shared validation utilities
+  const selectedYear = parseYear(url.searchParams.get('year'));
+  const selectedCountry = validateIso3(url.searchParams.get('country'));
+  const selectedDonor = validateDonorName(url.searchParams.get('donor'));
 
   // Validate donor filter - must be one of the allowed values to prevent SQL injection
   const VALID_DONOR_FILTERS: DonorFilter[] = ['all', 'oecd', 'eu_echo', 'us', 'gulf'];
