@@ -20,10 +20,29 @@ AidTracker helps analyze the gap between humanitarian funding and actual needs b
 
 ## Tech Stack
 
-- **Frontend**: SvelteKit, TypeScript, ECharts
+- **Frontend**: SvelteKit 5, TypeScript, ECharts 6
 - **Database**: PostgreSQL (Neon serverless)
 - **ORM**: Drizzle
+- **Styling**: Tailwind CSS
 - **Deployment**: Vercel
+
+## Architecture
+
+### Shared Utilities
+
+The codebase uses shared utilities to ensure consistency across routes:
+
+- **`$lib/utils/validation.ts`** - Input validation with safe number parsing, year validation, and parameter sanitization
+- **`$lib/utils/formatters.ts`** - Consistent number and currency formatting across the dashboard
+- **`$lib/utils/excelExport.ts`** - Excel export functionality for chart data
+
+### Data Ingestion
+
+Data ingestion scripts in `/scripts` use resilient fetching with exponential backoff retry logic:
+
+- Automatic retry on network failures (up to 4 attempts)
+- Exponential backoff (2s, 4s, 8s, 16s delays)
+- Retry on HTTP 429, 500, 502, 503, 504 status codes
 
 ## Getting Started
 

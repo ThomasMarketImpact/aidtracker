@@ -8,6 +8,7 @@ import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { eq, and, sql as sqlExpr } from 'drizzle-orm';
 import * as schema from '../src/db/schema.js';
+import { fetchWithRetry } from './utils/fetchWithRetry.js';
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient, { schema });
@@ -90,7 +91,8 @@ async function fetchFlowsForYear(year: number): Promise<FTSFlow[]> {
     const url = `${FTS_BASE}/v1/public/fts/flow?year=${year}&limit=${limit}&page=${page}`;
     console.log(`    Fetching page ${page}...`);
 
-    const response = await fetch(url);
+    // Use fetchWithRetry for resilient API calls with exponential backoff
+    const response = await fetchWithRetry(url);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
@@ -105,7 +107,7 @@ async function fetchFlowsForYear(year: number): Promise<FTSFlow[]> {
     if (flows.length < limit) break;
     page++;
 
-    // Rate limiting
+    // Rate limiting between pages
     await new Promise(r => setTimeout(r, 100));
   }
 

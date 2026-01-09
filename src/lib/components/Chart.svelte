@@ -9,14 +9,31 @@
 
   let container: HTMLDivElement;
   let chart: ECharts | null = null;
+  let currentClickHandler: ((params: any) => void) | undefined = undefined;
+
+  // Helper to update click handler - removes old handler before adding new one
+  function updateClickHandler(newHandler: ((params: any) => void) | undefined) {
+    if (!chart) return;
+
+    // Remove existing handler if present
+    if (currentClickHandler) {
+      chart.off('click', currentClickHandler);
+    }
+
+    // Add new handler if provided
+    if (newHandler) {
+      chart.on('click', newHandler);
+    }
+
+    currentClickHandler = newHandler;
+  }
 
   onMount(() => {
     chart = echarts.init(container);
     chart.setOption(options);
 
-    if (onChartClick) {
-      chart.on('click', onChartClick);
-    }
+    // Register initial click handler
+    updateClickHandler(onChartClick);
 
     const handleResize = () => chart?.resize();
     window.addEventListener('resize', handleResize);
@@ -27,11 +44,23 @@
   });
 
   onDestroy(() => {
+    // Clean up click handler before disposing
+    if (chart && currentClickHandler) {
+      chart.off('click', currentClickHandler);
+      currentClickHandler = undefined;
+    }
     chart?.dispose();
+    chart = null;
   });
 
+  // Update options when they change
   $: if (chart && options) {
     chart.setOption(options, true);
+  }
+
+  // Update click handler when prop changes
+  $: if (chart) {
+    updateClickHandler(onChartClick);
   }
 </script>
 
