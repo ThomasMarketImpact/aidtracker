@@ -1,4 +1,4 @@
-clcl# Project Plan: Interactive Funding vs Needs Comparison
+# Project Plan: Interactive Funding vs Needs Comparison
 
 > **Tech Stack:** SvelteKit + Neo4j + Vercel
 > **Data Sources:** FTS API (Funding) + HDX/HAPI (Humanitarian Needs)
